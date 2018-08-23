@@ -129,6 +129,9 @@ case $1 in
         ssh $DETERLAB_USER@users.deterlab.net "rm -f ~/remote/.lastsimul"
         echo -e "$okMsg" | tee ../../last-simul.log
 
+        echo -e "Simulation is using the following topology:"
+        readlink -f sda/simulation/hosts_mapping.toml
+
         echo -e "Starting simulation ${highlightOn}${SIMUL_FILE}${highlightOff} on ${highlightOn}${PLATFORM}${highlightOff}." | tee ../../last-simul.log
         DEBUG_LVL=$dbg_lvl DEBUG_COLOR=$colors ./"$EXEC_NAME" -platform "$PLATFORM" -mport "$MPORT" "$SIMUL_FILE" | tee ../../last-simul.log
 

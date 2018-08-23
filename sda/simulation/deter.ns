@@ -1,6 +1,7 @@
 #
 # This topology has M servers and N user nodes
 # connected by a bandwidth-limited link.
+# Additionally, it has an extra server in the LAN (used for the ICRC case)
 #
 
 set ns [new Simulator]
@@ -36,6 +37,13 @@ for {set i 0} {$i < $n_trustees} {incr i} {
    append lanstr_trustees "$trustee($i) "
 }
 
+set trusteeinlan [$ns node]
+tb-set-node-os $trusteeinlan Ubuntu1404-64-STD
+tb-set-hardware $trusteeinlan pc3060
+tb-set-node-startcmd $trusteeinlan /share/t1t2/set_route
+tb-set-node-failure-action $trusteeinlan "nonfatal"
+append lanstr_clients "$trusteeinlan "
+
 # create the Clients
 for {set i 0} {$i < $n_clients} {incr i} {
    set client($i) [$ns node]
@@ -70,6 +78,8 @@ for {set i 0} {$i < $n_clients} {incr i} {
     set ip 10.0.1.[expr {$i + 1}]
     tb-set-ip-lan $client($i) $lanclients $ip
 }
+set ip 10.0.1.250
+tb-set-ip-lan $trusteeinlan $lanclients $ip
 
 # Do not remove - automatically generated tunnelcode for connectivity
 # set tunnel [$ns node]
