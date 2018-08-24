@@ -80,10 +80,10 @@ func (s *SimulationService) identifyNodeType(config *onet.SimulationConfig, node
 
 	if relayRegex.MatchString(addrStr) {
 		return "relay"
-	} else if clientRegex.MatchString(addrStr) {
-		return "client"
 	} else if trusteeRegex.MatchString(addrStr) {
 		return "trustee"
+	} else if clientRegex.MatchString(addrStr) {
+		return "client"
 	}
 	log.Fatal("Unrecognized node type, IP is", addrStr)
 	return "" // never happens

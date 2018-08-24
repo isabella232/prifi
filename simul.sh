@@ -113,8 +113,6 @@ case $1 in
 
     simul|Simul|SIMUL)
 
-
-
         EXPERIMENT_ID_VALUE=$(LC_ALL=C cat /dev/urandom | LC_ALL=C tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
         dbg_lvl=1 # do not change this. Many other functions of this script call this script recursively. If this is >1, the log will blow up ;)
 
@@ -482,6 +480,40 @@ case $1 in
             done
 
         done
+        ;;
+
+    mode)
+        echo -e "Simulation is currently using the following topology:"
+        readlink -f sda/simulation/hosts_mapping.toml
+
+        nTrusteesInConfig=$(cat "$TEMPLATE_FILE" | grep "NTrustees")
+        echo -e "The number of trustees is $nTrusteesInConfig"
+        ;;
+
+    mode-default)
+        cd sda/simulation
+        rm -f hosts_mapping.toml
+        ln -s hosts_mapping_remote_trustees.toml hosts_mapping.toml
+        cd ../..
+
+        echo -e "Simulation is currently using the following topology:"
+        readlink -f sda/simulation/hosts_mapping.toml
+
+        nTrusteesInConfig=$(cat "$TEMPLATE_FILE" | grep "NTrustees")
+        echo -e "The number of trustees is $nTrusteesInConfig"
+        ;;
+
+    mode-icrc)
+        cd sda/simulation
+        rm -f hosts_mapping.toml
+        ln -s hosts_mapping_one_local_trustee.toml hosts_mapping.toml
+        cd ../..
+
+        echo -e "Simulation is currently using the following topology:"
+        readlink -f sda/simulation/hosts_mapping.toml
+
+        nTrusteesInConfig=$(cat "$TEMPLATE_FILE" | grep "NTrustees")
+        echo -e "${warningMsg} The number of trustees is $nTrusteesInConfig. Make sure it is 1 !"
         ;;
 
     simul-skype)
