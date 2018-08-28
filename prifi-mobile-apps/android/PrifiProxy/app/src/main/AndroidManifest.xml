@@ -30,25 +30,21 @@
             </intent-filter>
         </service>
 
+        <activity android:name=".activities.SplashActivity" android:theme="@style/SplashTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
         <activity
             android:name=".activities.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name=".activities.OnScreenLogActivity"
-            android:label="@string/on_screen_log_activity_label"
-            android:parentActivityName=".activities.MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.MainActivity" />
         </activity>
         <activity
             android:name=".activities.AppSelectionActivity"
@@ -60,15 +56,32 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.MainActivity" />
         </activity>
-
         <activity
-            android:name=".activities.SettingsActivity"
-            android:label="@string/title_settings_activity"
+            android:name=".activities.GroupsActivity"
+            android:label="@string/title_activity_groups"
             android:parentActivityName=".activities.MainActivity"
-            android:screenOrientation="portrait">
+            android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.MainActivity" />
+                android:value="ch.epfl.prifiproxy.activities.MainActivity" />
+        </activity>
+        <activity
+            android:name=".activities.GroupAddEditActivity"
+            android:label="@string/title_activity_group_add"
+            android:parentActivityName=".activities.GroupsActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ch.epfl.prifiproxy.activities.GroupsActivity" />
+        </activity>
+        <activity
+            android:name=".activities.ConfigurationAddEditActivity"
+            android:label="@string/title_activity_configuration_add"
+            android:parentActivityName=".activities.GroupAddEditActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ch.epfl.prifiproxy.activities.GroupAddEditActivity" />
         </activity>
     </application>
 
