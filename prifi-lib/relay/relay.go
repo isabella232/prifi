@@ -147,7 +147,7 @@ func (p *PriFiLibRelayInstance) Received_ALL_ALL_PARAMETERS(msg net.ALL_ALL_PARA
 		panic("Verifiable DCNet not implemented yet")
 	}
 
-	//this should be in NewRelayState, but we need p
+	//only add a rate limiter if it was not already added
 	if !p.relayState.roundManager.DoSendStopResumeMessages {
 		//Add rate-limiting component to buffer manager
 
@@ -216,7 +216,7 @@ Either we send something from the SOCKS/VPN buffer, or we answer the latency-tes
 func (p *PriFiLibRelayInstance) Received_CLI_REL_UPSTREAM_DATA(msg net.CLI_REL_UPSTREAM_DATA) error {
 	p.relayState.roundManager.AddClientCipher(msg.RoundID, msg.ClientID, msg.Data)
 	if p.relayState.roundManager.HasAllCiphersForCurrentRound() {
-		p.upstreamPhase1_processCiphers(true)
+		p.upstreamPhase1_processCiphers(false)
 	}
 
 	return nil
@@ -230,6 +230,7 @@ If for a future round we need to Buffer it.
 func (p *PriFiLibRelayInstance) Received_TRU_REL_DC_CIPHER(msg net.TRU_REL_DC_CIPHER) error {
 	p.relayState.roundManager.AddTrusteeCipher(msg.RoundID, msg.TrusteeID, msg.Data)
 	if p.relayState.roundManager.HasAllCiphersForCurrentRound() {
+		log.Error("Trustee is late")
 		p.upstreamPhase1_processCiphers(true)
 	}
 

@@ -141,7 +141,7 @@ func (p *PriFiLibTrusteeInstance) Send_TRU_REL_DC_CIPHER(rateChan chan int16) {
 		default:
 			if currentRate == TRUSTEE_RATE_ACTIVE {
 				if p.trusteeState.AlwaysSlowDown {
-					log.Lvl4("Trustee " + strconv.Itoa(p.trusteeState.ID) + " rate FULL, sleeping for " + strconv.Itoa(p.trusteeState.BaseSleepTime))
+					log.Lvl3("Trustee " + strconv.Itoa(p.trusteeState.ID) + " rate FULL, sleeping for " + strconv.Itoa(p.trusteeState.BaseSleepTime))
 					time.Sleep(time.Duration(p.trusteeState.BaseSleepTime) * time.Millisecond)
 				}
 				newRoundID, err := sendData(p, roundID)
@@ -153,7 +153,7 @@ func (p *PriFiLibTrusteeInstance) Send_TRU_REL_DC_CIPHER(rateChan chan int16) {
 			} else if currentRate == TRUSTEE_RATE_HALVED {
 				if !p.trusteeState.NeverSlowDown {
 					//sorry double neg. If NeverSlowDown = true, we skip this sleep
-					log.Lvl4("Trustee " + strconv.Itoa(p.trusteeState.ID) + " rate HALVED, sleeping for " + strconv.Itoa(p.trusteeState.BaseSleepTime))
+					log.Lvl3("Trustee " + strconv.Itoa(p.trusteeState.ID) + " rate HALVED, sleeping for " + strconv.Itoa(p.trusteeState.BaseSleepTime))
 					time.Sleep(time.Duration(p.trusteeState.BaseSleepTime) * time.Millisecond)
 				}
 				newRoundID, err := sendData(p, roundID)
@@ -200,6 +200,7 @@ func sendData(p *PriFiLibTrusteeInstance, roundID int32) (int32, error) {
 		RoundID:   roundID,
 		TrusteeID: p.trusteeState.ID,
 		Data:      data}
+
 	if !p.messageSender.SendToRelayWithLog(toSend, "(round "+strconv.Itoa(int(roundID))+")") {
 		return -1, errors.New("Could not send")
 	}

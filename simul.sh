@@ -127,7 +127,7 @@ case $1 in
         ssh $DETERLAB_USER@users.deterlab.net "rm -f ~/remote/.lastsimul"
         echo -e "$okMsg" | tee ../../last-simul.log
 
-        echo -e "Simulation is using the following topology:"
+        echo -en "Simulation is using the following topology:"
         readlink -f sda/simulation/hosts_mapping.toml
 
         echo -e "Starting simulation ${highlightOn}${SIMUL_FILE}${highlightOff} on ${highlightOn}${PLATFORM}${highlightOff}." | tee ../../last-simul.log
@@ -487,7 +487,10 @@ case $1 in
         readlink -f sda/simulation/hosts_mapping.toml
 
         nTrusteesInConfig=$(cat "$TEMPLATE_FILE" | grep "NTrustees")
-        echo -e "The number of trustees is $nTrusteesInConfig"
+        echo -e "The number of trustees in TEMPLATE is $nTrusteesInConfig"
+
+        nTrusteesInConfig=$(cat "$CONFIG_FILE" | grep "NTrustees")
+        echo -e "The number of trustees in CONFIG is $nTrusteesInConfig"
         ;;
 
     mode-default)
@@ -500,7 +503,10 @@ case $1 in
         readlink -f sda/simulation/hosts_mapping.toml
 
         nTrusteesInConfig=$(cat "$TEMPLATE_FILE" | grep "NTrustees")
-        echo -e "The number of trustees is $nTrusteesInConfig"
+        echo -e "The number of trustees in TEMPLATE is $nTrusteesInConfig"
+
+        nTrusteesInConfig=$(cat "$CONFIG_FILE" | grep "NTrustees")
+        echo -e "The number of trustees in CONFIG is $nTrusteesInConfig"
         ;;
 
     mode-icrc)
@@ -513,7 +519,10 @@ case $1 in
         readlink -f sda/simulation/hosts_mapping.toml
 
         nTrusteesInConfig=$(cat "$TEMPLATE_FILE" | grep "NTrustees")
-        echo -e "${warningMsg} The number of trustees is $nTrusteesInConfig. Make sure it is 1 !"
+        echo -e "The number of trustees in TEMPLATE is $nTrusteesInConfig. Make sure it is 1!"
+
+        nTrusteesInConfig=$(cat "$CONFIG_FILE" | grep "NTrustees")
+        echo -e "The number of trustees in CONFIG is $nTrusteesInConfig. Make sure it is 1!"
         ;;
 
     simul-skype)
