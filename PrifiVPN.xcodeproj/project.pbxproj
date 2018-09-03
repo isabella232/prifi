@@ -1,0 +1,712 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		170051B020E27B5300CC3895 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170051AF20E27B5300CC3895 /* AppDelegate.swift */; };
+		170051B220E27B5300CC3895 /* ConfigurationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170051B120E27B5300CC3895 /* ConfigurationViewController.swift */; };
+		170051B520E27B5300CC3895 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 170051B320E27B5300CC3895 /* Main.storyboard */; };
+		170051B720E27B5500CC3895 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 170051B620E27B5500CC3895 /* Assets.xcassets */; };
+		170051C420E27F5400CC3895 /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 170051C320E27F5400CC3895 /* NetworkExtension.framework */; };
+		170051DD20E2812600CC3895 /* PacketTunnelProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170051DC20E2812600CC3895 /* PacketTunnelProvider.swift */; };
+		170051E220E2812600CC3895 /* PrifiTunnel.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 170051DA20E2812600CC3895 /* PrifiTunnel.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		1704266B20F41AD5008F1529 /* PrifiLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1704266920F41A9D008F1529 /* PrifiLogger.swift */; };
+		170E2E9220F7F4600061ED0C /* LogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170E2E9120F7F4600061ED0C /* LogViewController.swift */; };
+		170E2E9820F83E200061ED0C /* FileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170E2E9720F83E200061ED0C /* FileViewController.swift */; };
+		170E2E9920F844820061ED0C /* prifi.toml in Resources */ = {isa = PBXBuildFile; fileRef = 17F551DB20F3E94B00B0F8E0 /* prifi.toml */; };
+		170E2E9A20F844870061ED0C /* identity.toml in Resources */ = {isa = PBXBuildFile; fileRef = 17F551DC20F3E94B00B0F8E0 /* identity.toml */; };
+		170E2E9B20F844890061ED0C /* group.toml in Resources */ = {isa = PBXBuildFile; fileRef = 17F551DD20F3E94B00B0F8E0 /* group.toml */; };
+		170F37BC20FBD469006C500A /* CocoaAsyncSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 170F37BB20FBD469006C500A /* CocoaAsyncSocket.framework */; };
+		170F37BE20FBD4AB006C500A /* NetworkTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170F37BD20FBD4AB006C500A /* NetworkTools.swift */; };
+		171DF40E2120B735003A4746 /* Reachability.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 171DF40D2120B735003A4746 /* Reachability.framework */; };
+		17484BC020ED115D00162C35 /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 170051C320E27F5400CC3895 /* NetworkExtension.framework */; };
+		17521E2E21265AFF006D67B8 /* Eureka.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 17521E2D21265AFF006D67B8 /* Eureka.framework */; };
+		17521E3621267E73006D67B8 /* ConfigurationsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17521E3521267E73006D67B8 /* ConfigurationsVC.swift */; };
+		17521E38212689D7006D67B8 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17521E37212689D7006D67B8 /* Configuration.swift */; };
+		17521E3E2126EE45006D67B8 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17521E3D2126EE45006D67B8 /* AboutViewController.swift */; };
+		17521E402127093D006D67B8 /* CoreActionSheetPicker.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 17521E3F2127093D006D67B8 /* CoreActionSheetPicker.framework */; };
+		1754C6C12128A2C9008D1ADD /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17521E37212689D7006D67B8 /* Configuration.swift */; };
+		1754C6C82128CB9A008D1ADD /* Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1754C6C62128CB9A008D1ADD /* Alert.swift */; };
+		1754C6C92128CB9A008D1ADD /* RuleIP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1754C6C72128CB9A008D1ADD /* RuleIP.swift */; };
+		1771881120FA86540035EA37 /* PrifiMobile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 17F551E120F3E9B900B0F8E0 /* PrifiMobile.framework */; };
+		1771881320FA97980035EA37 /* StringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1771881220FA97970035EA37 /* StringExtensions.swift */; };
+		1785C3DE21377ACF0072FA27 /* Group.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1785C3DD21377ACF0072FA27 /* Group.swift */; };
+		1785C3E321377D5C0072FA27 /* GroupsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1785C3E221377D5C0072FA27 /* GroupsVC.swift */; };
+		1785C3E721378E6A0072FA27 /* GroupTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1785C3E621378E6A0072FA27 /* GroupTableViewCell.swift */; };
+		17A25F0F20F67F7E004BB60A /* ScreenLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A25F0E20F67F7E004BB60A /* ScreenLogger.swift */; };
+		17B41860213B2D650021FBB1 /* GlobalSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B4185F213B2D650021FBB1 /* GlobalSettings.swift */; };
+		17BA9BCD21383F1500370812 /* Group.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1785C3DD21377ACF0072FA27 /* Group.swift */; };
+		17BA9BD32138F8BE00370812 /* ReasonExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17BA9BD22138F8BE00370812 /* ReasonExtension.swift */; };
+		17EBC9E9211DD99D009A08A8 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17EBC9E8211DD99D009A08A8 /* MainViewController.swift */; };
+		17EBC9ED211E1F18009A08A8 /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17EBC9EC211E1F18009A08A8 /* MenuViewController.swift */; };
+		17EBC9EF211F8E9B009A08A8 /* PrifiVpn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17EBC9EE211F8E9B009A08A8 /* PrifiVpn.swift */; };
+		17F551DE20F3E94B00B0F8E0 /* prifi.toml in Resources */ = {isa = PBXBuildFile; fileRef = 17F551DB20F3E94B00B0F8E0 /* prifi.toml */; };
+		17F551DF20F3E94B00B0F8E0 /* identity.toml in Resources */ = {isa = PBXBuildFile; fileRef = 17F551DC20F3E94B00B0F8E0 /* identity.toml */; };
+		17F551E020F3E94B00B0F8E0 /* group.toml in Resources */ = {isa = PBXBuildFile; fileRef = 17F551DD20F3E94B00B0F8E0 /* group.toml */; };
+		17F551E220F3E9B900B0F8E0 /* PrifiMobile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 17F551E120F3E9B900B0F8E0 /* PrifiMobile.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		170051E020E2812600CC3895 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 170051A420E27B5300CC3895 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 170051D920E2812600CC3895;
+			remoteInfo = PrifiTunnel;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		170051D520E2806C00CC3895 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				170051E220E2812600CC3895 /* PrifiTunnel.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1700520320E31FDF00CC3895 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		170051AC20E27B5300CC3895 /* PrifiVPN.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PrifiVPN.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		170051AF20E27B5300CC3895 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		170051B120E27B5300CC3895 /* ConfigurationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationViewController.swift; sourceTree = "<group>"; };
+		170051B420E27B5300CC3895 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		170051B620E27B5500CC3895 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		170051BB20E27B5500CC3895 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		170051C120E27F0900CC3895 /* PrifiVPN.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PrifiVPN.entitlements; sourceTree = "<group>"; };
+		170051C320E27F5400CC3895 /* NetworkExtension.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NetworkExtension.framework; path = System/Library/Frameworks/NetworkExtension.framework; sourceTree = SDKROOT; };
+		170051DA20E2812600CC3895 /* PrifiTunnel.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = PrifiTunnel.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		170051DC20E2812600CC3895 /* PacketTunnelProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PacketTunnelProvider.swift; sourceTree = "<group>"; };
+		170051DE20E2812600CC3895 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		170051DF20E2812600CC3895 /* PrifiTunnel.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PrifiTunnel.entitlements; sourceTree = "<group>"; };
+		1704266920F41A9D008F1529 /* PrifiLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrifiLogger.swift; sourceTree = "<group>"; };
+		170E2E9120F7F4600061ED0C /* LogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogViewController.swift; sourceTree = "<group>"; };
+		170E2E9720F83E200061ED0C /* FileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileViewController.swift; sourceTree = "<group>"; };
+		170F37BB20FBD469006C500A /* CocoaAsyncSocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaAsyncSocket.framework; path = Carthage/Build/iOS/CocoaAsyncSocket.framework; sourceTree = "<group>"; };
+		170F37BD20FBD4AB006C500A /* NetworkTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkTools.swift; sourceTree = "<group>"; };
+		171DF40D2120B735003A4746 /* Reachability.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Reachability.framework; path = Carthage/Build/iOS/Reachability.framework; sourceTree = "<group>"; };
+		17521E2D21265AFF006D67B8 /* Eureka.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Eureka.framework; path = Carthage/Build/iOS/Eureka.framework; sourceTree = "<group>"; };
+		17521E3521267E73006D67B8 /* ConfigurationsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationsVC.swift; sourceTree = "<group>"; };
+		17521E37212689D7006D67B8 /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
+		17521E3D2126EE45006D67B8 /* AboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
+		17521E3F2127093D006D67B8 /* CoreActionSheetPicker.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreActionSheetPicker.framework; path = Carthage/Build/iOS/CoreActionSheetPicker.framework; sourceTree = "<group>"; };
+		1754C6C62128CB9A008D1ADD /* Alert.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Alert.swift; sourceTree = "<group>"; };
+		1754C6C72128CB9A008D1ADD /* RuleIP.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RuleIP.swift; sourceTree = "<group>"; };
+		1771881220FA97970035EA37 /* StringExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtensions.swift; sourceTree = "<group>"; };
+		1785C3DD21377ACF0072FA27 /* Group.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Group.swift; sourceTree = "<group>"; };
+		1785C3E221377D5C0072FA27 /* GroupsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupsVC.swift; sourceTree = "<group>"; };
+		1785C3E621378E6A0072FA27 /* GroupTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupTableViewCell.swift; sourceTree = "<group>"; };
+		17A25F0E20F67F7E004BB60A /* ScreenLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenLogger.swift; sourceTree = "<group>"; };
+		17B4185F213B2D650021FBB1 /* GlobalSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalSettings.swift; sourceTree = "<group>"; };
+		17BA9BD22138F8BE00370812 /* ReasonExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReasonExtension.swift; sourceTree = "<group>"; };
+		17EBC9E8211DD99D009A08A8 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		17EBC9EC211E1F18009A08A8 /* MenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
+		17EBC9EE211F8E9B009A08A8 /* PrifiVpn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrifiVpn.swift; sourceTree = "<group>"; };
+		17F551DB20F3E94B00B0F8E0 /* prifi.toml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = prifi.toml; sourceTree = "<group>"; };
+		17F551DC20F3E94B00B0F8E0 /* identity.toml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = identity.toml; sourceTree = "<group>"; };
+		17F551DD20F3E94B00B0F8E0 /* group.toml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = group.toml; sourceTree = "<group>"; };
+		17F551E120F3E9B900B0F8E0 /* PrifiMobile.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = PrifiMobile.framework; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		170051A920E27B5300CC3895 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				170F37BC20FBD469006C500A /* CocoaAsyncSocket.framework in Frameworks */,
+				170051C420E27F5400CC3895 /* NetworkExtension.framework in Frameworks */,
+				1771881120FA86540035EA37 /* PrifiMobile.framework in Frameworks */,
+				17521E402127093D006D67B8 /* CoreActionSheetPicker.framework in Frameworks */,
+				171DF40E2120B735003A4746 /* Reachability.framework in Frameworks */,
+				17521E2E21265AFF006D67B8 /* Eureka.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		170051D720E2812600CC3895 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				17484BC020ED115D00162C35 /* NetworkExtension.framework in Frameworks */,
+				17F551E220F3E9B900B0F8E0 /* PrifiMobile.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		170051A320E27B5300CC3895 = {
+			isa = PBXGroup;
+			children = (
+				170051AE20E27B5300CC3895 /* PrifiVPN */,
+				170051DB20E2812600CC3895 /* PrifiTunnel */,
+				170051AD20E27B5300CC3895 /* Products */,
+				170051C220E27F5400CC3895 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		170051AD20E27B5300CC3895 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				170051AC20E27B5300CC3895 /* PrifiVPN.app */,
+				170051DA20E2812600CC3895 /* PrifiTunnel.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		170051AE20E27B5300CC3895 /* PrifiVPN */ = {
+			isa = PBXGroup;
+			children = (
+				1785C3DF21377C1B0072FA27 /* utils */,
+				1785C3DC213779C50072FA27 /* models */,
+				170051AF20E27B5300CC3895 /* AppDelegate.swift */,
+				17521E3D2126EE45006D67B8 /* AboutViewController.swift */,
+				17EBC9E8211DD99D009A08A8 /* MainViewController.swift */,
+				170E2E9120F7F4600061ED0C /* LogViewController.swift */,
+				170E2E9720F83E200061ED0C /* FileViewController.swift */,
+				17EBC9EC211E1F18009A08A8 /* MenuViewController.swift */,
+				170051B320E27B5300CC3895 /* Main.storyboard */,
+				170051B620E27B5500CC3895 /* Assets.xcassets */,
+				170051BB20E27B5500CC3895 /* Info.plist */,
+				17EBC9EE211F8E9B009A08A8 /* PrifiVpn.swift */,
+				170051C120E27F0900CC3895 /* PrifiVPN.entitlements */,
+				1785C3E221377D5C0072FA27 /* GroupsVC.swift */,
+				1785C3E621378E6A0072FA27 /* GroupTableViewCell.swift */,
+				17521E3521267E73006D67B8 /* ConfigurationsVC.swift */,
+				170051B120E27B5300CC3895 /* ConfigurationViewController.swift */,
+			);
+			path = PrifiVPN;
+			sourceTree = "<group>";
+		};
+		170051C220E27F5400CC3895 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				17521E3F2127093D006D67B8 /* CoreActionSheetPicker.framework */,
+				17521E2D21265AFF006D67B8 /* Eureka.framework */,
+				171DF40D2120B735003A4746 /* Reachability.framework */,
+				170F37BB20FBD469006C500A /* CocoaAsyncSocket.framework */,
+				17F551E120F3E9B900B0F8E0 /* PrifiMobile.framework */,
+				170051C320E27F5400CC3895 /* NetworkExtension.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		170051DB20E2812600CC3895 /* PrifiTunnel */ = {
+			isa = PBXGroup;
+			children = (
+				17F551DD20F3E94B00B0F8E0 /* group.toml */,
+				17F551DC20F3E94B00B0F8E0 /* identity.toml */,
+				17F551DB20F3E94B00B0F8E0 /* prifi.toml */,
+				170051DC20E2812600CC3895 /* PacketTunnelProvider.swift */,
+				1704266920F41A9D008F1529 /* PrifiLogger.swift */,
+				17A25F0E20F67F7E004BB60A /* ScreenLogger.swift */,
+				170051DE20E2812600CC3895 /* Info.plist */,
+				170051DF20E2812600CC3895 /* PrifiTunnel.entitlements */,
+				17BA9BD22138F8BE00370812 /* ReasonExtension.swift */,
+			);
+			path = PrifiTunnel;
+			sourceTree = "<group>";
+		};
+		1785C3DC213779C50072FA27 /* models */ = {
+			isa = PBXGroup;
+			children = (
+				17521E37212689D7006D67B8 /* Configuration.swift */,
+				1785C3DD21377ACF0072FA27 /* Group.swift */,
+				17B4185F213B2D650021FBB1 /* GlobalSettings.swift */,
+			);
+			path = models;
+			sourceTree = "<group>";
+		};
+		1785C3DF21377C1B0072FA27 /* utils */ = {
+			isa = PBXGroup;
+			children = (
+				1771881220FA97970035EA37 /* StringExtensions.swift */,
+				170F37BD20FBD4AB006C500A /* NetworkTools.swift */,
+				1754C6C62128CB9A008D1ADD /* Alert.swift */,
+				1754C6C72128CB9A008D1ADD /* RuleIP.swift */,
+			);
+			path = utils;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		170051AB20E27B5300CC3895 /* PrifiVPN */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 170051BE20E27B5500CC3895 /* Build configuration list for PBXNativeTarget "PrifiVPN" */;
+			buildPhases = (
+				170051A820E27B5300CC3895 /* Sources */,
+				170051A920E27B5300CC3895 /* Frameworks */,
+				170051AA20E27B5300CC3895 /* Resources */,
+				170051D520E2806C00CC3895 /* Embed App Extensions */,
+				1700520320E31FDF00CC3895 /* Embed Frameworks */,
+				170F37C020FBE3FA006C500A /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				170051E120E2812600CC3895 /* PBXTargetDependency */,
+			);
+			name = PrifiVPN;
+			productName = PrifiVPN;
+			productReference = 170051AC20E27B5300CC3895 /* PrifiVPN.app */;
+			productType = "com.apple.product-type.application";
+		};
+		170051D920E2812600CC3895 /* PrifiTunnel */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 170051E320E2812600CC3895 /* Build configuration list for PBXNativeTarget "PrifiTunnel" */;
+			buildPhases = (
+				170051D620E2812600CC3895 /* Sources */,
+				170051D720E2812600CC3895 /* Frameworks */,
+				170051D820E2812600CC3895 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PrifiTunnel;
+			productName = PrifiTunnel;
+			productReference = 170051DA20E2812600CC3895 /* PrifiTunnel.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		170051A420E27B5300CC3895 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0940;
+				LastUpgradeCheck = 0940;
+				ORGANIZATIONNAME = dedis;
+				TargetAttributes = {
+					170051AB20E27B5300CC3895 = {
+						CreatedOnToolsVersion = 9.4.1;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
+							com.apple.BackgroundModes = {
+								enabled = 0;
+							};
+							com.apple.NetworkExtensions.iOS = {
+								enabled = 1;
+							};
+							com.apple.VPNLite = {
+								enabled = 1;
+							};
+						};
+					};
+					170051D920E2812600CC3895 = {
+						CreatedOnToolsVersion = 9.4.1;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
+							com.apple.NetworkExtensions.iOS = {
+								enabled = 1;
+							};
+							com.apple.VPNLite = {
+								enabled = 1;
+							};
+						};
+					};
+				};
+			};
+			buildConfigurationList = 170051A720E27B5300CC3895 /* Build configuration list for PBXProject "PrifiVPN" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 170051A320E27B5300CC3895;
+			productRefGroup = 170051AD20E27B5300CC3895 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				170051AB20E27B5300CC3895 /* PrifiVPN */,
+				170051D920E2812600CC3895 /* PrifiTunnel */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		170051AA20E27B5300CC3895 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				170E2E9B20F844890061ED0C /* group.toml in Resources */,
+				170E2E9A20F844870061ED0C /* identity.toml in Resources */,
+				170051B720E27B5500CC3895 /* Assets.xcassets in Resources */,
+				170E2E9920F844820061ED0C /* prifi.toml in Resources */,
+				170051B520E27B5300CC3895 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		170051D820E2812600CC3895 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				17F551DE20F3E94B00B0F8E0 /* prifi.toml in Resources */,
+				17F551E020F3E94B00B0F8E0 /* group.toml in Resources */,
+				17F551DF20F3E94B00B0F8E0 /* identity.toml in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		170F37C020FBE3FA006C500A /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Carthage/build/iOS/CocoaAsyncSocket.framework",
+				"$(SRCROOT)/Carthage/build/iOS/Reachability.framework",
+				"$(SRCROOT)/Carthage/build/iOS/Eureka.framework",
+				"$(SRCROOT)/Carthage/build/iOS/CoreActionSheetPicker.framework",
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/$(FRAMEWORKS_FOLDER_PATH)/CocoaAsyncSocket.framework",
+				"$(DERIVED_FILE_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Reachability.framework",
+				"$(DERIVED_FILE_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Eureka.framework",
+				"$(DERIVED_FILE_DIR)/$(FRAMEWORKS_FOLDER_PATH)/CoreActionSheetPicker.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage copy-frameworks";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		170051A820E27B5300CC3895 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				17EBC9E9211DD99D009A08A8 /* MainViewController.swift in Sources */,
+				1785C3E721378E6A0072FA27 /* GroupTableViewCell.swift in Sources */,
+				17521E3621267E73006D67B8 /* ConfigurationsVC.swift in Sources */,
+				1785C3E321377D5C0072FA27 /* GroupsVC.swift in Sources */,
+				17EBC9EF211F8E9B009A08A8 /* PrifiVpn.swift in Sources */,
+				1785C3DE21377ACF0072FA27 /* Group.swift in Sources */,
+				170E2E9820F83E200061ED0C /* FileViewController.swift in Sources */,
+				170E2E9220F7F4600061ED0C /* LogViewController.swift in Sources */,
+				170F37BE20FBD4AB006C500A /* NetworkTools.swift in Sources */,
+				1754C6C82128CB9A008D1ADD /* Alert.swift in Sources */,
+				17EBC9ED211E1F18009A08A8 /* MenuViewController.swift in Sources */,
+				17B41860213B2D650021FBB1 /* GlobalSettings.swift in Sources */,
+				1754C6C92128CB9A008D1ADD /* RuleIP.swift in Sources */,
+				1771881320FA97980035EA37 /* StringExtensions.swift in Sources */,
+				17521E3E2126EE45006D67B8 /* AboutViewController.swift in Sources */,
+				170051B220E27B5300CC3895 /* ConfigurationViewController.swift in Sources */,
+				17521E38212689D7006D67B8 /* Configuration.swift in Sources */,
+				170051B020E27B5300CC3895 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		170051D620E2812600CC3895 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1754C6C12128A2C9008D1ADD /* Configuration.swift in Sources */,
+				1704266B20F41AD5008F1529 /* PrifiLogger.swift in Sources */,
+				170051DD20E2812600CC3895 /* PacketTunnelProvider.swift in Sources */,
+				17BA9BCD21383F1500370812 /* Group.swift in Sources */,
+				17A25F0F20F67F7E004BB60A /* ScreenLogger.swift in Sources */,
+				17BA9BD32138F8BE00370812 /* ReasonExtension.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		170051E120E2812600CC3895 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 170051D920E2812600CC3895 /* PrifiTunnel */;
+			targetProxy = 170051E020E2812600CC3895 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		170051B320E27B5300CC3895 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				170051B420E27B5300CC3895 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		170051BC20E27B5500CC3895 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		170051BD20E27B5500CC3895 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		170051BF20E27B5500CC3895 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_ENTITLEMENTS = PrifiVPN/PrifiVPN.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = EDV2AJUNWK;
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
+				INFOPLIST_FILE = PrifiVPN/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.lca.PrifiVPN;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		170051C020E27B5500CC3895 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_ENTITLEMENTS = PrifiVPN/PrifiVPN.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = EDV2AJUNWK;
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
+				INFOPLIST_FILE = PrifiVPN/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.lca.PrifiVPN;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		170051E420E2812600CC3895 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = PrifiTunnel/PrifiTunnel.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = EDV2AJUNWK;
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
+				INFOPLIST_FILE = PrifiTunnel/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.lca.PrifiVPN.PrifiTunnel;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		170051E520E2812600CC3895 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = PrifiTunnel/PrifiTunnel.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = EDV2AJUNWK;
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
+				INFOPLIST_FILE = PrifiTunnel/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.lca.PrifiVPN.PrifiTunnel;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		170051A720E27B5300CC3895 /* Build configuration list for PBXProject "PrifiVPN" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				170051BC20E27B5500CC3895 /* Debug */,
+				170051BD20E27B5500CC3895 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		170051BE20E27B5500CC3895 /* Build configuration list for PBXNativeTarget "PrifiVPN" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				170051BF20E27B5500CC3895 /* Debug */,
+				170051C020E27B5500CC3895 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		170051E320E2812600CC3895 /* Build configuration list for PBXNativeTarget "PrifiTunnel" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				170051E420E2812600CC3895 /* Debug */,
+				170051E520E2812600CC3895 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 170051A420E27B5300CC3895 /* Project object */;
+}
