@@ -12,7 +12,7 @@ import (
 
 // EgressServer takes data from a go channel and recreates the multiplexed TCP streams
 type EgressServer struct {
-	activeConnections map[string]*MultiplexedConnection
+	activeConnections map[uint32]*MultiplexedConnection
 	maxMessageSize    int
 	maxPayloadSize    int
 	upstreamChan      chan []byte
@@ -29,7 +29,7 @@ func StartEgressHandler(serverAddress string, maxMessageSize int, upstreamChan c
 	eg.upstreamChan = upstreamChan
 	eg.downstreamChan = downstreamChan
 	eg.stopChan = stopChan
-	eg.activeConnections = make(map[string]*MultiplexedConnection)
+	eg.activeConnections = make(map[uint32]*MultiplexedConnection)
 	eg.verbose = verbose
 
 	if verbose {
@@ -51,7 +51,7 @@ func StartEgressHandler(serverAddress string, maxMessageSize int, upstreamChan c
 			continue
 		}
 
-		ID := string(dataRead[0:4])
+		ID := binary.BigEndian.Uint32(dataRead[0:4])
 		size := int(binary.BigEndian.Uint32(dataRead[4:8]))
 		data := dataRead[8:]
 
@@ -72,11 +72,11 @@ func StartEgressHandler(serverAddress string, maxMessageSize int, upstreamChan c
 					serverAddress, "? You need one!", err)
 				continue
 			} else {
-
 				mc := new(MultiplexedConnection)
 				mc.conn = c
 				mc.ID = ID
-				mc.ID_bytes = []byte(ID)
+				mc.ID_bytes = make([]byte, 4)
+				binary.BigEndian.PutUint32(mc.ID_bytes, ID)
 				mc.stopChan = make(chan bool, 1)
 				mc.maxMessageLength = eg.maxMessageSize
 
