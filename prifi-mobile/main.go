@@ -17,7 +17,7 @@ var globalHost *onet.Server
 var globalService *prifi_service.ServiceState
 
 // The "main" function that is called by Mobile OS in order to launch a client server
-func StartClient() {
+func StartClient() error {
 	stopChan = make(chan bool, 1)
 	errorChan = make(chan error, 1)
 
@@ -28,6 +28,7 @@ func StartClient() {
 	select {
 	case err := <-errorChan:
 		log.Error("Error occurs", err)
+		return err
 	case <-stopChan:
 
 		// Stop goroutines
@@ -41,6 +42,7 @@ func StartClient() {
 		globalHost.Close()
 
 		log.Info("PriFi Session Ended")
+		return nil
 	}
 }
 
