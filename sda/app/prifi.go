@@ -27,6 +27,7 @@ import (
 	"os/exec"
 	"strconv"
 	"time"
+	"github.com/skip2/go-qrcode"
 )
 
 // DefaultName is the name of the binary we produce and is used to create a directory
@@ -124,6 +125,10 @@ func main() {
 		cli.BoolFlag{
 			Name:  "nowait",
 			Usage: "Return immediately",
+		},
+		cli.BoolFlag{
+			Name:  "qrcode",
+			Usage: "output the public key by qrcode",
 		},
 	}
 	app.Before = func(c *cli.Context) error {
@@ -283,22 +288,24 @@ func checkOverwrite(file string) bool {
 
 func createNewIdentityToml(c *cli.Context) error {
 
+	// -- Keys
 	log.Print("Generating public/private keys...")
 
 	suite := suites.MustFind("Ed25519") //TODO Nikko wants to change this
-	key := key.NewKeyPair(suite)
-	pubStr, err := encoding.PointToStringHex(suite, key.Public)
+	newKeyPair := key.NewKeyPair(suite)
+	pubStr, err := encoding.PointToStringHex(suite, newKeyPair.Public)
 	if err != nil {
 		panic(err)
 	}
-	privStr, err := encoding.ScalarToStringHex(suite, key.Private)
+	priStr, err := encoding.ScalarToStringHex(suite, newKeyPair.Private)
 	if err != nil {
 		panic(err)
 	}
 
-	addrPort := app.Inputf(":"+strconv.Itoa(DefaultPort)+"", "Which port do you want PriFi to use locally ?")
+	// -- Network
+	addrPort := ":" + app.Inputf(strconv.Itoa(DefaultPort), "Which port do you want PriFi to use locally ?")
 
-	//parse IP + Port
+	// parse IP + Port
 	var hostStr string
 	var portStr string
 
@@ -320,10 +327,11 @@ func createNewIdentityToml(c *cli.Context) error {
 
 	identity := &app.CothorityConfig{
 		Public:  pubStr,
-		Private: privStr,
+		Private: priStr,
 		Address: serverBinding,
 	}
 
+	// -- File Creation
 	var configDone bool
 	var folderPath string
 	var identityFilePath string
@@ -353,7 +361,14 @@ func createNewIdentityToml(c *cli.Context) error {
 	}
 
 	if err := identity.Save(identityFilePath); err != nil {
-		log.Fatal("Unable to write the config to file:", err)
+		log.Fatal("Unable to write the config to file: ", err)
+	}
+
+	// QR Code for the public key
+	if c.GlobalBool("qrcode") {
+		if err := qrcode.WriteFile(pubStr, qrcode.Medium, 256, folderPath + "public_key_qr.png"); err != nil {
+			log.Fatal("Unable to generate the qr code for the public key: ", err)
+		}
 	}
 
 	log.Info("Identity file saved.")

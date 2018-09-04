@@ -294,9 +294,11 @@ case $1 in
 
 		read -p "Do you want to generate it for [r]elay, [c]lient, or [t]trustee ? " key
 
+        doOutputQR=true
 		path=""
 		case "$key" in
 			r|R)
+			    pathSource="relay"
 				path="relay"
 			;;
 			t|T)
@@ -328,17 +330,17 @@ case $1 in
 		echo -e "Gonna generate ${highlightOn}identity.toml${highlightOff} in ${highlightOn}$pathReal${highlightOff}"
 
 		#generate identity.toml
-		DEBUG_COLOR="$colors" go run "$bin_file" --default_path "$pathReal" gen-id
+		DEBUG_COLOR="$colors" go run "$bin_file" --default_path "$pathReal" --qrcode="$doOutputQR" gen-id
 
 		if [ ! -f "${pathReal}group.toml" ]; then
 			#now group.toml
-			echo -n "Done ! now copying group.toml from identities_default/ to identity_real/..."
-			cp "${pathDefault}/group.toml" "${pathReal}group.toml"
+			echo -n "Now copying group.toml from identities_default/ to identity_real/..."
+			cp "${pathDefault}group.toml" "${pathReal}group.toml"
 			echo -e "$okMsg"
 
-			echo -e "Please edit ${highlightOn}$pathReal/group.toml${highlightOff} to the correct values."
+			echo -e "Please edit ${highlightOn}${pathReal}group.toml${highlightOff} to the correct values."
 		else
-			echo -e "Group file ${highlightOn}$pathReal/group.toml${highlightOff} already exists, not overwriting! you might want to check that the contents are correct."
+			echo -e "Group file ${highlightOn}${pathReal}group.toml${highlightOff} already exists, not overwriting! you might want to check that the contents are correct."
 		fi
 		;;
 
