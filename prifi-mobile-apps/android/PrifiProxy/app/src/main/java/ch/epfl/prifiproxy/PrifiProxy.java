@@ -3,7 +3,9 @@ package ch.epfl.prifiproxy;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 
+import ch.epfl.prifiproxy.utils.AppListHelper;
 import prifiMobile.PrifiMobile;
 
 /**
@@ -14,6 +16,8 @@ public class PrifiProxy extends Application {
 
     private static Application mApplication;
 
+    public static boolean isDevFlavor = BuildConfig.FLAVOR.equals("dev");
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -21,6 +25,7 @@ public class PrifiProxy extends Application {
 
         initPrifiConfig();
     }
+
 
     public static Context getContext() {
         return mApplication.getApplicationContext();
@@ -77,17 +82,21 @@ public class PrifiProxy extends Application {
             editor.putString(getString(R.string.prifi_client_public_key), pubKey);
             editor.putString(getString(R.string.prifi_client_private_key), priKey);
             // Set isFirstInit false
-            editor.putBoolean(getString(R.string.prifi_config_first_init), false);
+            editor.putBoolean(getString(R.string.prifi_config_first_init), true);
             // apply
             editor.apply();
+
+            AppListHelper.firstStart(this);
         } else {
             // Set if not
-            final String currentPrifiRelayAddress = prifiPrefs.getString(getString(R.string.prifi_config_relay_address),"");
+            final String currentPrifiRelayAddress = prifiPrefs.getString(getString(R.string.prifi_config_relay_address), "");
             final int currentPrifiRelayPort = prifiPrefs.getInt(getString(R.string.prifi_config_relay_port), 0);
-            final int currentPrifiRelaySocksPort = prifiPrefs.getInt(getString(R.string.prifi_config_relay_socks_port),0);
+            final int currentPrifiRelaySocksPort = prifiPrefs.getInt(getString(R.string.prifi_config_relay_socks_port), 0);
 
-            final String currentPubKey = prifiPrefs.getString(getString(R.string.prifi_client_public_key),"");
-            final String currentPriKey = prifiPrefs.getString(getString(R.string.prifi_client_private_key),"");
+            final String currentPubKey = prifiPrefs.getString(getString(R.string.prifi_client_public_key), "");
+            final String currentPriKey = prifiPrefs.getString(getString(R.string.prifi_client_private_key), "");
+
+            final boolean currentDoDisconnectWhenNetworkError = prifiPrefs.getBoolean(getString(R.string.prifi_config_disconnect_when_error), false);
 
             final boolean currentDoDisconnectWhenNetworkError = prifiPrefs.getBoolean(getString(R.string.prifi_config_disconnect_when_error), false);
 

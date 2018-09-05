@@ -1,6 +1,8 @@
 package ch.epfl.prifiproxy.activities;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -18,21 +20,29 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import ch.epfl.prifiproxy.PrifiProxy;
 import ch.epfl.prifiproxy.R;
+import ch.epfl.prifiproxy.persistence.entity.Configuration;
+import ch.epfl.prifiproxy.persistence.entity.ConfigurationGroup;
 import ch.epfl.prifiproxy.services.PrifiService;
-import ch.epfl.prifiproxy.utils.HttpThroughPrifiTask;
+import ch.epfl.prifiproxy.ui.MainDrawerRouter;
 import ch.epfl.prifiproxy.utils.NetworkHelper;
+import ch.epfl.prifiproxy.utils.SettingsHolder;
 import ch.epfl.prifiproxy.utils.SystemHelper;
+import ch.epfl.prifiproxy.viewmodel.MainViewModel;
 import eu.faircode.netguard.ServiceSinkhole;
 import eu.faircode.netguard.Util;
 import prifiMobile.PrifiMobile;
@@ -52,8 +62,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static final String EXTRA_METERED = "Metered";
     public static final String EXTRA_SIZE = "Size";
 
-    private Button testPrifiButton;
-
     private AtomicBoolean isPrifiServiceRunning;
 
     private ProgressDialog mProgessDialog;
@@ -62,6 +70,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private BroadcastReceiver mBroadcastReceiver;
     private FloatingActionButton powerButton;
     private TextView textStatus;
+    private MainDrawerRouter drawerRouter;
+    private MainViewModel viewModel;
+    private ConfigurationGroup activeGroup;
+    private Configuration activeConfiguration;
+    private List<Configuration> configurationList;
+    private AlertDialog.Builder dialogBuilder;
+    private AppCompatButton configurationButton;
+
+    private Configuration selectedConfiguration;
+    private SwitchCompat autodisconnectSwitch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // Buttons
         powerButton = findViewById(R.id.powerButton);
-        testPrifiButton = findViewById(R.id.testPrifiButton);
+        configurationButton = findViewById(R.id.configurationButton);
 
         // Text
         textStatus = findViewById(R.id.textStatus);
@@ -86,7 +104,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toggle.syncState();
 
         NavigationView navigationView = findViewById(R.id.nav_view);
+        drawerRouter = new MainDrawerRouter();
+        drawerRouter.addMenu(navigationView);
         navigationView.setNavigationItemSelectedListener(this);
+
+        autodisconnectSwitch = (SwitchCompat) navigationView.getMenu().findItem(R.id.nav_autodisconnect).getActionView();
+        SettingsHolder settings = SettingsHolder.load(this);
+        autodisconnectSwitch.setChecked(settings.isDoDisconnectWhenNetworkError());
+
+        autodisconnectSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            SharedPreferences prefs = SettingsHolder.getPreferences(this);
+            prefs.edit()
+                    .putBoolean(getString(R.string.prifi_config_disconnect_when_error), isChecked)
+                    .apply();
+        });
 
         // Actions
         mBroadcastReceiver = new BroadcastReceiver() {
@@ -114,13 +145,101 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         powerButton.setOnClickListener(view -> {
             boolean isRunning = isPrifiServiceRunning.get();
             if (!isRunning) {
-                prepareVpn();
+                if (activeConfiguration == null) {
+                    Toast.makeText(this, "No Configuration active", Toast.LENGTH_SHORT)
+                            .show();
+                } else {
+                    prepareVpn();
+                }
             } else {
                 stopPrifiService();
             }
         });
 
-        testPrifiButton.setOnClickListener(view -> new HttpThroughPrifiTask().execute());
+        viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        viewModel.getActiveConfiguration().observe(this, this::configChanged);
+        viewModel.getActiveGroup().observe(this, this::groupChanged);
+        viewModel.getConfigurations().observe(this, this::configurationsChanged);
+
+        dialogBuilder = new AlertDialog.Builder(this)
+                .setTitle(R.string.title_dialog_configuration_choose)
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                    if (selectedConfiguration != null)
+                        viewModel.setActive(selectedConfiguration);
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .setCancelable(true);
+
+        configurationButton.setOnClickListener(v -> {
+            if (configurationList.size() == 0) {
+                Toast.makeText(this, "No saved configurations!", Toast.LENGTH_SHORT).show();
+            } else {
+                dialogBuilder.show();
+            }
+        });
+    }
+
+    private void configurationsChanged(List<Configuration> configurations) {
+        configurationList = configurations;
+        int selected = -1;
+        ArrayList<String> items = new ArrayList<>();
+        int i = 0;
+        for (Configuration configuration : configurations) {
+            items.add(configuration.getName());
+            if (configuration.isActive()) {
+                selected = i;
+            }
+            i += 1;
+        }
+        selectedConfiguration = null;
+
+        dialogBuilder.setSingleChoiceItems(items.toArray(new String[items.size()]),
+                selected, (dialog, which) -> {
+                    selectedConfiguration = configurationList.get(which);
+                });
+    }
+
+    private void groupChanged(ConfigurationGroup group) {
+        activeGroup = group;
+        updateView();
+    }
+
+    private void configChanged(Configuration configuration) {
+        activeConfiguration = configuration;
+        if (configuration != null) {
+            viewModel.updateSettings(new WeakReference<>(this));
+        }
+        updateView();
+    }
+
+    private void updateView() {
+        if (PrifiProxy.isDevFlavor) {
+            StringBuilder builder = new StringBuilder();
+
+            builder.append("Status: ");
+
+            if (isPrifiServiceRunning.get()) {
+                builder.append("Connected");
+            } else {
+                builder.append("Disconnected");
+            }
+
+            if (activeGroup != null) {
+                builder.append("\nActive Network: ").append(activeGroup.getName());
+            }
+            if (activeConfiguration != null) {
+                builder.append("\nActive Config: ").append(activeConfiguration.getName());
+                builder.append("\nConfiguration: ").append(activeConfiguration.getHost()).append(":")
+                        .append(activeConfiguration.getRelayPort());
+            }
+            textStatus.setText(builder.toString());
+        }
+
+        if (activeConfiguration != null) {
+            configurationButton.setText(activeConfiguration.getName());
+        } else {
+            configurationButton.setText(R.string.text_button_configuration);
+        }
     }
 
     @Override
@@ -156,7 +275,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void prepareVpn() {
         Intent intent = VpnService.prepare(this);
         if (intent == null) {
-            Log.i(TAG, "Vpn prepared already");
+            Log.i(TAG, "VPN Already Prepared");
             onActivityResult(REQUEST_VPN, RESULT_OK, null);
         } else {
             startActivityForResult(intent, REQUEST_VPN);
@@ -225,22 +344,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int colorId;
         int dp;
         int elevation;
-        int statusId;
 
         if (isServiceRunning) {
             colorId = R.color.colorOn;
             dp = 6;
-            statusId = R.string.status_connnected;
         } else {
             colorId = R.color.colorOff;
             dp = 20;
-            statusId = R.string.status_disconnnected;
         }
 
         elevation = (int) (dp * Resources.getSystem().getDisplayMetrics().density);
-        String statusMsg = getString(R.string.status_msg, getString(statusId), Util.getWifiSSID(this));
 
-        textStatus.setText(statusMsg);
         powerButton.setCompatElevation(elevation);
         powerButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(colorId)));
     }
@@ -309,17 +423,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 SharedPreferences prefs = activity.getSharedPreferences(
                         activity.getString(R.string.prifi_config_shared_preferences), MODE_PRIVATE);
 
-                String prifiRelayAddress = prefs.getString(activity.getString(R.string.prifi_config_relay_address), "");
-                int prifiRelayPort = prefs.getInt(activity.getString(R.string.prifi_config_relay_port), 0);
-                int prifiRelaySocksPort = prefs.getInt(activity.getString(R.string.prifi_config_relay_socks_port), 0);
+                SettingsHolder settings = SettingsHolder.load(activity);
+                try {
+                    PrifiMobile.setRelayAddress(settings.getPrifiRelayAddress());
+                    PrifiMobile.setRelayPort(settings.getPrifiRelayPort());
+                    PrifiMobile.setRelaySocksPort(settings.getPrifiRelaySocksPort());
+                    PrifiMobile.setMobileDisconnectWhenNetworkError(settings.isDoDisconnectWhenNetworkError());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
                 boolean isRelayAvailable = NetworkHelper.isHostReachable(
-                        prifiRelayAddress,
-                        prifiRelayPort,
+                        settings.getPrifiRelayAddress(),
+                        settings.getPrifiRelayPort(),
                         DEFAULT_PING_TIMEOUT);
                 boolean isSocksAvailable = NetworkHelper.isHostReachable(
-                        prifiRelayAddress,
-                        prifiRelaySocksPort,
+                        settings.getPrifiRelayAddress(),
+                        settings.getPrifiRelaySocksPort(),
                         DEFAULT_PING_TIMEOUT);
 
                 if (isRelayAvailable && isSocksAvailable) {
@@ -387,23 +507,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         item.setChecked(true);
         drawer.closeDrawers();
 
+        // If select returns true, the action was performed already
+        if (drawerRouter.selected(id, this)) {
+            return true;
+        }
+
         Intent intent = null;
 
         switch (id) {
             case R.id.nav_apps:
                 intent = new Intent(this, AppSelectionActivity.class);
                 break;
-            case R.id.nav_log:
-                intent = new Intent(this, OnScreenLogActivity.class);
+            case R.id.nav_groups:
+                intent = new Intent(this, GroupsActivity.class);
                 break;
-            case R.id.nav_settings:
-                boolean isRunning = isPrifiServiceRunning.get();
-                if (isRunning) {
-                    Toast.makeText(this, R.string.msg_stop_settings,
-                            Toast.LENGTH_SHORT).show();
-                    return true;
-                }
-                intent = new Intent(this, SettingsActivity.class);
+            case R.id.nav_autodisconnect:
+                ((SwitchCompat) item.getActionView()).toggle();
+                item.setChecked(false);
                 break;
             default:
                 Toast.makeText(this, "Not implemented", Toast.LENGTH_SHORT).show();
@@ -412,7 +532,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (intent != null) {
             startActivity(intent);
         }
-
         return true;
     }
 }
