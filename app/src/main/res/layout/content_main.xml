@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="15dp"
+    tools:context="ch.epfl.prifiproxy.activities.MainActivity"
+    tools:showIn="@layout/app_bar_main">
+
+    <ch.epfl.prifiproxy.ui.CircleView
+        android:id="@+id/buttonOverlay"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/powerButton"
+        android:layout_width="200dp"
+        android:scaleType="center"
+        android:layout_height="200dp"
+        app:backgroundTint="@color/colorOff"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_wifi" />
+
+    <TextView
+        android:id="@+id/textVerbose"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:gravity="center_horizontal"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="HOME" />
+
+    <TextView
+        android:id="@+id/textBytes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:gravity="center_horizontal"
+        android:maxLines="1"
+        app:layout_constraintEnd_toEndOf="@id/powerButton"
+        app:layout_constraintStart_toStartOf="@id/powerButton"
+        app:layout_constraintTop_toBottomOf="@id/powerButton"
+        tools:text="@string/text_protected_bytes" />
+
+    <TextView
+        android:id="@+id/textStatus"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:gravity="center_horizontal"
+        android:text="@string/status_text"
+        app:layout_constraintBottom_toTopOf="@id/powerButton"
+        app:layout_constraintEnd_toEndOf="@id/powerButton"
+        app:layout_constraintStart_toStartOf="@id/powerButton" />
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/configurationButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="79dp"
+        android:layout_marginLeft="79dp"
+        android:layout_marginEnd="60dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/rounded_button"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="@string/text_button_configuration"
+        android:textAllCaps="false"
+        android:textColor="@color/colorOff"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="Relay @ Network" />
+
+    <ImageView
+        android:id="@+id/lockImage"
+        android:layout_width="30dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/configurationButton"
+        app:layout_constraintEnd_toStartOf="@+id/configurationButton"
+        app:layout_constraintTop_toTopOf="@+id/configurationButton"
+        app:srcCompat="@drawable/ic_lock_off" />
+
+</android.support.constraint.ConstraintLayout>
