@@ -1,4 +1,4 @@
-# Install script for directory: /Users/aledcuevas/Dev/epfl/prv_repo/prifi-android-vpn/prifi-mobile-apps/android/PrifiProxy/app
+# Install script for directory: /Users/aledcuevas/Dev/epfl/to_share/prifi/app
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -40,5 +40,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/Users/aledcuevas/Dev/epfl/prv_repo/prifi-android-vpn/prifi-mobile-apps/android/PrifiProxy/app/.externalNativeBuild/cmake/devDebug/armeabi-v7a/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/Users/aledcuevas/Dev/epfl/to_share/prifi/app/.externalNativeBuild/cmake/devDebug/armeabi-v7a/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

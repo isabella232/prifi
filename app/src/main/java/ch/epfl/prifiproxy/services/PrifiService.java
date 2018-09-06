@@ -63,7 +63,11 @@ public class PrifiService extends Service {
         public void handleMessage(Message msg) {
             try {
                 PrifiMobile.startClient(); // startClient is a blocking method.
-            } finally {
+            }
+            catch(Exception e){
+                System.out.println("Exception caught in catch block");
+            }
+            finally {
                 ServiceSinkhole.stop("Prifi disconnected", PrifiService.this, false);
                 if (!stopped) {
                     stopSelf(msg.arg1);
