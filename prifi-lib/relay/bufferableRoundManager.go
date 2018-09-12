@@ -96,20 +96,20 @@ func (b *BufferableRoundManager) Dump() {
 	sortedIntMapDump(b.trusteeAckMap)
 
 	/*
-	for i := 0; i < b.nTrustees; i++ {
-		numberOfCiphersInAdvance := 0
-		rounds := make([]int, len(b.bufferedTrusteeCiphers[i]))
-		j := 0
-		for roundID, _ := range b.bufferedTrusteeCiphers[i] {
-			if roundID > r {
-				numberOfCiphersInAdvance += 1
-				rounds[j] = int(roundID)
-				j++
+		for i := 0; i < b.nTrustees; i++ {
+			numberOfCiphersInAdvance := 0
+			rounds := make([]int, len(b.bufferedTrusteeCiphers[i]))
+			j := 0
+			for roundID, _ := range b.bufferedTrusteeCiphers[i] {
+				if roundID > r {
+					numberOfCiphersInAdvance += 1
+					rounds[j] = int(roundID)
+					j++
+				}
 			}
+			sort.Ints(rounds)
+			log.Lvl1("Trustee", i, "has",numberOfCiphersInAdvance, "ciphers in advance", rounds)
 		}
-		sort.Ints(rounds)
-		log.Lvl1("Trustee", i, "has",numberOfCiphersInAdvance, "ciphers in advance", rounds)
-	}
 	*/
 
 	//log.Lvl1("Buffered MAP Trustees")
