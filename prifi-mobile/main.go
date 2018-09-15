@@ -84,11 +84,18 @@ func networkErrorHappenedForMobile(si *network.ServerIdentity) {
 	if doWeDisconnectWhenNetworkError {
 		StopClient()
 	} else {
-		select {
-		case <-time.After(7 * time.Second):
-			if !globalService.IsPriFiProtocolRunning() {
-				StopClient()
-			}
+		go timeout()
+	}
+}
+
+func timeout() {
+	select {
+	case <-time.After(30 * time.Second):
+		if !globalService.IsPriFiProtocolRunning() {
+			log.Lvl2("Timeout triggered")
+			StopClient()
+		} else {
+			log.Lvl2("Timeout not triggered")
 		}
 	}
 }

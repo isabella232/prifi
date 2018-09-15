@@ -29,7 +29,7 @@ type HelloMsg struct{}
 type DisconnectionRequest struct{}
 
 //Delay before each host re-tried to connect to the relay
-const DELAY_BEFORE_CONNECT_TO_RELAY = 5 * time.Second
+const DELAY_BEFORE_CONNECT_TO_RELAY = 1 * time.Second
 
 //Delay before the relay re-tried to connect to the trustees
 const DELAY_BEFORE_CONNECT_TO_TRUSTEES = 5 * time.Second
@@ -218,7 +218,7 @@ func (s *ServiceState) connectToRelay(relayID *network.ServerIdentity, stopChan 
 	tick := time.Tick(DELAY_BEFORE_CONNECT_TO_RELAY)
 	for range tick {
 		log.Lvl3("connectToRelay still alive, Protocol running state: ", s.IsPriFiProtocolRunning())
-		
+
 		if !s.IsPriFiProtocolRunning() {
 			s.sendConnectionRequest(relayID)
 		}
