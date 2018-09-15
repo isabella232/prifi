@@ -105,7 +105,7 @@ func (s *ServiceState) handleTimeout(lateClients []string, lateTrustees []string
 // remain in some weird state)
 func (s *ServiceState) NetworkErrorHappened(si *network.ServerIdentity) {
 	if s.role != prifi_protocol.Relay {
-		log.Lvl3("A network error occurred with node", si, ", we're not the relay, hence we stop the protocol, " +
+		log.Lvl2("A network error occurred with node", si, ", we're not the relay, hence we stop the protocol, " +
 			"but let the connectToRelay goroutine still running.")
 		s.StopPriFiCommunicateProtocol()
 		return
@@ -217,9 +217,8 @@ func (s *ServiceState) connectToRelay(relayID *network.ServerIdentity, stopChan 
 
 	tick := time.Tick(DELAY_BEFORE_CONNECT_TO_RELAY)
 	for range tick {
-		log.Lvl3("connectToRelay still alive, Protocol running", s.IsPriFiProtocolRunning())
-
-		//log.Info("Service", s, ": Still pinging relay", !s.IsPriFiProtocolRunning())
+		log.Lvl3("connectToRelay still alive, Protocol running state: ", s.IsPriFiProtocolRunning())
+		
 		if !s.IsPriFiProtocolRunning() {
 			s.sendConnectionRequest(relayID)
 		}

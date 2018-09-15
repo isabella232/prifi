@@ -76,11 +76,19 @@ func networkErrorHappenedForMobile(si *network.ServerIdentity) {
 	log.Lvl3("Mobile Client: A network error occurred with node", si)
 	globalService.StopPriFiCommunicateProtocol()
 
-	b, err := GetMobileDisconnectWhenNetworkError()
+	doWeDisconnectWhenNetworkError, err := GetMobileDisconnectWhenNetworkError()
 	if err != nil {
 		log.Error("Error occurs while reading MobileDisconnectWhenNetworkError.")
 	}
-	if b {
+
+	if doWeDisconnectWhenNetworkError {
 		StopClient()
+	} else {
+		select {
+		case <-time.After(7 * time.Second):
+			if !globalService.IsPriFiProtocolRunning() {
+				StopClient()
+			}
+		}
 	}
 }
