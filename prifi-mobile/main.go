@@ -90,7 +90,7 @@ func networkErrorHappenedForMobile(si *network.ServerIdentity) {
 
 func timeout() {
 	select {
-	case <-time.After(30 * time.Second):
+	case <-time.After(10 * time.Second):
 		if !globalService.IsPriFiProtocolRunning() {
 			log.Lvl2("Timeout triggered")
 			StopClient()
