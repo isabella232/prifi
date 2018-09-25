@@ -70,7 +70,7 @@ func StartEgressHandler(serverAddress string, maxMessageSize int, upstreamChan c
 			if err != nil {
 				log.Error("Egress server: Could not connect to server, discarding data. Do you have a SOCKS server running on",
 					serverAddress, "? You need one!", err)
-				log.Info(len(eg.activeConnections))
+				log.Error("Egress server, number of activeConnections: ", len(eg.activeConnections))
 				continue
 			} else {
 				mc := new(MultiplexedConnection)
@@ -86,6 +86,7 @@ func StartEgressHandler(serverAddress string, maxMessageSize int, upstreamChan c
 			}
 		}
 
+		log.Info("Egress server, number of activeConnections: ", len(eg.activeConnections))
 		mc, _ := eg.activeConnections[ID]
 
 		// Try to write to it; if it fails, clean it
