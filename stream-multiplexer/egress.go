@@ -83,10 +83,11 @@ func StartEgressHandler(serverAddress string, maxMessageSize int, upstreamChan c
 
 				eg.activeConnections[ID] = mc
 				go eg.egressConnectionReader(mc)
+
+				log.Info("Egress server, number of activeConnections increased: ", len(eg.activeConnections))
 			}
 		}
 
-		log.Info("Egress server, number of activeConnections: ", len(eg.activeConnections))
 		mc, _ := eg.activeConnections[ID]
 
 		// Try to write to it; if it fails, clean it
