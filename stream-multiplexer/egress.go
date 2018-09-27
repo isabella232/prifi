@@ -125,6 +125,7 @@ func (eg *EgressServer) egressConnectionReader(mc *MultiplexedConnection) {
 
 			if err == io.EOF {
 				// Connection closed indicator
+				mc.conn.Close()
 				return
 			}
 
