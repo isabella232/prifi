@@ -8,6 +8,7 @@ import (
 	"io"
 	"net"
 	"time"
+	"sync"
 )
 
 // EgressServer takes data from a go channel and recreates the multiplexed TCP streams
@@ -18,6 +19,7 @@ type EgressServer struct {
 	upstreamChan      chan []byte
 	downstreamChan    chan []byte
 	stopChan          chan bool
+	mutex			  sync.Locker
 	verbose           bool
 }
 
@@ -30,6 +32,7 @@ func StartEgressHandler(serverAddress string, maxMessageSize int, upstreamChan c
 	eg.downstreamChan = downstreamChan
 	eg.stopChan = stopChan
 	eg.activeConnections = make(map[uint32]*MultiplexedConnection)
+	eg.mutex = new(sync.Mutex)
 	eg.verbose = verbose
 
 	if verbose {
@@ -64,6 +67,8 @@ func StartEgressHandler(serverAddress string, maxMessageSize int, upstreamChan c
 			log.Lvl1("Clients -> Egress Server:\n" + hex.Dump(data))
 		}
 
+		eg.mutex.Lock()
+
 		// if this a new connection, dial it first
 		if mc, ok := eg.activeConnections[ID]; !ok || mc == nil || mc.conn == nil {
 			c, err := net.Dial("tcp", serverAddress)
@@ -82,8 +87,8 @@ func StartEgressHandler(serverAddress string, maxMessageSize int, upstreamChan c
 				mc.maxMessageLength = eg.maxMessageSize
 
 				eg.activeConnections[ID] = mc
-				go eg.egressConnectionReader(mc)
 
+				go eg.egressConnectionReader(mc)
 				log.Info("Egress server, number of activeConnections increased: ", len(eg.activeConnections))
 			}
 		}
@@ -94,11 +99,13 @@ func StartEgressHandler(serverAddress string, maxMessageSize int, upstreamChan c
 		mc.conn.SetWriteDeadline(time.Now().Add(time.Second))
 		n, err := mc.conn.Write(data)
 
+		eg.mutex.Unlock()
+
 		if err != nil || n != len(data) {
 			log.Error("Egress server: could not write the whole", len(data), "bytes, only", n, "error", err)
-			mc.conn.Close()
-			mc.stopChan <- true
-			eg.activeConnections[ID] = nil
+			//mc.conn.Close()
+			//mc.stopChan <- true
+			//eg.activeConnections[ID] = nil
 		}
 	}
 }
@@ -126,7 +133,10 @@ func (eg *EgressServer) egressConnectionReader(mc *MultiplexedConnection) {
 			if err == io.EOF {
 				// Connection closed indicator
 				time.Sleep(20 * time.Second)
+				eg.mutex.Lock()
 				mc.conn.Close()
+				eg.activeConnections[mc.ID] = nil
+				eg.mutex.Unlock()
 				return
 			}
 
