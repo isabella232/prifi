@@ -266,9 +266,9 @@ case $1 in
 
         "$THIS_SCRIPT" simul-cl
 
-        for repeat in {1..4}
+        for repeat in {1..10}
         do
-            for i in 10 20 30 40 50 60 70 80 90
+            for i in 50
             do
                 hosts=$(($NTRUSTEES + $NRELAY + $i))
                 echo "Simulating for HOSTS=$hosts..."
@@ -310,9 +310,9 @@ case $1 in
 
         "$THIS_SCRIPT" simul-cl
 
-        for repeat in {1..3}
+        for repeat in {2..10}
         do
-            for window in {1..10}
+            for window in {11..20}
             do
                 echo "Simulating for WINDOW=$window..."
 
@@ -331,13 +331,13 @@ case $1 in
 
         for repeat in {1..10}
         do
-            for upsize in 1000 2000 3000 4000 5000 6000 7000 8000 9000 10000
+            for upsize in 100 500 1000 2000 3000 4000 5000 6000 7000 8000 9000 10000
             do
                 echo "Simulating for upsize=$upsize  (repeat $repeat)..."
 
                 #fix the config
                 rm -f "$CONFIG_FILE"
-                sed "s/CellSizeUp = x/CellSizeUp = $upsize/g" "$TEMPLATE_FILE" > "$CONFIG_FILE"
+                sed "s/PayloadSize = x/PayloadSize = $upsize/g" "$TEMPLATE_FILE" > "$CONFIG_FILE"
 
                 timeout "$SIMULATION_TIMEOUT" "$THIS_SCRIPT" simul | tee experiment_${upsize}_${repeat}.txt
             done
