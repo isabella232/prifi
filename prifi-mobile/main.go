@@ -42,7 +42,7 @@ func StartClient() error {
 	currentRelayHost = host
 	currentRelayPort = strconv.Itoa(port)
 
-	if !isRelayReachable() {
+	if !IsRelayReachable() {
 		return errors.New("Relay is not reachable at launch.")
 	}
 
@@ -103,19 +103,6 @@ func run() error {
 	return nil
 }
 
-func timeout() {
-	select {
-	case <-time.After(10 * time.Second):
-		if !globalService.IsPriFiProtocolRunning() {
-			log.Lvl2("Timeout triggered")
-			StopClient()
-		} else {
-			log.Lvl2("Timeout not triggered")
-			go checkIfRelayIsStillReachable(stopPingChan)
-		}
-	}
-}
-
 func checkIfRelayIsStillReachable(stopChan chan bool) {
 	for {
 		select {
@@ -125,7 +112,7 @@ func checkIfRelayIsStillReachable(stopChan chan bool) {
 		case <-time.After(3 * time.Second):
 		}
 
-		if !isRelayReachable() {
+		if !IsRelayReachable() {
 			log.Lvl2("The relay is not reachable.")
 			globalService.StopPriFiCommunicateProtocol()
 
@@ -133,16 +120,12 @@ func checkIfRelayIsStillReachable(stopChan chan bool) {
 
 			if doWeDisconnectWhenNetworkError {
 				StopClient()
-			} else {
-				stopPing()
-				go timeout()
 			}
 		}
 	}
-
 }
 
-func isRelayReachable() bool {
+func IsRelayReachable() bool {
 	relayAddress := currentRelayHost + ":" + currentRelayPort
 	conn, err := net.DialTimeout("tcp", relayAddress, 2 * time.Second)
 	if err != nil {
