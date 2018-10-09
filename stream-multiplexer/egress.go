@@ -89,7 +89,7 @@ func StartEgressHandler(serverAddress string, maxMessageSize int, upstreamChan c
 				eg.activeConnections[ID] = mc
 
 				go eg.egressConnectionReader(mc)
-				log.Info("Egress server, number of activeConnections increased: ", len(eg.activeConnections))
+				//log.Info("Egress server, number of activeConnections increased: ", len(eg.activeConnections))
 			}
 		}
 
