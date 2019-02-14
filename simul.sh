@@ -515,7 +515,7 @@ case $1 in
 
     simul-hangout)
 
-        for repeat in {1..5}
+        for repeat in {5..10}
         do
             simul-helper 7 5000 10 $repeat "hangouts.pcap"
             simul-helper 7 5000 20 $repeat "hangouts.pcap"
