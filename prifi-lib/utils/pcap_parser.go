@@ -52,8 +52,8 @@ func ParsePCAP(path string, maxPayloadLength int) ([]Packet, error) {
 		//maybe this packet is bigger than the payload size. Then, generate many packets
 		for remainingLen > maxPayloadLength {
 			p2 := Packet{
-				ID:     uint32(id),
-				Header: metaBytes(maxPayloadLength, uint32(id), t, false),
+				ID:                        uint32(id),
+				Header:                    metaBytes(maxPayloadLength, uint32(id), t, false),
 				MsSinceBeginningOfCapture: t,
 				RealLength:                maxPayloadLength,
 			}
@@ -66,8 +66,8 @@ func ParsePCAP(path string, maxPayloadLength int) ([]Packet, error) {
 			remainingLen = metaMessageLength
 		}
 		p := Packet{
-			ID:     uint32(id),
-			Header: metaBytes(remainingLen, uint32(id), t, true),
+			ID:                        uint32(id),
+			Header:                    metaBytes(remainingLen, uint32(id), t, true),
 			MsSinceBeginningOfCapture: t,
 			RealLength:                remainingLen,
 		}
