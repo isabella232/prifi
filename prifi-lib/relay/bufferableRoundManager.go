@@ -4,11 +4,11 @@ import (
 	"errors"
 	"github.com/dedis/prifi/prifi-lib/net"
 	"gopkg.in/dedis/onet.v2/log"
-	"runtime/debug"
 	"sort"
 	"strconv"
 	"sync"
 	"time"
+	"runtime/debug"
 )
 
 // Stores ciphers for different rounds. Manages the transition between rounds, the rate limiting of trustees
@@ -65,6 +65,35 @@ func sortedIntMapOfIntMapDump(m map[int]map[int32][]byte) {
 	for _, i := range nodes {
 		log.Lvlf1("%2d: %+v", i, m[i])
 	}
+}
+
+func (b *BufferableRoundManager) MemoryUsage() {
+
+	clientNumberOfCipherBuffered := uint32(0)
+	clientSizeOfCipherBuffered := uint64(0)
+	trusteeNumberOfCipherBuffered := uint32(0)
+	trusteeSizeOfCipherBuffered := uint64(0)
+
+	for i := 0; i < b.nClients; i++ {
+		thisClientCiphers := b.bufferedClientCiphers[i]
+		clientNumberOfCipherBuffered += uint32(len(thisClientCiphers))
+
+		for _,v := range thisClientCiphers {
+			clientSizeOfCipherBuffered += uint64(len(v))
+		}
+	}
+	for i := 0; i < b.nTrustees; i++ {
+		thisTrusteeCiphers := b.bufferedClientCiphers[i]
+		trusteeNumberOfCipherBuffered += uint32(len(thisTrusteeCiphers))
+
+		for _, v := range thisTrusteeCiphers {
+			trusteeSizeOfCipherBuffered += uint64(len(v))
+		}
+	}
+	log.Lvl1("[BufferableRoundManager] trustees:",trusteeNumberOfCipherBuffered,"=",trusteeSizeOfCipherBuffered,
+		"B; clients:",clientNumberOfCipherBuffered,"=",clientSizeOfCipherBuffered,"B; (config:", b.nClients, "clients",
+		b.nTrustees, "trustees, window =", b.maxNumberOfConcurrentRounds, "b.sendStopResumeMessage =",
+		b.DoSendStopResumeMessages, ", lowBound =", b.LowBound, ", highBound =", b.HighBound, ")")
 }
 
 func sortedIntMapDump(m map[int]bool) {
@@ -494,6 +523,7 @@ func (b *BufferableRoundManager) AddTrusteeCipher(roundID int32, trusteeID int, 
 
 // AddClientCipher adds a client cipher for a given round
 func (b *BufferableRoundManager) AddClientCipher(roundID int32, clientID int, data []byte) error {
+
 	b.Lock()
 	defer b.Unlock()
 

@@ -8,6 +8,9 @@ import (
 	"math/rand"
 	"os"
 	"time"
+	"bufio"
+	"strings"
+	"strconv"
 )
 
 const pattern uint16 = uint16(21845) //0101010101010101
@@ -21,12 +24,14 @@ type Packet struct {
 	RealLength                int
 }
 
-// Parses a .pcap file, and returns all valid packets. A packet is (ID, TimeSent [micros], Data)
+// Parses a .pcap file, and returns all valid packets. A packet is (ID, TimeSent [milliseconds], Data)
 func ParsePCAP(path string, maxPayloadLength int) ([]Packet, error) {
 	pcapfile, err := os.Open(path)
 	if err != nil {
 		return nil, errors.New("Cannot open" + path + "error is" + err.Error())
 	}
+	defer pcapfile.Close()
+
 	parsed, err := gopcap.Parse(pcapfile)
 	if err != nil {
 		return nil, errors.New("Cannot parse" + path + "error is" + err.Error())
@@ -72,6 +77,89 @@ func ParsePCAP(path string, maxPayloadLength int) ([]Packet, error) {
 			RealLength:                remainingLen,
 		}
 		out = append(out, p)
+	}
+
+	return out, nil
+}
+
+// Parses a .pkts file (homemade format with [timestamp, bytes, npackets], and returns all valid packets. A packet is (ID, TimeSent [milliseconds], Data)
+func ParsePKTS(path string, maxPayloadLength int) ([]Packet, error) {
+
+	file, err := os.Open(path)
+	if err != nil {
+		return nil, errors.New("Cannot open" + path + "error is" + err.Error())
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	out := make([]Packet, 0)
+
+	packetID := uint32(0)
+	for scanner.Scan() {
+		line := strings.Replace(scanner.Text(), "\t", "", -1)
+		parts := strings.Split(line, ",")
+
+		time_str := strings.TrimSpace(parts[0])
+		bytes_str := strings.TrimSpace(parts[1])
+		//npackets_str := strings.TrimSpace(parts[2]) we ignore the division, it's one stream
+
+		layout := "15:04:05"
+		time, err := time.Parse(layout, time_str)
+		if err != nil {
+			log.Lvl1("Can't convert", time_str, "to time", err)
+		}
+		time_ms := uint64(time.UnixNano())/1000000
+
+		bytes, err := strconv.Atoi(bytes_str)
+		if err != nil {
+			log.Lvl1("Can't convert", bytes_str, "to int")
+		}
+		/*
+		npackets, err := strconv.Atoi(npackets_str)
+		if err != nil {
+			log.Lvl1("Can't convert", npackets_str, "to int")
+		}
+		*/
+
+		log.Print(parts)
+		log.Print(time_ms)
+		log.Print(bytes)
+
+		remainingLen := bytes
+
+		//maybe this packet is bigger than the payload size. Then, generate many packets
+		for remainingLen > maxPayloadLength {
+			p2 := Packet{
+				ID:                        uint32(packetID),
+				Header:                    metaBytes(maxPayloadLength, uint32(packetID), time_ms, false),
+				MsSinceBeginningOfCapture: time_ms,
+				RealLength:                maxPayloadLength,
+			}
+			out = append(out, p2)
+			remainingLen -= maxPayloadLength
+		}
+
+		//add the last packet, that will trigger the relay pattern match
+		if remainingLen < metaMessageLength {
+			remainingLen = metaMessageLength
+		}
+		p := Packet{
+			ID:                        uint32(packetID),
+			Header:                    metaBytes(remainingLen, uint32(packetID), time_ms, true),
+			MsSinceBeginningOfCapture: time_ms,
+			RealLength:                remainingLen,
+		}
+		out = append(out, p)
+
+		packetID += 1
+	}
+	for p := range out {
+		log.Printf("%+v", out[p])
+	}
+	os.Exit(1)
+
+	if err := scanner.Err(); err != nil {
+		return nil, errors.New("Cannot read" + path + "error is" + err.Error())
 	}
 
 	return out, nil

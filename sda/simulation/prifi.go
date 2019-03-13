@@ -24,7 +24,7 @@ import (
 const FILE_SIMULATION_ID = ".simID"
 
 // SIMULATION_ROUND_TIMEOUT_SECONDS is define the max duration of one round of the simulation
-var SIMULATION_ROUND_TIMEOUT_SECONDS = 360
+var SIMULATION_ROUND_TIMEOUT_SECONDS = 3600
 
 /*
  * Defines the simulation for the service-template

@@ -48,6 +48,8 @@ import (
 	"github.com/dedis/prifi/utils"
 	"gopkg.in/dedis/kyber.v2"
 	"gopkg.in/dedis/onet.v2/log"
+	"os/exec"
+	"fmt"
 )
 
 /*
@@ -478,6 +480,15 @@ func (p *PriFiLibRelayInstance) upstreamPhase3_finalizeRound(roundID int32) erro
 		for k, v := range p.relayState.timeStatistics {
 			p.collectExperimentResult(v.ReportWithInfo(k))
 		}
+		if roundID % 100 == 0 {
+			log.Info("Relay Memory\n", memoryUsage())
+			p.relayState.roundManager.MemoryUsage()
+			i := 0
+			for _, s := range p.relayState.ExperimentResultData {
+				i += len(s)
+			}
+			log.Info("Size of experiment collect:", i, "B")
+		}
 	}
 
 	// Test if we are doing an experiment, and if we need to stop at some point.
@@ -849,4 +860,16 @@ func (p *PriFiLibRelayInstance) collectExperimentResult(str string) {
 	}
 
 	p.relayState.ExperimentResultData = append(p.relayState.ExperimentResultData, str)
+}
+
+func memoryUsage() string {
+
+	cmd_text := "ps aux --sort -rss | head -n 10"
+
+	cmd := "cat /proc/cpuinfo | egrep '^model name' | uniq | awk '{print substr($0, index($0,$4))}'"
+	out, err := exec.Command("bash","-c",cmd_text).Output()
+	if err != nil {
+		return fmt.Sprintf("Failed to execute command: %s", cmd)
+	}
+	return string(out)
 }
