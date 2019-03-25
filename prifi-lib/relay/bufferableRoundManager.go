@@ -9,6 +9,7 @@ import (
 	"sync"
 	"time"
 	"runtime/debug"
+	"fmt"
 )
 
 // Stores ciphers for different rounds. Manages the transition between rounds, the rate limiting of trustees
@@ -74,26 +75,38 @@ func (b *BufferableRoundManager) MemoryUsage() {
 	trusteeNumberOfCipherBuffered := uint32(0)
 	trusteeSizeOfCipherBuffered := uint64(0)
 
+	strClients := ""
+	strTrustees := ""
+
 	for i := 0; i < b.nClients; i++ {
 		thisClientCiphers := b.bufferedClientCiphers[i]
 		clientNumberOfCipherBuffered += uint32(len(thisClientCiphers))
 
+		thisClientSize := uint64(0)
 		for _,v := range thisClientCiphers {
-			clientSizeOfCipherBuffered += uint64(len(v))
+			thisClientSize += uint64(len(v))
 		}
+		if thisClientSize != 0 {
+			strClients += fmt.Sprintf("%v:%v B ", i, thisClientSize)
+		}
+		clientSizeOfCipherBuffered += thisClientSize
 	}
 	for i := 0; i < b.nTrustees; i++ {
 		thisTrusteeCiphers := b.bufferedClientCiphers[i]
 		trusteeNumberOfCipherBuffered += uint32(len(thisTrusteeCiphers))
 
+		thisTrusteeSize := uint64(0)
 		for _, v := range thisTrusteeCiphers {
-			trusteeSizeOfCipherBuffered += uint64(len(v))
+			thisTrusteeSize += uint64(len(v))
 		}
+		if thisTrusteeSize != 0 {
+			strTrustees += fmt.Sprintf("%v:%v B ", i, thisTrusteeSize)
+		}
+		trusteeSizeOfCipherBuffered += thisTrusteeSize
 	}
 	log.Lvl1("[BufferableRoundManager] trustees:",trusteeNumberOfCipherBuffered,"=",trusteeSizeOfCipherBuffered,
-		"B; clients:",clientNumberOfCipherBuffered,"=",clientSizeOfCipherBuffered,"B; (config:", b.nClients, "clients",
-		b.nTrustees, "trustees, window =", b.maxNumberOfConcurrentRounds, "b.sendStopResumeMessage =",
-		b.DoSendStopResumeMessages, ", lowBound =", b.LowBound, ", highBound =", b.HighBound, ")")
+		"B (", strTrustees, "); clients:",clientNumberOfCipherBuffered,"=",clientSizeOfCipherBuffered,"B (", strClients, ")")
+		// (config:", b.nClients, "clients", b.nTrustees, "trustees, window =", b.maxNumberOfConcurrentRounds, "b.sendStopResumeMessage =",	b.DoSendStopResumeMessages, ", lowBound =", b.LowBound, ", highBound =", b.HighBound, ")")
 }
 
 func sortedIntMapDump(m map[int]bool) {

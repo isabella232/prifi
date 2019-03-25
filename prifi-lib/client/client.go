@@ -279,7 +279,7 @@ func (p *PriFiLibClientInstance) ProcessDownStreamData(msg net.REL_CLI_DOWNSTREA
 	p.clientState.RoundNo++
 
 	p.clientState.timeStatistics["round-processing"].AddTime(timeMs)
-	p.clientState.timeStatistics["round-processing"].ReportWithInfo("round-processing")
+	//p.clientState.timeStatistics["round-processing"].ReportWithInfo("round-processing")
 
 	//now we will be expecting next message. Except if we already received and buffered it !
 	if msg, hasAMessage := p.clientState.BufferedRoundData[int32(p.clientState.RoundNo)]; hasAMessage {
