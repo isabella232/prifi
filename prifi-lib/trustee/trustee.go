@@ -156,11 +156,11 @@ func (p *PriFiLibTrusteeInstance) Send_TRU_REL_DC_CIPHER(rateChan chan int16) {
 					log.Lvl4("Trustee " + strconv.Itoa(p.trusteeState.ID) + " rate HALVED, sleeping for " + strconv.Itoa(p.trusteeState.BaseSleepTime))
 					time.Sleep(time.Duration(p.trusteeState.BaseSleepTime) * time.Millisecond)
 				}
-				newRoundID, err := sendData(p, roundID)
-				if err != nil {
-					stop = true
-				}
-				roundID = newRoundID
+				//newRoundID, err := sendData(p, roundID)
+				//if err != nil {
+				//	stop = true
+				//}
+				//roundID = newRoundID
 
 			} else {
 				log.Lvl2("Trustee " + strconv.Itoa(p.trusteeState.ID) + " : In unrecognized sending state")

@@ -52,9 +52,9 @@ type BufferableRoundManager struct {
 	LowBound                 int //restart sending at lowerbound
 	HighBound                int //stop sending at higherbound
 	stopFunction             func(int)
-	stopSent                 bool
+	stopSent                 map[int]bool
 	resumeFunction           func(int)
-	resumeSent               bool
+	resumeSent               map[int]bool
 }
 
 func sortedIntMapOfIntMapDump(m map[int]map[int32][]byte) {
@@ -512,6 +512,10 @@ func (b *BufferableRoundManager) AddTrusteeCipher(roundID int32, trusteeID int, 
 	b.Lock()
 	defer b.Unlock()
 
+	if roundID % 1000 == 0 {
+		log.Lvl1("Trustee", trusteeID, "is on round", roundID, "total received", roundID/1000, "MB")
+	}
+
 	_, currendRound := b.currentRound()
 	//if !anyRoundOpenend {
 	//	log.Fatal("Can't add trustee cipher, no round opened")
@@ -642,20 +646,30 @@ func (b *BufferableRoundManager) AddRateLimiter(lowBound, highBound int, stopFun
 	b.stopFunction = stopFunction
 	b.resumeFunction = resumeFunction
 
+	b.stopSent = make(map[int]bool)
+	for i := 0; i < b.nTrustees; i++ {
+		b.stopSent[i] = false
+	}
+	b.resumeSent = make(map[int]bool)
+	for i := 0; i < b.nTrustees; i++ {
+		b.resumeSent[i] = false
+	}
 	return nil
 }
 
 func (b *BufferableRoundManager) sendRateChangeIfNeeded(trusteeID int) {
 	if b.DoSendStopResumeMessages {
 		n := b.NumberOfBufferedCiphers(trusteeID)
-		if n >= b.HighBound && !b.stopSent {
+		if n >= b.HighBound && !b.stopSent[trusteeID] {
+			log.Error("***************** sending stop to", trusteeID)
 			b.stopFunction(trusteeID)
-			b.stopSent = true
-			b.resumeSent = false
-		} else if n <= b.LowBound && !b.resumeSent {
+			b.stopSent[trusteeID] = true
+			b.resumeSent[trusteeID] = false
+		} else if n <= b.LowBound && !b.resumeSent[trusteeID] {
+			log.Error("***************** sending resume to", trusteeID)
 			b.resumeFunction(trusteeID)
-			b.stopSent = false
-			b.resumeSent = true
+			b.stopSent[trusteeID] = false
+			b.resumeSent[trusteeID] = true
 		}
 	}
 }
