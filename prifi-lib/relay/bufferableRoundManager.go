@@ -2,14 +2,14 @@ package relay
 
 import (
 	"errors"
+	"fmt"
 	"github.com/dedis/prifi/prifi-lib/net"
 	"gopkg.in/dedis/onet.v2/log"
+	"runtime/debug"
 	"sort"
 	"strconv"
 	"sync"
 	"time"
-	"runtime/debug"
-	"fmt"
 )
 
 // Stores ciphers for different rounds. Manages the transition between rounds, the rate limiting of trustees
@@ -83,7 +83,7 @@ func (b *BufferableRoundManager) MemoryUsage() {
 		clientNumberOfCipherBuffered += uint32(len(thisClientCiphers))
 
 		thisClientSize := uint64(0)
-		for _,v := range thisClientCiphers {
+		for _, v := range thisClientCiphers {
 			thisClientSize += uint64(len(v))
 		}
 		if thisClientSize != 0 {
@@ -104,9 +104,9 @@ func (b *BufferableRoundManager) MemoryUsage() {
 		}
 		trusteeSizeOfCipherBuffered += thisTrusteeSize
 	}
-	log.Lvl1("[BufferableRoundManager] trustees:",trusteeNumberOfCipherBuffered,"=",trusteeSizeOfCipherBuffered,
-		"B (", strTrustees, "); clients:",clientNumberOfCipherBuffered,"=",clientSizeOfCipherBuffered,"B (", strClients, ")")
-		// (config:", b.nClients, "clients", b.nTrustees, "trustees, window =", b.maxNumberOfConcurrentRounds, "b.sendStopResumeMessage =",	b.DoSendStopResumeMessages, ", lowBound =", b.LowBound, ", highBound =", b.HighBound, ")")
+	log.Lvl1("[BufferableRoundManager] trustees:", trusteeNumberOfCipherBuffered, "=", trusteeSizeOfCipherBuffered,
+		"B (", strTrustees, "); clients:", clientNumberOfCipherBuffered, "=", clientSizeOfCipherBuffered, "B (", strClients, ")")
+	// (config:", b.nClients, "clients", b.nTrustees, "trustees, window =", b.maxNumberOfConcurrentRounds, "b.sendStopResumeMessage =",	b.DoSendStopResumeMessages, ", lowBound =", b.LowBound, ", highBound =", b.HighBound, ")")
 }
 
 func sortedIntMapDump(m map[int]bool) {

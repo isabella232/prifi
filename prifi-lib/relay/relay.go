@@ -40,6 +40,7 @@ import (
 	"bytes"
 	"crypto/hmac"
 	"crypto/sha256"
+	"fmt"
 	"github.com/dedis/prifi/prifi-lib/config"
 	"github.com/dedis/prifi/prifi-lib/dcnet"
 	prifilog "github.com/dedis/prifi/prifi-lib/log"
@@ -49,7 +50,6 @@ import (
 	"gopkg.in/dedis/kyber.v2"
 	"gopkg.in/dedis/onet.v2/log"
 	"os/exec"
-	"fmt"
 	"runtime"
 	"strings"
 )
@@ -482,7 +482,7 @@ func (p *PriFiLibRelayInstance) upstreamPhase3_finalizeRound(roundID int32) erro
 		/*for k, v := range p.relayState.timeStatistics {
 			p.collectExperimentResult(v.ReportWithInfo(k))
 		}*/
-		if roundID % 1000 == 0 {
+		if roundID%1000 == 0 {
 			log.Info("Round", roundID, "Relay Memory\n", memoryUsage())
 			memoryUsage2()
 			i := 0
@@ -870,7 +870,7 @@ func memoryUsage() string {
 	cmd_text := "ps aux --sort -rss | head -n 2"
 
 	cmd := "cat /proc/cpuinfo | egrep '^model name' | uniq | awk '{print substr($0, index($0,$4))}'"
-	out, err := exec.Command("bash","-c",cmd_text).Output()
+	out, err := exec.Command("bash", "-c", cmd_text).Output()
 	if err != nil {
 		return fmt.Sprintf("Failed to execute command: %s", cmd)
 	}
@@ -885,7 +885,7 @@ func memoryUsage2() {
 	fmt.Printf(" HeapObjects = %v MiB", bToMb(m.HeapObjects))
 	fmt.Printf(" HeapInuse = %v", bToMb(m.HeapInuse))
 	fmt.Printf(" HeapIdle = %v", bToMb(m.HeapIdle))
-	fmt.Printf(" HeapSys = %v", bToMb(m.HeapSys	))
+	fmt.Printf(" HeapSys = %v", bToMb(m.HeapSys))
 	fmt.Printf(" StackSys = %v MiB", bToMb(m.StackSys))
 	fmt.Printf(" Sys = %v MiB\n", bToMb(m.Sys))
 }

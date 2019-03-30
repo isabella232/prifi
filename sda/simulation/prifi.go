@@ -7,6 +7,7 @@ import (
 	"github.com/BurntSushi/toml"
 	prifi_protocol "github.com/dedis/prifi/sda/protocols"
 	prifi_service "github.com/dedis/prifi/sda/services"
+	"github.com/pkg/profile"
 	"gopkg.in/dedis/onet.v2"
 	"gopkg.in/dedis/onet.v2/app"
 	"gopkg.in/dedis/onet.v2/log"
@@ -18,7 +19,6 @@ import (
 	"strconv"
 	"strings"
 	"time"
-	"github.com/pkg/profile"
 )
 
 // FILE_SIMULATION_ID is the file where the simulation ID is stored

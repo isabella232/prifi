@@ -1,16 +1,16 @@
 package utils
 
 import (
+	"bufio"
 	"encoding/binary"
 	"errors"
 	"github.com/Lukasa/gopcap"
 	"gopkg.in/dedis/onet.v2/log"
 	"math/rand"
 	"os"
-	"time"
-	"bufio"
-	"strings"
 	"strconv"
+	"strings"
+	"time"
 )
 
 const pattern uint16 = uint16(21845) //0101010101010101
@@ -108,17 +108,17 @@ func ParsePKTS(path string, maxPayloadLength int) ([]Packet, error) {
 		if err != nil {
 			log.Lvl1("Can't convert", time_str, "to time", err)
 		}
-		time_ms := uint64(time.UnixNano())/1000000
+		time_ms := uint64(time.UnixNano()) / 1000000
 
 		bytes, err := strconv.Atoi(bytes_str)
 		if err != nil {
 			log.Lvl1("Can't convert", bytes_str, "to int")
 		}
 		/*
-		npackets, err := strconv.Atoi(npackets_str)
-		if err != nil {
-			log.Lvl1("Can't convert", npackets_str, "to int")
-		}
+			npackets, err := strconv.Atoi(npackets_str)
+			if err != nil {
+				log.Lvl1("Can't convert", npackets_str, "to int")
+			}
 		*/
 
 		log.Print(parts)
