@@ -512,10 +512,6 @@ func (b *BufferableRoundManager) AddTrusteeCipher(roundID int32, trusteeID int, 
 	b.Lock()
 	defer b.Unlock()
 
-	if roundID % 1000 == 0 {
-		log.Lvl1("Trustee", trusteeID, "is on round", roundID, "total received", roundID/1000, "MB")
-	}
-
 	_, currendRound := b.currentRound()
 	//if !anyRoundOpenend {
 	//	log.Fatal("Can't add trustee cipher, no round opened")
@@ -661,12 +657,10 @@ func (b *BufferableRoundManager) sendRateChangeIfNeeded(trusteeID int) {
 	if b.DoSendStopResumeMessages {
 		n := b.NumberOfBufferedCiphers(trusteeID)
 		if n >= b.HighBound && !b.stopSent[trusteeID] {
-			log.Error("***************** sending stop to", trusteeID)
 			b.stopFunction(trusteeID)
 			b.stopSent[trusteeID] = true
 			b.resumeSent[trusteeID] = false
 		} else if n <= b.LowBound && !b.resumeSent[trusteeID] {
-			log.Error("***************** sending resume to", trusteeID)
 			b.resumeFunction(trusteeID)
 			b.stopSent[trusteeID] = false
 			b.resumeSent[trusteeID] = true

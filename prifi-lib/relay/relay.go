@@ -218,9 +218,7 @@ If we finished a round (we had collected all data, and called DecodeCell()), we 
 Either we send something from the SOCKS/VPN buffer, or we answer the latency-test message if we received any, or we send 1 bit.
 */
 func (p *PriFiLibRelayInstance) Received_CLI_REL_UPSTREAM_DATA(msg net.CLI_REL_UPSTREAM_DATA) error {
-	data := make([]byte, len(msg.Data))
-	copy(data, msg.Data)
-	p.relayState.roundManager.AddClientCipher(msg.RoundID, msg.ClientID, data)
+	p.relayState.roundManager.AddClientCipher(msg.RoundID, msg.ClientID, msg.Data)
 	if p.relayState.roundManager.HasAllCiphersForCurrentRound() {
 		p.upstreamPhase1_processCiphers(true)
 	}
@@ -234,9 +232,7 @@ If it's for this round, we call decode on it, and remember we received it.
 If for a future round we need to Buffer it.
 */
 func (p *PriFiLibRelayInstance) Received_TRU_REL_DC_CIPHER(msg net.TRU_REL_DC_CIPHER) error {
-	data := make([]byte, len(msg.Data))
-	copy(data, msg.Data)
-	p.relayState.roundManager.AddTrusteeCipher(msg.RoundID, msg.TrusteeID, data)
+	p.relayState.roundManager.AddTrusteeCipher(msg.RoundID, msg.TrusteeID, msg.Data)
 	if p.relayState.roundManager.HasAllCiphersForCurrentRound() {
 		p.upstreamPhase1_processCiphers(true)
 	}
@@ -247,9 +243,7 @@ func (p *PriFiLibRelayInstance) Received_TRU_REL_DC_CIPHER(msg net.TRU_REL_DC_CI
 // Received_CLI_REL_OPENCLOSED_DATA handles the reception of the OpenClosed map, which details which
 // pseudonymous clients want to transmit in a given round
 func (p *PriFiLibRelayInstance) Received_CLI_REL_OPENCLOSED_DATA(msg net.CLI_REL_OPENCLOSED_DATA) error {
-	data := make([]byte, len(msg.OpenClosedData))
-	copy(data, msg.OpenClosedData)
-	p.relayState.roundManager.AddClientCipher(msg.RoundID, msg.ClientID, data)
+	p.relayState.roundManager.AddClientCipher(msg.RoundID, msg.ClientID, msg.OpenClosedData)
 	if p.relayState.roundManager.HasAllCiphersForCurrentRound() {
 		p.upstreamPhase1_processCiphers(false)
 	}
