@@ -7,7 +7,6 @@ import (
 	"github.com/BurntSushi/toml"
 	prifi_protocol "github.com/dedis/prifi/sda/protocols"
 	prifi_service "github.com/dedis/prifi/sda/services"
-	"github.com/pkg/profile"
 	"gopkg.in/dedis/onet.v2"
 	"gopkg.in/dedis/onet.v2/app"
 	"gopkg.in/dedis/onet.v2/log"
@@ -25,7 +24,7 @@ import (
 const FILE_SIMULATION_ID = ".simID"
 
 // SIMULATION_ROUND_TIMEOUT_SECONDS is define the max duration of one round of the simulation
-var SIMULATION_ROUND_TIMEOUT_SECONDS = 2 * 3600
+var SIMULATION_ROUND_TIMEOUT_SECONDS = 1 * 3600
 
 /*
  * Defines the simulation for the service-template
@@ -173,7 +172,7 @@ func (s *SimulationService) Node(config *onet.SimulationConfig) error {
 // Run is used on the destination machines and runs a number of
 // rounds
 func (s *SimulationService) Run(config *onet.SimulationConfig) error {
-	profiler := profile.Start(profile.MemProfile)
+	//profiler := profile.Start(profile.MemProfile)
 
 	//this is run only on the relay. Get the simulation ID stored by the shell script
 	simulationIDBytes, err := ioutil.ReadFile(FILE_SIMULATION_ID)
@@ -239,7 +238,7 @@ func (s *SimulationService) Run(config *onet.SimulationConfig) error {
 	duration := time.Now().Sub(startTime)
 	log.Error("Experiment", simulationID, "finished after", duration)
 
-	profiler.Stop()
+	//profiler.Stop()
 
 	//stop the SOCKS stuff
 	service.GlobalShutDownSocks()
