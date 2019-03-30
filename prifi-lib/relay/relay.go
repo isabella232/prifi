@@ -482,7 +482,7 @@ func (p *PriFiLibRelayInstance) upstreamPhase3_finalizeRound(roundID int32) erro
 		/*for k, v := range p.relayState.timeStatistics {
 			p.collectExperimentResult(v.ReportWithInfo(k))
 		}*/
-		if false || roundID%1000 == 0 {
+		if false && roundID%1000 == 0 {
 			log.Info("Round", roundID, "Relay Memory\n", memoryUsage())
 			memoryUsage2()
 			i := 0
