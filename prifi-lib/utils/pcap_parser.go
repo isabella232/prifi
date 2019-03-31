@@ -101,30 +101,18 @@ func ParsePKTS(path string, maxPayloadLength int) ([]Packet, error) {
 
 		time_str := strings.TrimSpace(parts[0])
 		bytes_str := strings.TrimSpace(parts[1])
-		//npackets_str := strings.TrimSpace(parts[2]) we ignore the division, it's one stream
 
 		layout := "15:04:05"
-		time, err := time.Parse(layout, time_str)
+		time_parsed, err := time.Parse(layout, time_str)
 		if err != nil {
 			log.Lvl1("Can't convert", time_str, "to time", err)
 		}
-		time_ms := uint64(time.UnixNano()) / 1000000
+		time_ms := uint64(time_parsed.Hour() * 3600 * 1000) + uint64(time_parsed.Minute() * 60 * 1000) + uint64(time_parsed.Second() * 1000)
 
 		bytes, err := strconv.Atoi(bytes_str)
 		if err != nil {
 			log.Lvl1("Can't convert", bytes_str, "to int")
 		}
-		/*
-			npackets, err := strconv.Atoi(npackets_str)
-			if err != nil {
-				log.Lvl1("Can't convert", npackets_str, "to int")
-			}
-		*/
-
-		log.Print(parts)
-		log.Print(time_ms)
-		log.Print(bytes)
-
 		remainingLen := bytes
 
 		//maybe this packet is bigger than the payload size. Then, generate many packets
@@ -153,15 +141,9 @@ func ParsePKTS(path string, maxPayloadLength int) ([]Packet, error) {
 
 		packetID += 1
 	}
-	for p := range out {
-		log.Printf("%+v", out[p])
-	}
-	os.Exit(1)
-
 	if err := scanner.Err(); err != nil {
 		return nil, errors.New("Cannot read" + path + "error is" + err.Error())
 	}
-
 	return out, nil
 }
 

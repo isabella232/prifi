@@ -111,9 +111,18 @@ func (p *PriFiLibClientInstance) Received_ALL_ALL_PARAMETERS(msg net.ALL_ALL_PAR
 		}
 		p.clientState.pcapReplay.Packets = packets
 
-		if len(packets) > 0 {
-			offset := packets[0].MsSinceBeginningOfCapture
-			log.Lvl1("Client", clientID, "loaded corresponding PCAP with", len(packets), "packets, offset", offset, "ms.")
+		if len(packets) == 0 {
+			p.clientState.pcapReplay.PCAPFile = p.clientState.pcapReplay.PCAPFolder + "client" + strconv.Itoa(clientID) + ".pkts"
+			packets, err := utils.ParsePKTS(p.clientState.pcapReplay.PCAPFile, p.clientState.PayloadSize)
+			if err != nil {
+				log.Lvl2("Client", clientID, "Requested PKTS Replay, but could not parse;", err)
+			}
+			p.clientState.pcapReplay.Packets = packets
+		}
+
+		if len(p.clientState.pcapReplay.Packets) > 0 {
+			offset := p.clientState.pcapReplay.Packets[0].MsSinceBeginningOfCapture
+			log.Lvl1("Client", clientID, "loaded PCAP",p.clientState.pcapReplay.PCAPFile,"with", len(p.clientState.pcapReplay.Packets), "packets, offset", offset, "ms.")
 		} else {
 			log.Lvl1("Client", clientID, "loaded corresponding PCAP with 0packets.")
 		}
@@ -371,8 +380,9 @@ func (p *PriFiLibClientInstance) SendUpstreamData(ownerSlotID int) error {
 			if p.clientState.pcapReplay.Enabled && p.clientState.pcapReplay.currentPacket < len(p.clientState.pcapReplay.Packets) {
 
 				if p.clientState.pcapReplay.currentPacket >= len(p.clientState.pcapReplay.Packets)-2 {
-					log.Fatal("Client", p.clientState.ID, "End of experiment, client sent all packets!")
-				}
+					log.Error("Important: Client", p.clientState.ID, " sent all packets!")
+					p.clientState.pcapReplay.Enabled = false
+				} else {
 				//if it is time to send some packet
 				relativeNow := uint64(MsTimeStampNow()) - p.clientState.pcapReplay.time0
 
@@ -385,20 +395,21 @@ func (p *PriFiLibClientInstance) SendUpstreamData(ownerSlotID int) error {
 				lastPacketID := p.clientState.pcapReplay.currentPacket
 				for currentPacket.MsSinceBeginningOfCapture <= relativeNow && payloadRealLength+currentPacket.RealLength <= actualPayloadSize {
 
-					// add this packet
-					payload = append(payload, currentPacket.Header...)
-					payloadRealLength += currentPacket.RealLength
-					p.clientState.pcapReplay.currentPacket++
-					currentPacket = p.clientState.pcapReplay.Packets[p.clientState.pcapReplay.currentPacket]
-					lastPacketID = p.clientState.pcapReplay.currentPacket
+				// add this packet
+				payload = append(payload, currentPacket.Header...)
+				payloadRealLength += currentPacket.RealLength
+				p.clientState.pcapReplay.currentPacket++
+				currentPacket = p.clientState.pcapReplay.Packets[p.clientState.pcapReplay.currentPacket]
+				lastPacketID = p.clientState.pcapReplay.currentPacket
 				}
 				totalPackets := len(p.clientState.pcapReplay.Packets)
 				log.Lvl2("Client", p.clientState.ID, "Adding pcap packets", basePacketID, "-", lastPacketID, "/", totalPackets)
 				if basePacketID%100 == 0 || basePacketID+10 > totalPackets {
-					log.Lvl2("Client", p.clientState.ID, "PCAP: added pcap packets", basePacketID, "-", lastPacketID, "/", totalPackets)
+				log.Lvl2("Client", p.clientState.ID, "PCAP: added pcap packets", basePacketID, "-", lastPacketID, "/", totalPackets)
 				}
 
 				upstreamCellContent = payload
+				}
 			} else {
 
 				select {

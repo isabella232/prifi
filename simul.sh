@@ -328,15 +328,15 @@ case $1 in
 
         "$THIS_SCRIPT" simul-cl
 
-        for repeat in {1..10}
+        for repeat in {1..2}
         do
-            for upsize in 1000 2000 3000 4000 5000 6000 7000 8000 9000 10000
+            for upsize in 1000 5000 7500 10000 15000
             do
-                echo "Simulating for upsize=$upsize  (repeat $repeat)..."
+                echo "Simulating for PayloadSize=$upsize  (repeat $repeat)..."
 
                 #fix the config
                 rm -f "$CONFIG_FILE"
-                sed "s/CellSizeUp = x/CellSizeUp = $upsize/g" "$TEMPLATE_FILE" > "$CONFIG_FILE"
+                sed "s/PayloadSize = x/PayloadSize = $upsize/g" "$TEMPLATE_FILE" > "$CONFIG_FILE"
 
                 timeout "$SIMULATION_TIMEOUT" "$THIS_SCRIPT" simul | tee experiment_${upsize}_${repeat}.txt
             done
