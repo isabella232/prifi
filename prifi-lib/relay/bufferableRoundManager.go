@@ -68,6 +68,7 @@ func sortedIntMapOfIntMapDump(m map[int]map[int32][]byte) {
 	}
 }
 
+// Dumps precise statistics about the memory used by this datastructure
 func (b *BufferableRoundManager) MemoryUsage() {
 
 	clientNumberOfCipherBuffered := uint32(0)

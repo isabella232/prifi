@@ -107,7 +107,7 @@ func ParsePKTS(path string, maxPayloadLength int) ([]Packet, error) {
 		if err != nil {
 			log.Lvl1("Can't convert", time_str, "to time", err)
 		}
-		time_ms := uint64(time_parsed.Hour() * 3600 * 1000) + uint64(time_parsed.Minute() * 60 * 1000) + uint64(time_parsed.Second() * 1000)
+		time_ms := uint64(time_parsed.Hour()*3600*1000) + uint64(time_parsed.Minute()*60*1000) + uint64(time_parsed.Second()*1000)
 
 		bytes, err := strconv.Atoi(bytes_str)
 		if err != nil {
@@ -139,7 +139,7 @@ func ParsePKTS(path string, maxPayloadLength int) ([]Packet, error) {
 		}
 		out = append(out, p)
 
-		packetID += 1
+		packetID++
 	}
 	if err := scanner.Err(); err != nil {
 		return nil, errors.New("Cannot read" + path + "error is" + err.Error())
