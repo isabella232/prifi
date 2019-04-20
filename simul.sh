@@ -67,6 +67,16 @@ print_usage() {
     echo 
 }
 
+setPKTSOnServer() {
+
+    client=$1
+
+    echo "Removing old symlinks"
+    ssh $DETERLAB_USER@users.deterlab.net "rm -f ${DETERLAB_PCAP_LOCATION}client*.pkts"
+
+    echo "Linking client${client}.pkts.old to client${client}.pkts"
+    ssh $DETERLAB_USER@users.deterlab.net "ln -s ${DETERLAB_PCAP_LOCATION}client${client}.pkts.old ${DETERLAB_PCAP_LOCATION}client${client}.pkts"
+}
 setPCAPOnServer() {
 
     traffic=$1
@@ -127,6 +137,7 @@ case $1 in
         echo -en "Simulation ID is ${highlightOn}${EXPERIMENT_ID_VALUE}${highlightOff}, storing it in ${highlightOn}~/remote/.simID${highlightOff} on remote... " | tee ../../last-simul.log
         ssh $DETERLAB_USER@users.deterlab.net "echo ${EXPERIMENT_ID_VALUE} > ~/remote/.simID"  | tee ../../last-simul.log
         ssh $DETERLAB_USER@users.deterlab.net "rm -f ~/remote/.lastsimul"
+        ssh $DETERLAB_USER@users.deterlab.net "rm -f ~/remote/*.db"
         echo -e "$okMsg" | tee ../../last-simul.log
 
         echo -e "Starting simulation ${highlightOn}${SIMUL_FILE}${highlightOff} on ${highlightOn}${PLATFORM}${highlightOff}." | tee ../../last-simul.log
@@ -265,7 +276,7 @@ case $1 in
 
         "$THIS_SCRIPT" simul-cl
 
-        for repeat in {1..4}
+        for repeat in {1..10}
         do
             for i in 10 20 30 40 50 60 70 80 90
             do
@@ -328,9 +339,9 @@ case $1 in
 
         "$THIS_SCRIPT" simul-cl
 
-        for repeat in {1..2}
+        for repeat in {1..1}
         do
-            for upsize in 1000 5000 7500 10000 15000
+            for upsize in 4000 5000 6000 7000 8000 9000 10000
             do
                 echo "Simulating for PayloadSize=$upsize  (repeat $repeat)..."
 
@@ -541,6 +552,19 @@ case $1 in
             simul-helper 3 5000 70 $repeat "youtube.pcap"
             simul-helper 3 5000 80 $repeat "youtube.pcap"
             simul-helper 3 5000 90 $repeat "youtube.pcap"
+        done
+        ;;
+
+    simul-icrc)
+        rm -rf *.txt
+        for repeat in {1..5}
+        do
+            for client in 1 2 3 4 5 6 7 8 9
+            do
+                echo "Simulating for client ${client}"
+                setPKTSOnServer ${client}
+                timeout "$SIMULATION_TIMEOUT" "$THIS_SCRIPT" simul | tee experiment_${client}_${repeat}.txt
+            done
         done
         ;;
 

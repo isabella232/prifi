@@ -105,7 +105,7 @@ func (p *PriFiLibClientInstance) Received_ALL_ALL_PARAMETERS(msg net.ALL_ALL_PAR
 	//we know our client number, if needed, parse the pcap for replay
 	if p.clientState.pcapReplay.Enabled {
 		p.clientState.pcapReplay.PCAPFile = p.clientState.pcapReplay.PCAPFolder + "client" + strconv.Itoa(clientID) + ".pcap"
-		packets, err := utils.ParsePCAP(p.clientState.pcapReplay.PCAPFile, p.clientState.PayloadSize)
+		packets, err := utils.ParsePCAP(p.clientState.pcapReplay.PCAPFile, p.clientState.PayloadSize, uint16(clientID))
 		if err != nil {
 			log.Lvl2("Client", clientID, "Requested PCAP Replay, but could not parse;", err)
 		}
@@ -113,7 +113,7 @@ func (p *PriFiLibClientInstance) Received_ALL_ALL_PARAMETERS(msg net.ALL_ALL_PAR
 
 		if len(packets) == 0 {
 			p.clientState.pcapReplay.PCAPFile = p.clientState.pcapReplay.PCAPFolder + "client" + strconv.Itoa(clientID) + ".pkts"
-			packets, err := utils.ParsePKTS(p.clientState.pcapReplay.PCAPFile, p.clientState.PayloadSize)
+			packets, err := utils.ParsePKTS(p.clientState.pcapReplay.PCAPFile, p.clientState.PayloadSize, uint16(clientID))
 			if err != nil {
 				log.Lvl2("Client", clientID, "Requested PKTS Replay, but could not parse;", err)
 			}
@@ -322,10 +322,10 @@ func (p *PriFiLibClientInstance) WantsToTransmit() bool {
 	}
 
 	// if we transmitted in the last second, keep reserving (but don't do this with pcaps)
-	if !p.clientState.pcapReplay.Enabled {
+	if true || !p.clientState.pcapReplay.Enabled {
 		now := time.Now()
 		//if we transmitted in the last second, keep reserving slots
-		if now.Before(p.clientState.LastWantToSend.Add(5 * time.Second)) {
+		if now.Before(p.clientState.LastWantToSend.Add(1 * time.Second)) {
 			log.Lvl3("WantToSend < 5 sec,  true")
 			return true
 		}
@@ -393,7 +393,11 @@ func (p *PriFiLibClientInstance) SendUpstreamData(ownerSlotID int) error {
 					//all packets >= currentPacket AND <= relativeNow should be sent
 					basePacketID := p.clientState.pcapReplay.currentPacket
 					lastPacketID := p.clientState.pcapReplay.currentPacket
-					for currentPacket.MsSinceBeginningOfCapture <= relativeNow && payloadRealLength+currentPacket.RealLength <= actualPayloadSize {
+					for p.clientState.pcapReplay.currentPacket < len(p.clientState.pcapReplay.Packets) - 1 &&
+						currentPacket.MsSinceBeginningOfCapture <= relativeNow &&
+						payloadRealLength+currentPacket.RealLength <= actualPayloadSize {
+
+						//log.Lvl1("Sending PCAP", p.clientState.pcapReplay.currentPacket, "because now is", relativeNow, "and it should be sent at", currentPacket.MsSinceBeginningOfCapture)
 
 						// add this packet
 						payload = append(payload, currentPacket.Header...)
@@ -401,12 +405,10 @@ func (p *PriFiLibClientInstance) SendUpstreamData(ownerSlotID int) error {
 						p.clientState.pcapReplay.currentPacket++
 						currentPacket = p.clientState.pcapReplay.Packets[p.clientState.pcapReplay.currentPacket]
 						lastPacketID = p.clientState.pcapReplay.currentPacket
+
 					}
 					totalPackets := len(p.clientState.pcapReplay.Packets)
 					log.Lvl2("Client", p.clientState.ID, "Adding pcap packets", basePacketID, "-", lastPacketID, "/", totalPackets)
-					if basePacketID%100 == 0 || basePacketID+10 > totalPackets {
-						log.Lvl2("Client", p.clientState.ID, "PCAP: added pcap packets", basePacketID, "-", lastPacketID, "/", totalPackets)
-					}
 
 					upstreamCellContent = payload
 				}

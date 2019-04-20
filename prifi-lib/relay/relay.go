@@ -283,11 +283,6 @@ func (p *PriFiLibRelayInstance) upstreamPhase1_processCiphers(finishedByTrustee 
 		}
 	}
 
-	// used if we're replaying a pcap. The first message we decode is "time0"
-	if roundID == 0 {
-		p.relayState.time0 = uint64(prifilog.MsTimeStampNow())
-	}
-
 	// one round has just passed ! Round start with downstream data, and end with upstream data, like here.
 	p.upstreamPhase3_finalizeRound(roundID)
 
@@ -403,41 +398,43 @@ func (p *PriFiLibRelayInstance) upstreamPhase2b_extractPayload() error {
 			p.relayState.PriorityDataForClients <- upstreamPlaintext
 		} else if pattern == 21845 {
 			//0101010101010101
-			ID := int32(binary.BigEndian.Uint32(upstreamPlaintext[2:6]))
-			timestamp := int64(binary.BigEndian.Uint64(upstreamPlaintext[6:14]))
+			clientID := uint16(binary.BigEndian.Uint16(upstreamPlaintext[2:4]))
+			ID := uint32(binary.BigEndian.Uint32(upstreamPlaintext[4:8]))
+			timestamp := int64(binary.BigEndian.Uint64(upstreamPlaintext[8:16]))
 			frag := false
-			if upstreamPlaintext[14] == byte(1) {
+			if upstreamPlaintext[17] == byte(1) {
 				frag = true
 			}
 			now := prifilog.MsTimeStampNow() - int64(p.relayState.time0)
 			diff := now - timestamp
 
-			log.Lvl2("Got a PCAP meta-message (id", ID, ",frag", frag, ") at", now, ", delay since original is", diff, "ms")
+			log.Lvl2("Got a PCAP meta-message (client", clientID, "id", ID, ",frag", frag, ") at", now, ", delay since original is", diff, "ms")
 			p.relayState.timeStatistics["pcap-delay"].AddTime(diff)
-			p.relayState.pcapLogger.ReceivedPcap(uint32(ID), frag, uint64(timestamp), p.relayState.time0, uint32(len(upstreamPlaintext)))
+			p.relayState.pcapLogger.ReceivedPcap(ID, clientID, frag, uint64(timestamp), p.relayState.time0, uint32(len(upstreamPlaintext)))
 
 			//also decode other messages
-			pos := 15
-			for pos+15 <= len(upstreamPlaintext) {
+			pos := 17
+			for pos+17 <= len(upstreamPlaintext) {
 				pattern := int(binary.BigEndian.Uint16(upstreamPlaintext[pos : pos+2]))
 				if pattern != 21845 {
 					break
 				}
-				ID := int32(binary.BigEndian.Uint32(upstreamPlaintext[pos+2 : pos+6]))
-				timestamp := int64(binary.BigEndian.Uint64(upstreamPlaintext[pos+6 : pos+14]))
+				clientID := uint16(binary.BigEndian.Uint16(upstreamPlaintext[pos + 2: pos + 4]))
+				ID := int32(binary.BigEndian.Uint32(upstreamPlaintext[pos+4 : pos+8]))
+				timestamp := int64(binary.BigEndian.Uint64(upstreamPlaintext[pos+8 : pos+16]))
 				frag := false
-				if upstreamPlaintext[pos+14] == byte(1) {
+				if upstreamPlaintext[pos+17] == byte(1) {
 					frag = true
 				}
 
 				now := prifilog.MsTimeStampNow() - int64(p.relayState.time0)
 				diff := now - timestamp
 
-				log.Lvl2("Got a PCAP meta-message (id", ID, ",frag", frag, ") at", now, ", delay since original is", diff, "ms")
+				log.Lvl2("Got a PCAP meta-message (client", clientID, "id", ID, ",frag", frag, ") at", now, ", delay since original is", diff, "ms")
 				p.relayState.timeStatistics["pcap-delay"].AddTime(diff)
-				p.relayState.pcapLogger.ReceivedPcap(uint32(ID), frag, uint64(timestamp), p.relayState.time0, uint32(len(upstreamPlaintext)))
+				p.relayState.pcapLogger.ReceivedPcap(uint32(ID), clientID, frag, uint64(timestamp), p.relayState.time0, uint32(len(upstreamPlaintext)))
 
-				pos += 15
+				pos += 17
 			}
 
 		}
@@ -475,13 +472,13 @@ func (p *PriFiLibRelayInstance) upstreamPhase3_finalizeRound(roundID int32) erro
 		log.Lvl2("Relay finished round " + strconv.Itoa(int(roundID)) + " .")
 	} else {
 		log.Lvl2("Relay finished round "+strconv.Itoa(int(roundID))+" (after", p.relayState.roundManager.TimeSpentInRound(roundID), ").")
-		//p.collectExperimentResult(p.relayState.bitrateStatistics.Report())
-		//p.collectExperimentResult(p.relayState.schedulesStatistics.Report())
+		p.collectExperimentResult(p.relayState.bitrateStatistics.Report())
+		p.collectExperimentResult(p.relayState.schedulesStatistics.Report())
 		timeSpent := p.relayState.roundManager.TimeSpentInRound(roundID)
 		p.relayState.timeStatistics["round-duration"].AddTime(timeSpent.Nanoseconds() / 1e6) //ms
-		/*for k, v := range p.relayState.timeStatistics {
+		for k, v := range p.relayState.timeStatistics {
 			p.collectExperimentResult(v.ReportWithInfo(k))
-		}*/
+		}
 		if false && roundID%1000 == 0 {
 			log.Info("Round", roundID, "Relay Memory\n", memoryUsage())
 			memoryUsage2()
@@ -555,6 +552,11 @@ func (p *PriFiLibRelayInstance) downstreamPhase1_openRoundAndSendData() error {
 	}
 
 	nextDownstreamRoundID := p.relayState.roundManager.NextRoundToOpen()
+
+	// used if we're replaying a pcap. The first message we decode is "time0"
+	if nextDownstreamRoundID == 1 {
+		p.relayState.time0 = uint64(prifilog.MsTimeStampNow())
+	}
 
 	// TODO : if something went wrong before, this flag should be used to warn the clients that the config has changed
 	flagResync := false

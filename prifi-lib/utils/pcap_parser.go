@@ -25,7 +25,7 @@ type Packet struct {
 }
 
 // Parses a .pcap file, and returns all valid packets. A packet is (ID, TimeSent [milliseconds], Data)
-func ParsePCAP(path string, maxPayloadLength int) ([]Packet, error) {
+func ParsePCAP(path string, maxPayloadLength int, clientID uint16) ([]Packet, error) {
 	pcapfile, err := os.Open(path)
 	if err != nil {
 		return nil, errors.New("Cannot open" + path + "error is" + err.Error())
@@ -58,7 +58,7 @@ func ParsePCAP(path string, maxPayloadLength int) ([]Packet, error) {
 		for remainingLen > maxPayloadLength {
 			p2 := Packet{
 				ID:                        uint32(id),
-				Header:                    metaBytes(maxPayloadLength, uint32(id), t, false),
+				Header:                    metaBytes(maxPayloadLength, clientID, uint32(id), t, false),
 				MsSinceBeginningOfCapture: t,
 				RealLength:                maxPayloadLength,
 			}
@@ -72,7 +72,7 @@ func ParsePCAP(path string, maxPayloadLength int) ([]Packet, error) {
 		}
 		p := Packet{
 			ID:                        uint32(id),
-			Header:                    metaBytes(remainingLen, uint32(id), t, true),
+			Header:                    metaBytes(remainingLen, clientID, uint32(id), t, true),
 			MsSinceBeginningOfCapture: t,
 			RealLength:                remainingLen,
 		}
@@ -83,7 +83,7 @@ func ParsePCAP(path string, maxPayloadLength int) ([]Packet, error) {
 }
 
 // Parses a .pkts file (homemade format with [timestamp, bytes, npackets], and returns all valid packets. A packet is (ID, TimeSent [milliseconds], Data)
-func ParsePKTS(path string, maxPayloadLength int) ([]Packet, error) {
+func ParsePKTS(path string, maxPayloadLength int, clientID uint16) ([]Packet, error) {
 
 	file, err := os.Open(path)
 	if err != nil {
@@ -99,7 +99,16 @@ func ParsePKTS(path string, maxPayloadLength int) ([]Packet, error) {
 		line := strings.Replace(scanner.Text(), "\t", "", -1)
 		parts := strings.Split(line, ",")
 
-		time_str := strings.TrimSpace(parts[0])
+		time_ms_str := strings.TrimSpace(parts[0])
+		parts2 := strings.Split(time_ms_str, ".")
+		time_str := strings.TrimSpace(parts2[0])
+		time_ms := strings.TrimSpace(parts2[1])
+
+		time_ms_i, err := strconv.Atoi(time_ms)
+		if err != nil {
+			log.Lvl1("Can't convert", time_ms, "to int")
+		}
+
 		bytes_str := strings.TrimSpace(parts[1])
 
 		layout := "15:04:05"
@@ -107,7 +116,7 @@ func ParsePKTS(path string, maxPayloadLength int) ([]Packet, error) {
 		if err != nil {
 			log.Lvl1("Can't convert", time_str, "to time", err)
 		}
-		time_ms := uint64(time_parsed.Hour()*3600*1000) + uint64(time_parsed.Minute()*60*1000) + uint64(time_parsed.Second()*1000)
+		packet_time_ms := uint64(time_parsed.Hour()*3600*1000) + uint64(time_parsed.Minute()*60*1000) + uint64(time_parsed.Second()*1000) + uint64(time_ms_i)
 
 		bytes, err := strconv.Atoi(bytes_str)
 		if err != nil {
@@ -119,8 +128,8 @@ func ParsePKTS(path string, maxPayloadLength int) ([]Packet, error) {
 		for remainingLen > maxPayloadLength {
 			p2 := Packet{
 				ID:                        uint32(packetID),
-				Header:                    metaBytes(maxPayloadLength, uint32(packetID), time_ms, false),
-				MsSinceBeginningOfCapture: time_ms,
+				Header:                    metaBytes(maxPayloadLength, clientID, uint32(packetID), packet_time_ms, false),
+				MsSinceBeginningOfCapture: packet_time_ms,
 				RealLength:                maxPayloadLength,
 			}
 			out = append(out, p2)
@@ -133,8 +142,8 @@ func ParsePKTS(path string, maxPayloadLength int) ([]Packet, error) {
 		}
 		p := Packet{
 			ID:                        uint32(packetID),
-			Header:                    metaBytes(remainingLen, uint32(packetID), time_ms, true),
-			MsSinceBeginningOfCapture: time_ms,
+			Header:                    metaBytes(remainingLen, clientID, uint32(packetID), packet_time_ms, true),
+			MsSinceBeginningOfCapture: packet_time_ms,
 			RealLength:                remainingLen,
 		}
 		out = append(out, p)
@@ -147,29 +156,30 @@ func ParsePKTS(path string, maxPayloadLength int) ([]Packet, error) {
 	return out, nil
 }
 
-func getPayloadOrRandom(pkt gopcap.Packet, packetID uint32, msSinceBeginningOfCapture uint64) []byte {
+func getPayloadOrRandom(pkt gopcap.Packet, clientID uint16, packetID uint32, msSinceBeginningOfCapture uint64) []byte {
 	len := pkt.IncludedLen
 
 	if true || pkt.Data == nil {
-		return metaBytes(int(len), packetID, msSinceBeginningOfCapture, false)
+		return metaBytes(int(len), clientID, packetID, msSinceBeginningOfCapture, false)
 	}
 
 	return pkt.Data.LinkData().InternetData().TransportData()
 }
 
-func metaBytes(length int, packetID uint32, timeSentInPcap uint64, isFinalPacket bool) []byte {
+func metaBytes(length int, clientID uint16, packetID uint32, timeSentInPcap uint64, isFinalPacket bool) []byte {
 	// ignore length, have short messages
 	if false && length < metaMessageLength {
 		return recognizableBytes(length, packetID)
 	}
 	// out := make([]byte, length)
-	out := make([]byte, 15)
+	out := make([]byte, 17)
 	binary.BigEndian.PutUint16(out[0:2], pattern)
-	binary.BigEndian.PutUint32(out[2:6], packetID)
-	binary.BigEndian.PutUint64(out[6:14], timeSentInPcap)
-	out[14] = byte(0)
+	binary.BigEndian.PutUint16(out[2:4], clientID)
+	binary.BigEndian.PutUint32(out[4:8], packetID)
+	binary.BigEndian.PutUint64(out[8:16], timeSentInPcap)
+	out[16] = byte(0)
 	if isFinalPacket {
-		out[14] = byte(1)
+		out[16] = byte(1)
 	}
 	return out
 }
