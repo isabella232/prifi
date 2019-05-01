@@ -276,7 +276,7 @@ case $1 in
 
         "$THIS_SCRIPT" simul-cl
 
-        for repeat in {1..10}
+        for repeat in {11..20}
         do
             for i in 10 20 30 40 50 60 70 80 90
             do
@@ -526,7 +526,7 @@ case $1 in
 
     simul-hangout)
 
-        for repeat in {5..10}
+        for repeat in {1..5}
         do
             simul-helper 7 5000 10 $repeat "hangouts.pcap"
             simul-helper 7 5000 20 $repeat "hangouts.pcap"
