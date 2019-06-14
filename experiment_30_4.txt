@@ -1,0 +1,975 @@
+Building simulation... [32m[ok][0m
+Simulation ID is [33mcPOIK8bUJC4mAicR4GFoKR8vgSzOdtSX[0m, storing it in [33m~/remote/.simID[0m on remote... [32m[ok][0m
+Starting simulation [33mprifi_simul.toml[0m on [33mdeterlab[0m.
+[0;33m1 : (                        simul.startBuild:  54) - Deploying to deterlab
+[0mGoing to encode  rv {lbarman users.deterlab.net SAFER LB-LLD /home/jwhite/d/git/prifi/sda/simulation  /home/jwhite/d/git/prifi/sda/simulation/deploy /home/jwhite/d/git/prifi/sda/simulation/build /home/jwhite/d/go/src/gopkg.in/dedis/onet.v2/simul/platform [] [] <nil> false localhost users.isi.deterlab.net 10002 9 PriFi 34 0 10000000ms Ed25519 }
+Key  RV {lbarman users.deterlab.net SAFER LB-LLD /home/jwhite/d/git/prifi/sda/simulation  /home/jwhite/d/git/prifi/sda/simulation/deploy /home/jwhite/d/git/prifi/sda/simulation/build /home/jwhite/d/go/src/gopkg.in/dedis/onet.v2/simul/platform [] [] <nil> false localhost users.isi.deterlab.net 10002 9 PriFi 34 0 10000000ms Ed25519 } k is of type struct
+Key Login RV lbarman k is of type string
+Key Host RV users.deterlab.net k is of type string
+Key Project RV SAFER k is of type string
+Key Experiment RV LB-LLD k is of type string
+Key ProxyAddress RV localhost k is of type string
+Key MonitorAddress RV users.isi.deterlab.net k is of type string
+Key MonitorPort RV 10002 k is of type int
+Key Servers RV 9 k is of type int
+Key Simulation RV PriFi k is of type string
+Key Hosts RV 34 k is of type int
+Key Debug RV 0 k is of type int
+Key RunWait RV 10000000ms k is of type string
+Key Suite RV Ed25519 k is of type string
+Key PreScript RV  k is of type string
+[0;33m1 : (              platform.(*Deterlab).Build: 136) - Building for lbarman users.deterlab.net SAFER  simulDir= /home/jwhite/d/git/prifi/sda/simulation
+[0m[0;33m1 : (              platform.(*Deterlab).Build: 182) - Build is finished after 1.56236281s
+[0mGoing to encode  rv {lbarman users.deterlab.net SAFER LB-LLD /home/jwhite/d/git/prifi/sda/simulation  /home/jwhite/d/git/prifi/sda/simulation/deploy /home/jwhite/d/git/prifi/sda/simulation/build /home/jwhite/d/go/src/gopkg.in/dedis/onet.v2/simul/platform [client-0.LB-LLD.SAFER.isi.deterlab.net client-1.LB-LLD.SAFER.isi.deterlab.net client-2.LB-LLD.SAFER.isi.deterlab.net client-3.LB-LLD.SAFER.isi.deterlab.net client-4.LB-LLD.SAFER.isi.deterlab.net relay.LB-LLD.SAFER.isi.deterlab.net trustee-0.LB-LLD.SAFER.isi.deterlab.net trustee-1.LB-LLD.SAFER.isi.deterlab.net trustee-2.LB-LLD.SAFER.isi.deterlab.net trusteeinlan.LB-LLD.SAFER.isi.deterlab.net] [10.0.1.1 10.0.1.2 10.0.1.3 10.0.1.4 10.0.1.5 10.0.1.254 10.1.0.1 10.1.0.2 10.1.0.3 10.2.0.250] 0xc000086720 false localhost users.isi.deterlab.net 10002 9 PriFi 34 1 10000000ms Ed25519 }
+Key  RV {lbarman users.deterlab.net SAFER LB-LLD /home/jwhite/d/git/prifi/sda/simulation  /home/jwhite/d/git/prifi/sda/simulation/deploy /home/jwhite/d/git/prifi/sda/simulation/build /home/jwhite/d/go/src/gopkg.in/dedis/onet.v2/simul/platform [client-0.LB-LLD.SAFER.isi.deterlab.net client-1.LB-LLD.SAFER.isi.deterlab.net client-2.LB-LLD.SAFER.isi.deterlab.net client-3.LB-LLD.SAFER.isi.deterlab.net client-4.LB-LLD.SAFER.isi.deterlab.net relay.LB-LLD.SAFER.isi.deterlab.net trustee-0.LB-LLD.SAFER.isi.deterlab.net trustee-1.LB-LLD.SAFER.isi.deterlab.net trustee-2.LB-LLD.SAFER.isi.deterlab.net trusteeinlan.LB-LLD.SAFER.isi.deterlab.net] [10.0.1.1 10.0.1.2 10.0.1.3 10.0.1.4 10.0.1.5 10.0.1.254 10.1.0.1 10.1.0.2 10.1.0.3 10.2.0.250] 0xc000086720 false localhost users.isi.deterlab.net 10002 9 PriFi 34 1 10000000ms Ed25519 } k is of type struct
+Key Login RV lbarman k is of type string
+Key Host RV users.deterlab.net k is of type string
+Key Project RV SAFER k is of type string
+Key Experiment RV LB-LLD k is of type string
+Key Phys RV [client-0.LB-LLD.SAFER.isi.deterlab.net client-1.LB-LLD.SAFER.isi.deterlab.net client-2.LB-LLD.SAFER.isi.deterlab.net client-3.LB-LLD.SAFER.isi.deterlab.net client-4.LB-LLD.SAFER.isi.deterlab.net relay.LB-LLD.SAFER.isi.deterlab.net trustee-0.LB-LLD.SAFER.isi.deterlab.net trustee-1.LB-LLD.SAFER.isi.deterlab.net trustee-2.LB-LLD.SAFER.isi.deterlab.net trusteeinlan.LB-LLD.SAFER.isi.deterlab.net] k is of type slice
+Key Virt RV [10.0.1.1 10.0.1.2 10.0.1.3 10.0.1.4 10.0.1.5 10.0.1.254 10.1.0.1 10.1.0.2 10.1.0.3 10.2.0.250] k is of type slice
+Key ProxyAddress RV localhost k is of type string
+Key MonitorAddress RV users.isi.deterlab.net k is of type string
+Key MonitorPort RV 10002 k is of type int
+Key Servers RV 9 k is of type int
+Key Simulation RV PriFi k is of type string
+Key Hosts RV 34 k is of type int
+Key Debug RV 1 k is of type int
+Key RunWait RV 10000000ms k is of type string
+Key Suite RV Ed25519 k is of type string
+Key PreScript RV  k is of type string
+[0;33m1 : (             platform.(*Deterlab).Deploy: 293) - Copying over to lbarman @ users.deterlab.net
+[0m1 : (                               main.main:  50) - Cleaning up 10 hosts.
+1 : (                               main.main: 120) - starting 9 cothorities for a total of 34 processes.
+1 : (                       network.NewRouter:  73) - New router with address tcp://[::]:2000 and public key 0cb03e935a3a29005784d15c2cd1bc76a8a184bcec3b98e686ec1cb1ce68f179
+1 : (                       network.NewRouter:  73) - New router with address tcp://[::]:2000 and public key 83e6152fcd3664ca013d88845c033d44b533637e5f77d64bbb8db2f8adbae79a
+1 : (                       network.NewRouter:  73) - New router with address tcp://[::]:2002 and public key d834296134dfb50145314bad336bb9919bd862bcdc79504c5634e7b61f30a06e
+1 : (               onet%2ev2.(*Server).Start: 213) - Starting server at 2019-04-29 08:24:35 on address tcp://10.1.0.1:2000 with public key 83e6152fcd3664ca013d88845c033d44b533637e5f77d64bbb8db2f8adbae79a
+1 : (                       network.NewRouter:  73) - New router with address tcp://[::]:2004 and public key 305a140ac08089884ae10015775b277eee8d87511d040eb603b3fdc81242d7bd
+1 : (                       network.NewRouter:  73) - New router with address tcp://[::]:2006 and public key 3f1366c82cf87072c58d1dc0b09ed2b4dd4c3bd1af926a935eea3cbc1abe4915
+1 : (                       network.NewRouter:  73) - New router with address tcp://[::]:2000 and public key 1d27ccf2fc26266775af3239c5f53cab3d0c38eb25a53020c355831765ac896a
+1 : (                       network.NewRouter:  73) - New router with address tcp://[::]:2008 and public key 2e6628a88a02b6ac4a50b986544314c5f52dde10f400f6c337225ff25f0c62b4
+1 : (               onet%2ev2.(*Server).Start: 213) - Starting server at 2019-04-29 08:24:36 on address tcp://10.0.1.254:2000 with public key 1d27ccf2fc26266775af3239c5f53cab3d0c38eb25a53020c355831765ac896a
+1 : (                       network.NewRouter:  73) - New router with address tcp://[::]:2010 and public key 78bbf2a9ed2da6adb258da1c581ba7afe2a88848079794d3bb00201e7c4a4bb5
+1 : (                       platform.Simulate: 115) - Started counting children with timeout of 1s
+1 : (               onet%2ev2.(*Server).Start: 213) - Starting server at 2019-04-29 08:24:35 on address tcp://10.0.1.3:2000 with public key 0cb03e935a3a29005784d15c2cd1bc76a8a184bcec3b98e686ec1cb1ce68f179
+1 : (               onet%2ev2.(*Server).Start: 213) - Starting server at 2019-04-29 08:24:35 on address tcp://10.0.1.3:2002 with public key d834296134dfb50145314bad336bb9919bd862bcdc79504c5634e7b61f30a06e
+1 : (               onet%2ev2.(*Server).Start: 213) - Starting server at 2019-04-29 08:24:35 on address tcp://10.0.1.3:2004 with public key 305a140ac08089884ae10015775b277eee8d87511d040eb603b3fdc81242d7bd
+1 : (               onet%2ev2.(*Server).Start: 213) - Starting server at 2019-04-29 08:24:35 on address tcp://10.0.1.3:2006 with public key 3f1366c82cf87072c58d1dc0b09ed2b4dd4c3bd1af926a935eea3cbc1abe4915
+1 : (               onet%2ev2.(*Server).Start: 213) - Starting server at 2019-04-29 08:24:35 on address tcp://10.0.1.3:2008 with public key 2e6628a88a02b6ac4a50b986544314c5f52dde10f400f6c337225ff25f0c62b4
+1 : (               onet%2ev2.(*Server).Start: 213) - Starting server at 2019-04-29 08:24:35 on address tcp://10.0.1.3:2010 with public key 78bbf2a9ed2da6adb258da1c581ba7afe2a88848079794d3bb00201e7c4a4bb5
+1 : (                       network.NewRouter:  73) - New router with address tcp://[::]:2000 and public key 4b6464c2fd101a1bd2489e0e6e1b367176768288e49d40fd6a1fc3c9669b98c0
+1 : (                       network.NewRouter:  73) - New router with address tcp://[::]:2000 and public key 92c1ce68c143ef829c4cc1fb3a1051507c02f9da01e265b773a50043bd659462
+1 : (                       network.NewRouter:  73) - New router with address tcp://[::]:2000 and public key 2ac76e2cbc8c51e85417a13080e9a9d2f1ae3a0bed8b6bb43d6266e9e9f94851
+1 : (                       network.NewRouter:  73) - New router with address tcp://[::]:2002 and public key f1396e39271ca0e6201b959d94b0cbc38eee958d569a65265af449d157e7e43b
+1 : (                       network.NewRouter:  73) - New router with address tcp://[::]:2000 and public key 57ab7b3bcbbeea48649db530b142a52f0619660d219d2bb912fb7ac28686ca14
+1 : (                       network.NewRouter:  73) - New router with address tcp://[::]:2002 and public key 56b25ea1693577c32c10c5b9f83b5a79e214b45bcd42d12c9d1ac5dbd3dc2d4b
+1 : (                       network.NewRouter:  73) - New router with address tcp://[::]:2000 and public key 715167622bc383d47befdd3ab0bbbccf6c31b78aa4c695de01859e689e3a3a10
+1 : (                       network.NewRouter:  73) - New router with address tcp://[::]:2004 and public key abb4606d4bb94ddba0b7f27c022bd51a2d9b0f1d59d50421f1680472f3345da7
+1 : (                       network.NewRouter:  73) - New router with address tcp://[::]:2002 and public key 2d78abc0e15084845123889430f877c5a2a02858a5736e11d45ba2d88486338c
+1 : (                       network.NewRouter:  73) - New router with address tcp://[::]:2004 and public key c2d38eb6fcbe898c8228ee62695f6608f3c24412e7ddd02bc2e823405c4bfe1c
+1 : (                       network.NewRouter:  73) - New router with address tcp://[::]:2006 and public key 9dbc04b9fcfd48fd649c02ff64478c1789afb9f67e2bf369530e7293399d200f
+1 : (               onet%2ev2.(*Server).Start: 213) - Starting server at 2019-04-29 08:24:35 on address tcp://10.1.0.2:2000 with public key 57ab7b3bcbbeea48649db530b142a52f0619660d219d2bb912fb7ac28686ca14
+1 : (               onet%2ev2.(*Server).Start: 213) - Starting server at 2019-04-29 08:24:34 on address tcp://10.1.0.3:2000 with public key 715167622bc383d47befdd3ab0bbbccf6c31b78aa4c695de01859e689e3a3a10
+1 : (                       network.NewRouter:  73) - New router with address tcp://[::]:2004 and public key 9bfdfad54d2580c98340d1c337d92c90657ff3615b254f49467036aca52b1fe3
+1 : (                       network.NewRouter:  73) - New router with address tcp://[::]:2006 and public key b90ee786075771767554b81fb2d1142ebaffa947fca096e9714f03d0777d515f
+1 : (                       network.NewRouter:  73) - New router with address tcp://[::]:2008 and public key 7963749973309105810ce0391c290435815b48f2b126d61c77278c3b2b3247e1
+1 : (                       network.NewRouter:  73) - New router with address tcp://[::]:2006 and public key dbf062aed2f02ee5429782d1ff5563999b313a331e2b97c4683917a8cbe5fa35
+1 : (                       network.NewRouter:  73) - New router with address tcp://[::]:2008 and public key 90b4232b23b85a5926fced0151447da9a735c87c3390352bb9582179421bdffe
+1 : (                       network.NewRouter:  73) - New router with address tcp://[::]:2010 and public key c19e623a8af1b5846614e7d3834fc3ed43a0b2a6df56af2ba1bfef5345fe0b1e
+1 : (                       network.NewRouter:  73) - New router with address tcp://[::]:2000 and public key d139bb6eb57ee1d05d9cb200a9aada63ec2370bdd0929eaf7354cd2e95862368
+1 : (                       network.NewRouter:  73) - New router with address tcp://[::]:2008 and public key 6627f2d19ef14468f4f9ba615601e2c3135d395a99e032b09031f2664f26af2f
+1 : (                       network.NewRouter:  73) - New router with address tcp://[::]:2010 and public key 327d8e134c6e8eb9381b2632c5dd97a1696e42c83208777b113c80f7a0f6a2d0
+1 : (               onet%2ev2.(*Server).Start: 213) - Starting server at 2019-04-29 08:24:36 on address tcp://10.0.1.1:2000 with public key 4b6464c2fd101a1bd2489e0e6e1b367176768288e49d40fd6a1fc3c9669b98c0
+1 : (               onet%2ev2.(*Server).Start: 213) - Starting server at 2019-04-29 08:24:36 on address tcp://10.0.1.1:2002 with public key f1396e39271ca0e6201b959d94b0cbc38eee958d569a65265af449d157e7e43b
+1 : (                       network.NewRouter:  73) - New router with address tcp://[::]:2002 and public key 8c652f17c6e216db95cd198433dfe9ccb4521564c757645e9256fdd3e984e1f7
+1 : (               onet%2ev2.(*Server).Start: 213) - Starting server at 2019-04-29 08:24:36 on address tcp://10.0.1.1:2004 with public key abb4606d4bb94ddba0b7f27c022bd51a2d9b0f1d59d50421f1680472f3345da7
+1 : (               onet%2ev2.(*Server).Start: 213) - Starting server at 2019-04-29 08:24:36 on address tcp://10.0.1.1:2006 with public key 9dbc04b9fcfd48fd649c02ff64478c1789afb9f67e2bf369530e7293399d200f
+1 : (               onet%2ev2.(*Server).Start: 213) - Starting server at 2019-04-29 08:24:36 on address tcp://10.0.1.1:2008 with public key 7963749973309105810ce0391c290435815b48f2b126d61c77278c3b2b3247e1
+1 : (                       network.NewRouter:  73) - New router with address tcp://[::]:2010 and public key e48dc3e6734e05ff404076db440b4877b142dddc8e88bb77d779d0f9249f1e8e
+1 : (               onet%2ev2.(*Server).Start: 213) - Starting server at 2019-04-29 08:24:36 on address tcp://10.0.1.1:2010 with public key c19e623a8af1b5846614e7d3834fc3ed43a0b2a6df56af2ba1bfef5345fe0b1e
+1 : (                       network.NewRouter:  73) - New router with address tcp://[::]:2004 and public key 6fba76e1e7e956b53d2a9398599c967bd356d299af59e578ade223449bce9fb5
+1 : (               onet%2ev2.(*Server).Start: 213) - Starting server at 2019-04-29 08:24:36 on address tcp://10.0.1.4:2000 with public key 92c1ce68c143ef829c4cc1fb3a1051507c02f9da01e265b773a50043bd659462
+1 : (               onet%2ev2.(*Server).Start: 213) - Starting server at 2019-04-29 08:24:36 on address tcp://10.0.1.4:2002 with public key 56b25ea1693577c32c10c5b9f83b5a79e214b45bcd42d12c9d1ac5dbd3dc2d4b
+1 : (               onet%2ev2.(*Server).Start: 213) - Starting server at 2019-04-29 08:24:36 on address tcp://10.0.1.4:2004 with public key c2d38eb6fcbe898c8228ee62695f6608f3c24412e7ddd02bc2e823405c4bfe1c
+1 : (               onet%2ev2.(*Server).Start: 213) - Starting server at 2019-04-29 08:24:36 on address tcp://10.0.1.4:2006 with public key b90ee786075771767554b81fb2d1142ebaffa947fca096e9714f03d0777d515f
+1 : (               onet%2ev2.(*Server).Start: 213) - Starting server at 2019-04-29 08:24:36 on address tcp://10.0.1.4:2008 with public key 90b4232b23b85a5926fced0151447da9a735c87c3390352bb9582179421bdffe
+1 : (               onet%2ev2.(*Server).Start: 213) - Starting server at 2019-04-29 08:24:36 on address tcp://10.0.1.4:2010 with public key 327d8e134c6e8eb9381b2632c5dd97a1696e42c83208777b113c80f7a0f6a2d0
+1 : (               onet%2ev2.(*Server).Start: 213) - Starting server at 2019-04-29 08:24:35 on address tcp://10.0.1.5:2000 with public key 2ac76e2cbc8c51e85417a13080e9a9d2f1ae3a0bed8b6bb43d6266e9e9f94851
+1 : (               onet%2ev2.(*Server).Start: 213) - Starting server at 2019-04-29 08:24:35 on address tcp://10.0.1.5:2002 with public key 2d78abc0e15084845123889430f877c5a2a02858a5736e11d45ba2d88486338c
+1 : (               onet%2ev2.(*Server).Start: 213) - Starting server at 2019-04-29 08:24:35 on address tcp://10.0.1.5:2004 with public key 9bfdfad54d2580c98340d1c337d92c90657ff3615b254f49467036aca52b1fe3
+1 : (               onet%2ev2.(*Server).Start: 213) - Starting server at 2019-04-29 08:24:35 on address tcp://10.0.1.5:2006 with public key dbf062aed2f02ee5429782d1ff5563999b313a331e2b97c4683917a8cbe5fa35
+1 : (               onet%2ev2.(*Server).Start: 213) - Starting server at 2019-04-29 08:24:35 on address tcp://10.0.1.5:2008 with public key 6627f2d19ef14468f4f9ba615601e2c3135d395a99e032b09031f2664f26af2f
+1 : (                       network.NewRouter:  73) - New router with address tcp://[::]:2006 and public key 0f04f4e604b9b8955a063df76257f2ae77b240ac81fc6b67cf211338c43e5bed
+1 : (               onet%2ev2.(*Server).Start: 213) - Starting server at 2019-04-29 08:24:35 on address tcp://10.0.1.5:2010 with public key e48dc3e6734e05ff404076db440b4877b142dddc8e88bb77d779d0f9249f1e8e
+1 : (                       network.NewRouter:  73) - New router with address tcp://[::]:2008 and public key eadc5c093eec1fa1b6a64e40479acd4427adc0d7a69a0e968b662eb2823539b8
+1 : (                       network.NewRouter:  73) - New router with address tcp://[::]:2010 and public key 736071b267f7cb1bb441a4b4acb174e3ae660552959f9c050a339d5eed0d1347
+1 : (               onet%2ev2.(*Server).Start: 213) - Starting server at 2019-04-29 08:24:36 on address tcp://10.0.1.2:2000 with public key d139bb6eb57ee1d05d9cb200a9aada63ec2370bdd0929eaf7354cd2e95862368
+1 : (               onet%2ev2.(*Server).Start: 213) - Starting server at 2019-04-29 08:24:36 on address tcp://10.0.1.2:2002 with public key 8c652f17c6e216db95cd198433dfe9ccb4521564c757645e9256fdd3e984e1f7
+1 : (               onet%2ev2.(*Server).Start: 213) - Starting server at 2019-04-29 08:24:36 on address tcp://10.0.1.2:2004 with public key 6fba76e1e7e956b53d2a9398599c967bd356d299af59e578ade223449bce9fb5
+1 : (               onet%2ev2.(*Server).Start: 213) - Starting server at 2019-04-29 08:24:36 on address tcp://10.0.1.2:2006 with public key 0f04f4e604b9b8955a063df76257f2ae77b240ac81fc6b67cf211338c43e5bed
+1 : (               onet%2ev2.(*Server).Start: 213) - Starting server at 2019-04-29 08:24:36 on address tcp://10.0.1.2:2008 with public key eadc5c093eec1fa1b6a64e40479acd4427adc0d7a69a0e968b662eb2823539b8
+1 : (               onet%2ev2.(*Server).Start: 213) - Starting server at 2019-04-29 08:24:36 on address tcp://10.0.1.2:2010 with public key 736071b267f7cb1bb441a4b4acb174e3ae660552959f9c050a339d5eed0d1347
+1 : (                       platform.Simulate: 119) - Found all 34 children
+1 : (          main.(*SimulationService).Node: 102) - Node #0 running on server tcp://10.0.1.254:2000 and will be a relay
+[0;33m1 : (          main.(*SimulationService).Node: 147) - Initiating this node (index  0 ) as relay
+[0m[0;37;1mI : (     services.(*ServiceState).StartRelay: 133) - Service tcp://10.0.1.254:2000 running in relay mode
+[0m[0;33m1 : (     services.(*ServiceState).StartRelay: 161) - Starting EGRESS false
+[0m1 : (          main.(*SimulationService).Node: 102) - Node #3 running on server tcp://10.1.0.3:2000 and will be a trustee
+1 : (          main.(*SimulationService).Node: 102) - Node #33 running on server tcp://10.0.1.5:2010 and will be a client
+1 : (          main.(*SimulationService).Node: 102) - Node #4 running on server tcp://10.0.1.1:2000 and will be a client
+1 : (          main.(*SimulationService).Node: 102) - Node #2 running on server tcp://10.1.0.2:2000 and will be a trustee
+1 : (          main.(*SimulationService).Node: 102) - Node #1 running on server tcp://10.1.0.1:2000 and will be a trustee
+1 : (          main.(*SimulationService).Node: 102) - Node #10 running on server tcp://10.0.1.2:2002 and will be a client
+1 : (          main.(*SimulationService).Node: 102) - Node #20 running on server tcp://10.0.1.2:2006 and will be a client
+1 : (          main.(*SimulationService).Node: 102) - Node #7 running on server tcp://10.0.1.4:2000 and will be a client
+1 : (          main.(*SimulationService).Node: 102) - Node #5 running on server tcp://10.0.1.2:2000 and will be a client
+1 : (          main.(*SimulationService).Node: 102) - Node #25 running on server tcp://10.0.1.2:2008 and will be a client
+1 : (          main.(*SimulationService).Node: 102) - Node #16 running on server tcp://10.0.1.3:2004 and will be a client
+1 : (          main.(*SimulationService).Node: 102) - Node #6 running on server tcp://10.0.1.3:2000 and will be a client
+1 : (          main.(*SimulationService).Node: 102) - Node #13 running on server tcp://10.0.1.5:2002 and will be a client
+1 : (          main.(*SimulationService).Node: 102) - Node #31 running on server tcp://10.0.1.3:2010 and will be a client
+1 : (          main.(*SimulationService).Node: 102) - Node #11 running on server tcp://10.0.1.3:2002 and will be a client
+1 : (          main.(*SimulationService).Node: 102) - Node #8 running on server tcp://10.0.1.5:2000 and will be a client
+1 : (          main.(*SimulationService).Node: 102) - Node #27 running on server tcp://10.0.1.4:2008 and will be a client
+1 : (          main.(*SimulationService).Node: 102) - Node #21 running on server tcp://10.0.1.3:2006 and will be a client
+1 : (          main.(*SimulationService).Node: 102) - Node #14 running on server tcp://10.0.1.1:2004 and will be a client
+1 : (          main.(*SimulationService).Node: 102) - Node #22 running on server tcp://10.0.1.4:2006 and will be a client
+1 : (          main.(*SimulationService).Node: 102) - Node #15 running on server tcp://10.0.1.2:2004 and will be a client
+1 : (          main.(*SimulationService).Node: 102) - Node #17 running on server tcp://10.0.1.4:2004 and will be a client
+1 : (          main.(*SimulationService).Node: 102) - Node #18 running on server tcp://10.0.1.5:2004 and will be a client
+1 : (          main.(*SimulationService).Node: 102) - Node #23 running on server tcp://10.0.1.5:2006 and will be a client
+[0;33m1 : (          main.(*SimulationService).Node: 150) - Initiating this node (index  1 ) as trustee
+[0m1 : (          main.(*SimulationService).Node: 102) - Node #19 running on server tcp://10.0.1.1:2006 and will be a client
+1 : (          main.(*SimulationService).Node: 102) - Node #29 running on server tcp://10.0.1.1:2010 and will be a client
+[0;33m1 : (          main.(*SimulationService).Node: 150) - Initiating this node (index  3 ) as trustee
+[0m[0;33m1 : (          main.(*SimulationService).Node: 150) - Initiating this node (index  2 ) as trustee
+[0m1 : (          main.(*SimulationService).Node: 102) - Node #28 running on server tcp://10.0.1.5:2008 and will be a client
+1 : (          main.(*SimulationService).Node: 102) - Node #26 running on server tcp://10.0.1.3:2008 and will be a client
+1 : (          main.(*SimulationService).Node: 102) - Node #30 running on server tcp://10.0.1.2:2010 and will be a client
+1 : (          main.(*SimulationService).Node: 102) - Node #24 running on server tcp://10.0.1.1:2008 and will be a client
+1 : (          main.(*SimulationService).Node: 102) - Node #12 running on server tcp://10.0.1.4:2002 and will be a client
+1 : (          main.(*SimulationService).Node: 102) - Node #9 running on server tcp://10.0.1.1:2002 and will be a client
+1 : (          main.(*SimulationService).Node: 102) - Node #32 running on server tcp://10.0.1.4:2010 and will be a client
+[0;37;1mI : (   services.(*ServiceState).StartTrustee: 246) - Service tcp://10.1.0.1:2000 running in trustee mode
+[0m[0;37;1mI : (   services.(*ServiceState).StartTrustee: 246) - Service tcp://10.1.0.3:2000 running in trustee mode
+[0m[0;37;1mI : (   services.(*ServiceState).StartTrustee: 246) - Service tcp://10.1.0.2:2000 running in trustee mode
+[0m[0;37;1mI : (    services.(*ServiceState).StartClient: 177) - Service tcp://10.0.1.3:2006 running in client mode
+[0m[0;33m1 : (    services.(*ServiceState).StartClient: 192) - Starting SOCKS server on port 8101
+[0m[0;37;1mI : (    services.(*ServiceState).StartClient: 177) - Service tcp://10.0.1.1:2000 running in client mode
+[0m[0;33m1 : (    services.(*ServiceState).StartClient: 192) - Starting SOCKS server on port 8084
+[0m[0;37;1mI : (    services.(*ServiceState).StartClient: 177) - Service tcp://10.0.1.5:2010 running in client mode
+[0m[0;33m1 : (    services.(*ServiceState).StartClient: 192) - Starting SOCKS server on port 8113
+[0m[0;37;1mI : (    services.(*ServiceState).StartClient: 177) - Service tcp://10.0.1.2:2008 running in client mode
+[0m[0;33m1 : (    services.(*ServiceState).StartClient: 192) - Starting SOCKS server on port 8105
+[0m[0;37;1mI : (    services.(*ServiceState).StartClient: 177) - Service tcp://10.0.1.5:2006 running in client mode
+[0m[0;33m1 : (    services.(*ServiceState).StartClient: 192) - Starting SOCKS server on port 8103
+[0m[0;37;1mI : (    services.(*ServiceState).StartClient: 177) - Service tcp://10.0.1.5:2008 running in client mode
+[0m[0;33m1 : (    services.(*ServiceState).StartClient: 192) - Starting SOCKS server on port 8108
+[0m[0;37;1mI : (    services.(*ServiceState).StartClient: 177) - Service tcp://10.0.1.4:2000 running in client mode
+[0m[0;37;1mI : (    services.(*ServiceState).StartClient: 177) - Service tcp://10.0.1.4:2006 running in client mode
+[0m[0;33m1 : (    services.(*ServiceState).StartClient: 192) - Starting SOCKS server on port 8102
+[0m[0;33m1 : (    services.(*ServiceState).StartClient: 192) - Starting SOCKS server on port 8087
+[0m[0;37;1mI : (    services.(*ServiceState).StartClient: 177) - Service tcp://10.0.1.4:2008 running in client mode
+[0m[0;33m1 : (    services.(*ServiceState).StartClient: 192) - Starting SOCKS server on port 8107
+[0m[0;37;1mI : (    services.(*ServiceState).StartClient: 177) - Service tcp://10.0.1.1:2010 running in client mode
+[0m[0;33m1 : (    services.(*ServiceState).StartClient: 192) - Starting SOCKS server on port 8109
+[0m[0;37;1mI : (    services.(*ServiceState).StartClient: 177) - Service tcp://10.0.1.3:2004 running in client mode
+[0m[0;33m1 : (    services.(*ServiceState).StartClient: 192) - Starting SOCKS server on port 8096
+[0m[0;31m[0m[0;37;1mI : (    services.(*ServiceState).StartClient: 177) - Service tcp://10.0.1.3:2000 running in client mode
+[0m[0;33m1 : (    services.(*ServiceState).StartClient: 192) - Starting SOCKS server on port 8086
+[0m[0;37;1mI : (    services.(*ServiceState).StartClient: 177) - Service tcp://10.0.1.5:2004 running in client mode
+[0m[0;33m1 : (    services.(*ServiceState).StartClient: 192) - Starting SOCKS server on port 8098
+[0m[0;37;1mI : (    services.(*ServiceState).StartClient: 177) - Service tcp://10.0.1.5:2002 running in client mode
+[0m[0;33m1 : (    services.(*ServiceState).StartClient: 192) - Starting SOCKS server on port 8093
+[0m[0;37;1mI : (    services.(*ServiceState).StartClient: 177) - Service tcp://10.0.1.5:2000 running in client mode
+[0m[0;37;1mI : (    services.(*ServiceState).StartClient: 177) - Service tcp://10.0.1.2:2000 running in client mode
+[0m[0;33m1 : (    services.(*ServiceState).StartClient: 192) - Starting SOCKS server on port 8085
+[0m[0;37;1mI : (    services.(*ServiceState).StartClient: 177) - Service tcp://10.0.1.1:2006 running in client mode
+[0m[0;33m1 : (    services.(*ServiceState).StartClient: 192) - Starting SOCKS server on port 8099
+[0m[0;33m1 : (    services.(*ServiceState).StartClient: 192) - Starting SOCKS server on port 8088
+[0m[0;37;1mI : (    services.(*ServiceState).StartClient: 177) - Service tcp://10.0.1.1:2004 running in client mode
+[0m[0;33m1 : (    services.(*ServiceState).StartClient: 192) - Starting SOCKS server on port 8094
+[0m[0;37;1mI : (    services.(*ServiceState).StartClient: 177) - Service tcp://10.0.1.4:2002 running in client mode
+[0m[0;33m1 : (    services.(*ServiceState).StartClient: 192) - Starting SOCKS server on port 8092
+[0m[0;37;1mI : (    services.(*ServiceState).StartClient: 177) - Service tcp://10.0.1.3:2010 running in client mode
+[0m[0;33m1 : (    services.(*ServiceState).StartClient: 192) - Starting SOCKS server on port 8111
+[0m[0;37;1mI : (    services.(*ServiceState).StartClient: 177) - Service tcp://10.0.1.1:2002 running in client mode
+[0m[0;33m1 : (    services.(*ServiceState).StartClient: 192) - Starting SOCKS server on port 8089
+[0m[0;37;1mI : (    services.(*ServiceState).StartClient: 177) - Service tcp://10.0.1.3:2008 running in client mode
+[0m[0;33m1 : (    services.(*ServiceState).StartClient: 192) - Starting SOCKS server on port 8106
+[0m[0;37;1mI : (    services.(*ServiceState).StartClient: 177) - Service tcp://10.0.1.3:2002 running in client mode
+[0m[0;37;1mI : (    services.(*ServiceState).StartClient: 177) - Service tcp://10.0.1.1:2008 running in client mode
+[0m[0;33m1 : (    services.(*ServiceState).StartClient: 192) - Starting SOCKS server on port 8104
+[0m[0;33m1 : (    services.(*ServiceState).StartClient: 192) - Starting SOCKS server on port 8091
+[0m[0;37;1mI : (    services.(*ServiceState).StartClient: 177) - Service tcp://10.0.1.4:2004 running in client mode
+[0m[0;33m1 : (    services.(*ServiceState).StartClient: 192) - Starting SOCKS server on port 8097
+[0m[0;37;1mI : (    services.(*ServiceState).StartClient: 177) - Service tcp://10.0.1.4:2010 running in client mode
+[0m[0;33m1 : (    services.(*ServiceState).StartClient: 192) - Starting SOCKS server on port 8112
+[0m[0;37;1mI : (    services.(*ServiceState).StartClient: 177) - Service tcp://10.0.1.2:2006 running in client mode
+[0m[0;33m1 : (    services.(*ServiceState).StartClient: 192) - Starting SOCKS server on port 8100
+[0m[0;37;1mI : (    services.(*ServiceState).StartClient: 177) - Service tcp://10.0.1.2:2010 running in client mode
+[0m[0;33m1 : (    services.(*ServiceState).StartClient: 192) - Starting SOCKS server on port 8110
+[0m[0;37;1mI : (    services.(*ServiceState).StartClient: 177) - Service tcp://10.0.1.2:2004 running in client mode
+[0m[0;33m1 : (    services.(*ServiceState).StartClient: 192) - Starting SOCKS server on port 8095
+[0m[0;37;1mI : (    services.(*ServiceState).StartClient: 177) - Service tcp://10.0.1.2:2002 running in client mode
+[0m[0;33m1 : (    services.(*ServiceState).StartClient: 192) - Starting SOCKS server on port 8090
+[0m[0;33m1 : (services.(*churnHandler).tryStartProtocol: 314) - Too few participants ( 0 clients and 1 trustees), waiting...
+[0m[0;33m1 : (services.(*churnHandler).tryStartProtocol: 314) - Too few participants ( 0 clients and 2 trustees), waiting...
+[0m[0;33m1 : (services.(*churnHandler).tryStartProtocol: 314) - Too few participants ( 0 clients and 3 trustees), waiting...
+[0m[0;33m1 : (services.(*churnHandler).tryStartProtocol: 309) - Enough participants ( 1 clients and 3 trustees), but no handler to start.
+[0m[0;33m1 : (services.(*churnHandler).tryStartProtocol: 309) - Enough participants ( 2 clients and 3 trustees), but no handler to start.
+[0m[0;33m1 : (services.(*churnHandler).tryStartProtocol: 309) - Enough participants ( 3 clients and 3 trustees), but no handler to start.
+[0m[0;33m1 : (services.(*churnHandler).tryStartProtocol: 309) - Enough participants ( 4 clients and 3 trustees), but no handler to start.
+[0m[0;33m1 : (services.(*churnHandler).tryStartProtocol: 309) - Enough participants ( 5 clients and 3 trustees), but no handler to start.
+[0m[0;33m1 : (services.(*churnHandler).tryStartProtocol: 309) - Enough participants ( 6 clients and 3 trustees), but no handler to start.
+[0m[0;33m1 : (services.(*churnHandler).tryStartProtocol: 309) - Enough participants ( 7 clients and 3 trustees), but no handler to start.
+[0m[0;33m1 : (services.(*churnHandler).tryStartProtocol: 309) - Enough participants ( 8 clients and 3 trustees), but no handler to start.
+[0m[0;33m1 : (services.(*churnHandler).tryStartProtocol: 309) - Enough participants ( 9 clients and 3 trustees), but no handler to start.
+[0m[0;33m1 : (services.(*churnHandler).tryStartProtocol: 309) - Enough participants ( 10 clients and 3 trustees), but no handler to start.
+[0m[0;33m1 : (services.(*churnHandler).tryStartProtocol: 309) - Enough participants ( 11 clients and 3 trustees), but no handler to start.
+[0m[0;33m1 : (services.(*churnHandler).tryStartProtocol: 309) - Enough participants ( 12 clients and 3 trustees), but no handler to start.
+[0m[0;33m1 : (services.(*churnHandler).tryStartProtocol: 309) - Enough participants ( 13 clients and 3 trustees), but no handler to start.
+[0m[0;33m1 : (services.(*churnHandler).tryStartProtocol: 309) - Enough participants ( 14 clients and 3 trustees), but no handler to start.
+[0m[0;33m1 : (services.(*churnHandler).tryStartProtocol: 309) - Enough participants ( 15 clients and 3 trustees), but no handler to start.
+[0m[0;33m1 : (services.(*churnHandler).tryStartProtocol: 309) - Enough participants ( 16 clients and 3 trustees), but no handler to start.
+[0m[0;33m1 : (services.(*churnHandler).tryStartProtocol: 309) - Enough participants ( 17 clients and 3 trustees), but no handler to start.
+[0m[0;33m1 : (services.(*churnHandler).tryStartProtocol: 309) - Enough participants ( 18 clients and 3 trustees), but no handler to start.
+[0m[0;33m1 : (services.(*churnHandler).tryStartProtocol: 309) - Enough participants ( 19 clients and 3 trustees), but no handler to start.
+[0m[0;33m1 : (services.(*churnHandler).tryStartProtocol: 309) - Enough participants ( 20 clients and 3 trustees), but no handler to start.
+[0m[0;33m1 : (services.(*churnHandler).tryStartProtocol: 309) - Enough participants ( 21 clients and 3 trustees), but no handler to start.
+[0m[0;33m1 : (services.(*churnHandler).tryStartProtocol: 309) - Enough participants ( 22 clients and 3 trustees), but no handler to start.
+[0m[0;33m1 : (services.(*churnHandler).tryStartProtocol: 309) - Enough participants ( 23 clients and 3 trustees), but no handler to start.
+[0m[0;33m1 : (services.(*churnHandler).tryStartProtocol: 309) - Enough participants ( 24 clients and 3 trustees), but no handler to start.
+[0m[0;33m1 : (services.(*churnHandler).tryStartProtocol: 309) - Enough participants ( 25 clients and 3 trustees), but no handler to start.
+[0m[0;33m1 : (services.(*churnHandler).tryStartProtocol: 309) - Enough participants ( 26 clients and 3 trustees), but no handler to start.
+[0m[0;33m1 : (services.(*churnHandler).tryStartProtocol: 309) - Enough participants ( 27 clients and 3 trustees), but no handler to start.
+[0m[0;33m1 : (services.(*churnHandler).tryStartProtocol: 309) - Enough participants ( 28 clients and 3 trustees), but no handler to start.
+[0m[0;33m1 : (services.(*churnHandler).tryStartProtocol: 309) - Enough participants ( 29 clients and 3 trustees), but no handler to start.
+[0m[0;33m1 : (                        platform.Simulate: 140) - Starting new node PriFi
+[0m[0;33m1 : (services.(*churnHandler).tryStartProtocol: 309) - Enough participants ( 30 clients and 3 trustees), but no handler to start.
+[0m[0;37;1mI : (            main.(*SimulationService).Run: 188) - Sleeping 15 seconds before starting the experiment...
+[0m[0;37;1mI : (            main.(*SimulationService).Run: 191) - Starting experiment cPOIK8bUJC4mAicR4GFoKR8vgSzOdtSX
+
+[0m[0;33m1 : (services.(*ServiceState).StartPriFiCommunicateProtocol: 142) - Starting PriFi protocol
+[0m[0;37;1mI : (services.(*ServiceState).StartPriFiCommunicateProtocol: 149) - Outputting CPU profile in /tmp/prifi-321670588
+[0m[0;33m1 : (                         main.(*SimulationService).Run: 224) - Giving the experiment 3600 seconds to finish before aborting...
+[0m[0;33m1 : (relay.(*PriFiLibRelayInstance).Received_ALL_ALL_PARAMETERS: 170) - Relay has been initialized by message; StartNow is true
+[0m[0;33m1 : (relay.(*PriFiLibRelayInstance).Received_ALL_ALL_PARAMETERS: 177) - Relay setup done, and setup sent to the trustees.
+[0m[0;33m1 : (                           utils.StopMeasureAndLogWithInfo:  67) - [StopMeasureAndLog] measured time for resync-boot : 8090731 ns, info: 30
+[0m[0;33m1 : (                           utils.StopMeasureAndLogWithInfo:  67) - [StopMeasureAndLog] measured time for resync-shuffle-collect-client-pk : 1282588536 ns, info: 30
+[0m[0;33m1 : (                           utils.StopMeasureAndLogWithInfo:  67) - [StopMeasureAndLog] measured time for resync-shuffle-trustee-1step : 735741483 ns, info: 30
+[0m[0;33m1 : (                           utils.StopMeasureAndLogWithInfo:  67) - [StopMeasureAndLog] measured time for resync-shuffle-trustee-2step : 223708865 ns, info: 30
+[0m[0;33m1 : (                           utils.StopMeasureAndLogWithInfo:  67) - [StopMeasureAndLog] measured time for resync-shuffle : 2242362207 ns, info: 30
+[0m[0;33m1 : (                           utils.StopMeasureAndLogWithInfo:  67) - [StopMeasureAndLog] measured time for resync : 2250576793 ns, info: 30
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [0] 0.2 round/sec, 1.0 kB/s up, 0.0 kB/s down, 0.0 kB/s down(udp), 0.0 kB/s down(re-udp), 1 cells, 5000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [0] Schedules 1->1;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [0] 107 ms +- 0 (over 1, happened 1). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [0] 0 ms +- 0 (over 1, happened 1). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [0] 0 ms +- 0 (over 7, happened 7). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [0] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [0] 108 ms +- 0 (over 1, happened 1). Info: round-duration
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [0] 104 ms +- 0 (over 1, happened 1). Info: latency-msg-stayed-in-buffer
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [0] 596 ms +- 0 (over 1, happened 1). Info: measured-latency
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [1] 27.4 round/sec, 133.8 kB/s up, 0.0 kB/s down, 2.0 kB/s down(udp), 0.0 kB/s down(re-udp), 138 cells, 690000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [1] Schedules 0->18; 1->2;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [1] 205.65 ms +- 8.11 (over 100, happened 157). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [1] 29.6 ms +- 17.98 (over 20, happened 20). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [1] 28.53 ms +- 9.94 (over 100, happened 138). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [1] 0 ms +- 0 (over 100, happened 163). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [1] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [1] 210 ms +- 94.87 (over 3, happened 3). Info: latency-msg-stayed-in-buffer
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [1] 460.5 ms +- 100.83 (over 4, happened 4). Info: measured-latency
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [2] 28.2 round/sec, 137.7 kB/s up, 0.0 kB/s down, 3.0 kB/s down(udp), 0.0 kB/s down(re-udp), 279 cells, 1395000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [2] Schedules 0->35; 1->5;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [2] 34.73 ms +- 13.15 (over 100, happened 279). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [2] 0 ms +- 0 (over 100, happened 324). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [2] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [2] 226.99 ms +- 14.41 (over 100, happened 318). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [2] 22.43 ms +- 11.64 (over 40, happened 40). Info: waiting-on-clients
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [2] 258 ms +- 122.33 (over 6, happened 6). Info: latency-msg-stayed-in-buffer
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [2] 516.83 ms +- 112.07 (over 6, happened 6). Info: measured-latency
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [3] 29.4 round/sec, 143.6 kB/s up, 0.0 kB/s down, 1.0 kB/s down(udp), 0.0 kB/s down(re-udp), 426 cells, 2130000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [3] Schedules 0->53; 1->7;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [3] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [3] 207.29 ms +- 13.23 (over 100, happened 485). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [3] 22.97 ms +- 12.25 (over 60, happened 60). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [3] 28.98 ms +- 10.18 (over 100, happened 426). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [3] 0 ms +- 0 (over 100, happened 491). Info: sending-data
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [3] 245.5 ms +- 92.97 (over 8, happened 8). Info: latency-msg-stayed-in-buffer
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [3] 488.63 ms +- 90.62 (over 8, happened 8). Info: measured-latency
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [4] 28.2 round/sec, 137.7 kB/s up, 0.0 kB/s down, 2.0 kB/s down(udp), 0.0 kB/s down(re-udp), 567 cells, 2835000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [4] Schedules 0->71; 1->9;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [4] 24.56 ms +- 10.9 (over 80, happened 80). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [4] 33.16 ms +- 12.78 (over 100, happened 567). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [4] 0 ms +- 0 (over 100, happened 652). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [4] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [4] 225.43 ms +- 15.21 (over 100, happened 646). Info: round-duration
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [4] 239.7 ms +- 74.73 (over 10, happened 10). Info: latency-msg-stayed-in-buffer
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [4] 472.6 ms +- 75.18 (over 10, happened 10). Info: measured-latency
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [5] 30.6 round/sec, 149.4 kB/s up, 0.0 kB/s down, 2.0 kB/s down(udp), 0.0 kB/s down(re-udp), 720 cells, 3600000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [5] Schedules 0->92; 1->10;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [5] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [5] 197.58 ms +- 13.11 (over 100, happened 821). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [5] 27.81 ms +- 11.07 (over 100, happened 102). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [5] 25.31 ms +- 9.67 (over 100, happened 720). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [5] 0 ms +- 0 (over 100, happened 827). Info: sending-data
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [5] 239.85 ms +- 59.03 (over 13, happened 13). Info: latency-msg-stayed-in-buffer
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [5] 478 ms +- 60.86 (over 13, happened 13). Info: measured-latency
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [6] 30.8 round/sec, 150.4 kB/s up, 0.0 kB/s down, 3.0 kB/s down(udp), 0.0 kB/s down(re-udp), 874 cells, 4370000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [6] Schedules 0->110; 1->13;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [6] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [6] 219.25 ms +- 12.7 (over 100, happened 996). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [6] 28.65 ms +- 11.54 (over 100, happened 123). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [6] 30.42 ms +- 12.24 (over 100, happened 874). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [6] 0 ms +- 0 (over 100, happened 1002). Info: sending-data
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [6] 249.27 ms +- 54.91 (over 15, happened 15). Info: latency-msg-stayed-in-buffer
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [6] 496.47 ms +- 57.9 (over 15, happened 15). Info: measured-latency
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [7] 30.8 round/sec, 150.4 kB/s up, 0.0 kB/s down, 2.0 kB/s down(udp), 0.0 kB/s down(re-udp), 1028 cells, 5140000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [7] Schedules 0->130; 1->15;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [7] 207.46 ms +- 12.9 (over 100, happened 1172). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [7] 31.51 ms +- 11.84 (over 100, happened 145). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [7] 26.51 ms +- 9.32 (over 100, happened 1028). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [7] 0 ms +- 0 (over 100, happened 1178). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [7] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [8] 31.4 round/sec, 153.3 kB/s up, 0.0 kB/s down, 2.0 kB/s down(udp), 0.0 kB/s down(re-udp), 1185 cells, 5925000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [8] Schedules 0->150; 1->17;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [8] 30.39 ms +- 10.55 (over 100, happened 167). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [8] 33 ms +- 13.14 (over 100, happened 1185). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [8] 0 ms +- 0 (over 100, happened 1357). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [8] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [8] 208.94 ms +- 14.37 (over 100, happened 1351). Info: round-duration
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [7] 259.33 ms +- 49.66 (over 18, happened 18). Info: latency-msg-stayed-in-buffer
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [7] 503.94 ms +- 49.69 (over 18, happened 18). Info: measured-latency
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [9] 28.4 round/sec, 138.7 kB/s up, 0.0 kB/s down, 2.0 kB/s down(udp), 0.0 kB/s down(re-udp), 1327 cells, 6635000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [9] Schedules 0->168; 1->19;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [9] 233.64 ms +- 10.43 (over 100, happened 1513). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [9] 28.16 ms +- 10.07 (over 100, happened 187). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [9] 33.17 ms +- 12.37 (over 100, happened 1327). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [9] 0 ms +- 0 (over 100, happened 1519). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [9] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [8] 261.76 ms +- 45.44 (over 21, happened 21). Info: latency-msg-stayed-in-buffer
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [8] 505.71 ms +- 44.96 (over 21, happened 21). Info: measured-latency
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [10] 30.2 round/sec, 147.5 kB/s up, 0.0 kB/s down, 2.0 kB/s down(udp), 0.0 kB/s down(re-udp), 1478 cells, 7390000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [10] Schedules 0->188; 1->21;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [10] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [10] 193.72 ms +- 7.59 (over 100, happened 1686). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [10] 26.01 ms +- 9.18 (over 100, happened 209). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [10] 25.08 ms +- 10.88 (over 100, happened 1478). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [10] 0 ms +- 0 (over 100, happened 1692). Info: sending-data
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [9] 256.74 ms +- 42.01 (over 23, happened 23). Info: latency-msg-stayed-in-buffer
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [11] 31.4 round/sec, 153.3 kB/s up, 0.0 kB/s down, 2.0 kB/s down(udp), 0.0 kB/s down(re-udp), 1635 cells, 8175000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [11] Schedules 0->208; 1->23;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [11] 192.63 ms +- 11.22 (over 100, happened 1865). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [11] 26.05 ms +- 8.85 (over 100, happened 231). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [11] 28.53 ms +- 11.64 (over 100, happened 1635). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [11] 0 ms +- 0 (over 100, happened 1871). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [11] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [9] 497.42 ms +- 40.92 (over 24, happened 24). Info: measured-latency
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [10] 260 ms +- 38.92 (over 25, happened 25). Info: latency-msg-stayed-in-buffer
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [12] 28.6 round/sec, 139.6 kB/s up, 0.0 kB/s down, 2.0 kB/s down(udp), 0.0 kB/s down(re-udp), 1778 cells, 8890000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [12] Schedules 0->226; 1->25;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [12] 31.17 ms +- 10.81 (over 100, happened 251). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [12] 26.5 ms +- 10.36 (over 100, happened 1778). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [12] 0 ms +- 0 (over 100, happened 2034). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [12] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [12] 185.13 ms +- 19.94 (over 100, happened 2028). Info: round-duration
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [10] 490.38 ms +- 38.92 (over 26, happened 26). Info: measured-latency
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [11] 263.19 ms +- 37.66 (over 27, happened 27). Info: latency-msg-stayed-in-buffer
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [13] 23.8 round/sec, 116.2 kB/s up, 0.0 kB/s down, 2.0 kB/s down(udp), 0.0 kB/s down(re-udp), 1897 cells, 9485000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [13] Schedules 0->241; 1->27;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [13] 237.83 ms +- 12.8 (over 100, happened 2164). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [13] 35.33 ms +- 11.71 (over 100, happened 268). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [13] 33.35 ms +- 11.84 (over 100, happened 1897). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [13] 0 ms +- 0 (over 100, happened 2170). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [13] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [11] 485.75 ms +- 40.66 (over 28, happened 28). Info: measured-latency
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [14] 32.6 round/sec, 159.2 kB/s up, 0.0 kB/s down, 2.0 kB/s down(udp), 0.0 kB/s down(re-udp), 2060 cells, 10300000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [14] Schedules 0->261; 1->29;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [14] 39.5 ms +- 12.62 (over 100, happened 290). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [14] 24.14 ms +- 11.17 (over 100, happened 2060). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [14] 0 ms +- 0 (over 100, happened 2355). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [14] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [14] 208.6 ms +- 16.8 (over 100, happened 2349). Info: round-duration
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [12] 262.23 ms +- 35.69 (over 30, happened 30). Info: latency-msg-stayed-in-buffer
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [12] 491.47 ms +- 38.87 (over 30, happened 30). Info: measured-latency
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [15] 29.8 round/sec, 145.5 kB/s up, 0.0 kB/s down, 2.0 kB/s down(udp), 0.0 kB/s down(re-udp), 2209 cells, 11045000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [15] Schedules 0->280; 1->31;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [15] 31.51 ms +- 11.71 (over 100, happened 2209). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [15] 0.02 ms +- 0.04 (over 100, happened 2525). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [15] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [15] 214.9 ms +- 10.73 (over 100, happened 2519). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [15] 38.94 ms +- 12.26 (over 100, happened 311). Info: waiting-on-clients
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [13] 269 ms +- 33.69 (over 33, happened 33). Info: latency-msg-stayed-in-buffer
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [13] 498.45 ms +- 36.5 (over 33, happened 33). Info: measured-latency
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [16] 35.0 round/sec, 170.9 kB/s up, 0.0 kB/s down, 2.0 kB/s down(udp), 0.0 kB/s down(re-udp), 2384 cells, 11920000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [16] Schedules 0->303; 1->33;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [16] 21.62 ms +- 8.07 (over 100, happened 2384). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [16] 0 ms +- 0 (over 100, happened 2725). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [16] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [16] 169.81 ms +- 9.92 (over 100, happened 2719). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [16] 36.97 ms +- 12.02 (over 100, happened 336). Info: waiting-on-clients
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [17] 31.0 round/sec, 151.4 kB/s up, 0.0 kB/s down, 2.0 kB/s down(udp), 0.0 kB/s down(re-udp), 2539 cells, 12695000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [17] Schedules 0->323; 1->35;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [17] 196.31 ms +- 13.87 (over 100, happened 2896). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [17] 31.19 ms +- 10.24 (over 100, happened 358). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [17] 25.69 ms +- 10.01 (over 100, happened 2539). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [17] 0 ms +- 0 (over 100, happened 2902). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [17] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [14] 274.5 ms +- 34.04 (over 36, happened 36). Info: latency-msg-stayed-in-buffer
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [14] 500.14 ms +- 34.5 (over 36, happened 36). Info: measured-latency
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [18] 30.4 round/sec, 148.4 kB/s up, 0.0 kB/s down, 2.0 kB/s down(udp), 0.0 kB/s down(re-udp), 2691 cells, 13455000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [18] Schedules 0->342; 1->37;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [18] 0 ms +- 0 (over 100, happened 3075). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [18] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [18] 216.16 ms +- 10.75 (over 100, happened 3069). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [18] 28.91 ms +- 9.95 (over 100, happened 379). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [18] 31.19 ms +- 12.02 (over 100, happened 2691). Info: waiting-on-trustees
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [15] 500.37 ms +- 32.69 (over 38, happened 38). Info: measured-latency
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [15] 279.18 ms +- 32.05 (over 39, happened 39). Info: latency-msg-stayed-in-buffer
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [19] 29.8 round/sec, 145.5 kB/s up, 0.0 kB/s down, 2.0 kB/s down(udp), 0.0 kB/s down(re-udp), 2840 cells, 14200000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [19] Schedules 0->362; 1->39;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [19] 214.9 ms +- 10.22 (over 100, happened 3240). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [19] 24.97 ms +- 9.54 (over 100, happened 401). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [19] 31.15 ms +- 12.24 (over 100, happened 2840). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [19] 0 ms +- 0 (over 100, happened 3246). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [19] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [16] 500.44 ms +- 32.4 (over 41, happened 41). Info: measured-latency
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [20] 31.2 round/sec, 152.3 kB/s up, 0.0 kB/s down, 2.0 kB/s down(udp), 0.0 kB/s down(re-udp), 2996 cells, 14980000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [20] Schedules 0->382; 1->41;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [20] 0 ms +- 0 (over 100, happened 3424). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [20] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [20] 195.16 ms +- 9.18 (over 100, happened 3418). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [20] 26.8 ms +- 10.07 (over 100, happened 423). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [20] 25.99 ms +- 10.02 (over 100, happened 2996). Info: waiting-on-trustees
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [16] 273.1 ms +- 31.31 (over 42, happened 42). Info: latency-msg-stayed-in-buffer
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [17] 501.67 ms +- 31.32 (over 43, happened 43). Info: measured-latency
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [21] 29.0 round/sec, 141.6 kB/s up, 0.0 kB/s down, 2.0 kB/s down(udp), 0.0 kB/s down(re-udp), 3141 cells, 15705000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [21] Schedules 0->400; 1->43;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [21] 225.53 ms +- 12.87 (over 100, happened 3583). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [21] 27.86 ms +- 11.14 (over 100, happened 443). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [21] 29.05 ms +- 12.26 (over 100, happened 3141). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [21] 0 ms +- 0 (over 100, happened 3589). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [21] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [17] 272.45 ms +- 31.26 (over 44, happened 44). Info: latency-msg-stayed-in-buffer
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [22] 29.2 round/sec, 142.6 kB/s up, 0.0 kB/s down, 2.0 kB/s down(udp), 0.0 kB/s down(re-udp), 3287 cells, 16435000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [22] Schedules 0->419; 1->45;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [22] 29.89 ms +- 11.45 (over 100, happened 464). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [22] 28.84 ms +- 11.59 (over 100, happened 3287). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [22] 0 ms +- 0 (over 100, happened 3756). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [22] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [22] 210.29 ms +- 9.72 (over 100, happened 3750). Info: round-duration
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [18] 498 ms +- 31.06 (over 46, happened 46). Info: measured-latency
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [18] 272.57 ms +- 30.21 (over 47, happened 47). Info: latency-msg-stayed-in-buffer
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [23] 30.6 round/sec, 149.4 kB/s up, 0.0 kB/s down, 3.0 kB/s down(udp), 0.0 kB/s down(re-udp), 3440 cells, 17200000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [23] Schedules 0->437; 1->48;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [23] 30.59 ms +- 12.47 (over 100, happened 485). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [23] 25.26 ms +- 10.02 (over 100, happened 3440). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [23] 0 ms +- 0 (over 100, happened 3930). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [23] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [23] 198.05 ms +- 7.86 (over 100, happened 3924). Info: round-duration
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [19] 490.27 ms +- 30.5 (over 49, happened 49). Info: measured-latency
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [24] 27.6 round/sec, 134.8 kB/s up, 0.0 kB/s down, 1.0 kB/s down(udp), 0.0 kB/s down(re-udp), 3578 cells, 17890000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [24] Schedules 0->455; 1->50;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [24] 31.7 ms +- 13.87 (over 100, happened 3578). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [24] 0 ms +- 0 (over 100, happened 4088). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [24] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [24] 231.96 ms +- 32.33 (over 100, happened 4082). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [24] 31.91 ms +- 11.92 (over 100, happened 505). Info: waiting-on-clients
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [19] 268.22 ms +- 28.8 (over 50, happened 50). Info: latency-msg-stayed-in-buffer
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [20] 492.59 ms +- 29.65 (over 51, happened 51). Info: measured-latency
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [25] 25.4 round/sec, 124.0 kB/s up, 0.0 kB/s down, 2.0 kB/s down(udp), 0.0 kB/s down(re-udp), 3705 cells, 18525000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [25] Schedules 0->471; 1->51;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [25] 232.18 ms +- 8.12 (over 100, happened 4226). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [25] 34.25 ms +- 11.98 (over 100, happened 522). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [25] 32.75 ms +- 8.36 (over 100, happened 3705). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [25] 0 ms +- 0 (over 100, happened 4232). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [25] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [20] 268.79 ms +- 27.99 (over 52, happened 52). Info: latency-msg-stayed-in-buffer
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [21] 491.59 ms +- 28.21 (over 54, happened 54). Info: measured-latency
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [26] 30.2 round/sec, 147.5 kB/s up, 0.0 kB/s down, 3.0 kB/s down(udp), 0.0 kB/s down(re-udp), 3856 cells, 19280000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [26] Schedules 0->489; 1->54;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [26] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [26] 216.54 ms +- 13.4 (over 100, happened 4398). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [26] 30.3 ms +- 10.62 (over 100, happened 543). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [26] 32.33 ms +- 12.15 (over 100, happened 3856). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [26] 0 ms +- 0 (over 100, happened 4404). Info: sending-data
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [21] 269.11 ms +- 26.67 (over 55, happened 55). Info: latency-msg-stayed-in-buffer
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [22] 489.05 ms +- 27.42 (over 56, happened 56). Info: measured-latency
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [27] 34.0 round/sec, 166.0 kB/s up, 0.0 kB/s down, 2.0 kB/s down(udp), 0.0 kB/s down(re-udp), 4026 cells, 20130000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [27] Schedules 0->511; 1->56;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [27] 0 ms +- 0 (over 100, happened 4598). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [27] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [27] 186.45 ms +- 9.38 (over 100, happened 4592). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [27] 28.65 ms +- 9.86 (over 100, happened 567). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [27] 24.97 ms +- 9.5 (over 100, happened 4026). Info: waiting-on-trustees
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [22] 273.54 ms +- 27.95 (over 57, happened 57). Info: latency-msg-stayed-in-buffer
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [28] 25.0 round/sec, 122.1 kB/s up, 0.0 kB/s down, 1.0 kB/s down(udp), 0.0 kB/s down(re-udp), 4151 cells, 20755000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [28] Schedules 0->528; 1->57;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [28] 259.74 ms +- 14.58 (over 100, happened 4735). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [28] 27.64 ms +- 9.37 (over 100, happened 585). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [28] 33.5 ms +- 10.37 (over 100, happened 4151). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [28] 0 ms +- 0 (over 100, happened 4741). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [28] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [23] 497.05 ms +- 29.79 (over 58, happened 58). Info: measured-latency
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [29] 28.8 round/sec, 140.6 kB/s up, 0.0 kB/s down, 2.0 kB/s down(udp), 0.0 kB/s down(re-udp), 4295 cells, 21475000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [29] Schedules 0->546; 1->59;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [29] 26.09 ms +- 9.61 (over 100, happened 605). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [29] 27.17 ms +- 7.65 (over 100, happened 4295). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [29] 0 ms +- 0 (over 100, happened 4905). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [29] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [29] 200.97 ms +- 12.14 (over 100, happened 4899). Info: round-duration
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [23] 274.72 ms +- 26.59 (over 60, happened 60). Info: latency-msg-stayed-in-buffer
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [24] 493.1 ms +- 28.94 (over 61, happened 61). Info: measured-latency
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [30] 29.2 round/sec, 142.6 kB/s up, 0.0 kB/s down, 2.0 kB/s down(udp), 0.0 kB/s down(re-udp), 4441 cells, 22205000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [30] Schedules 0->565; 1->61;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [30] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [30] 209.82 ms +- 11.41 (over 100, happened 5066). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [30] 26.82 ms +- 10.37 (over 100, happened 626). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [30] 29.91 ms +- 12.46 (over 100, happened 4441). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [30] 0 ms +- 0 (over 100, happened 5072). Info: sending-data
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [24] 273.61 ms +- 25.84 (over 62, happened 62). Info: latency-msg-stayed-in-buffer
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [25] 493.55 ms +- 27.86 (over 64, happened 64). Info: measured-latency
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [31] 32.2 round/sec, 157.2 kB/s up, 0.0 kB/s down, 3.0 kB/s down(udp), 0.0 kB/s down(re-udp), 4602 cells, 23010000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [31] Schedules 0->585; 1->64;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [31] 0 ms +- 0 (over 100, happened 5256). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [31] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [31] 175.48 ms +- 5.66 (over 100, happened 5250). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [31] 25.75 ms +- 10.16 (over 100, happened 649). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [31] 26.47 ms +- 5.9 (over 100, happened 4602). Info: waiting-on-trustees
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [25] 276.57 ms +- 25.51 (over 65, happened 65). Info: latency-msg-stayed-in-buffer
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [32] 32.0 round/sec, 156.2 kB/s up, 0.0 kB/s down, 1.0 kB/s down(udp), 0.0 kB/s down(re-udp), 4762 cells, 23810000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [32] Schedules 0->606; 1->65;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [32] 30.8 ms +- 11.3 (over 100, happened 671). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [32] 23.75 ms +- 8.99 (over 100, happened 4762). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [32] 0 ms +- 0 (over 100, happened 5438). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [32] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [32] 191.65 ms +- 10.64 (over 100, happened 5432). Info: round-duration
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [26] 494.67 ms +- 27.27 (over 66, happened 66). Info: measured-latency
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [33] 27.6 round/sec, 134.8 kB/s up, 0.0 kB/s down, 2.0 kB/s down(udp), 0.0 kB/s down(re-udp), 4900 cells, 24500000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [33] Schedules 0->624; 1->67;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [33] 220.29 ms +- 10.49 (over 100, happened 5590). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [33] 27.36 ms +- 10.01 (over 100, happened 691). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [33] 33.72 ms +- 12.64 (over 100, happened 4900). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [33] 0 ms +- 0 (over 100, happened 5596). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [33] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [26] 274.24 ms +- 24.82 (over 68, happened 68). Info: latency-msg-stayed-in-buffer
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [27] 495.32 ms +- 26.49 (over 68, happened 68). Info: measured-latency
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [34] 32.8 round/sec, 160.2 kB/s up, 0.0 kB/s down, 2.0 kB/s down(udp), 0.0 kB/s down(re-udp), 5064 cells, 25320000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [34] Schedules 0->645; 1->69;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [34] 22.67 ms +- 7.94 (over 100, happened 5064). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [34] 0 ms +- 0 (over 100, happened 5783). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [34] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [34] 180.64 ms +- 11.64 (over 100, happened 5777). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [34] 30.7 ms +- 10.4 (over 100, happened 714). Info: waiting-on-clients
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [27] 272.21 ms +- 24.49 (over 70, happened 70). Info: latency-msg-stayed-in-buffer
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [28] 490.11 ms +- 26.92 (over 70, happened 70). Info: measured-latency
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [35] 31.2 round/sec, 152.3 kB/s up, 0.0 kB/s down, 2.0 kB/s down(udp), 0.0 kB/s down(re-udp), 5220 cells, 26100000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [35] Schedules 0->665; 1->71;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [35] 26.25 ms +- 9.62 (over 100, happened 736). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [35] 30.29 ms +- 12.62 (over 100, happened 5220). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [35] 0 ms +- 0 (over 100, happened 5961). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [35] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [35] 197.34 ms +- 13.33 (over 100, happened 5955). Info: round-duration
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [28] 286.95 ms +- 40.11 (over 73, happened 73). Info: latency-msg-stayed-in-buffer
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [36] 20.6 round/sec, 100.6 kB/s up, 0.0 kB/s down, 1.0 kB/s down(udp), 0.0 kB/s down(re-udp), 5323 cells, 26615000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [36] Schedules 0->678; 1->72;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [36] 300.56 ms +- 83.75 (over 100, happened 6072). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [36] 31.53 ms +- 11.05 (over 100, happened 750). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [36] 35.83 ms +- 23.76 (over 100, happened 5323). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [36] 0 ms +- 0 (over 100, happened 6078). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [36] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [29] 508.49 ms +- 50.25 (over 73, happened 73). Info: measured-latency
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [37] 8.0 round/sec, 39.1 kB/s up, 0.0 kB/s down, 2.0 kB/s down(udp), 0.0 kB/s down(re-udp), 5363 cells, 26815000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [37] Schedules 0->682; 1->74;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [37] 0 ms +- 0 (over 100, happened 6124). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [37] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [37] 573.33 ms +- 121.47 (over 100, happened 6118). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [37] 34.56 ms +- 12.07 (over 100, happened 756). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [37] 73.75 ms +- 47.72 (over 100, happened 5363). Info: waiting-on-trustees
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [29] 316.05 ms +- 57.51 (over 75, happened 75). Info: latency-msg-stayed-in-buffer
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [30] 547.08 ms +- 74.83 (over 75, happened 75). Info: measured-latency
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (trustee.(*PriFiLibTrusteeInstance).Send_TRU_REL_DC_CIPHER: 132) - Trustee 1 : rate changed from 1 to HALVED
+[0m[0;33m1 : (trustee.(*PriFiLibTrusteeInstance).Send_TRU_REL_DC_CIPHER: 132) - Trustee 0 : rate changed from 1 to HALVED
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [38] 11.4 round/sec, 55.7 kB/s up, 0.0 kB/s down, 2.9 kB/s down(udp), 0.0 kB/s down(re-udp), 5420 cells, 27100000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [38] Schedules 0->687; 1->77;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [38] 681.48 ms +- 97.4 (over 100, happened 6183). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [38] 35.46 ms +- 11.68 (over 100, happened 764). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [38] 93.61 ms +- 44.56 (over 100, happened 5420). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [38] 0 ms +- 0 (over 100, happened 6189). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [38] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [30] 321.18 ms +- 56.58 (over 78, happened 78). Info: latency-msg-stayed-in-buffer
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [31] 563.13 ms +- 75.34 (over 78, happened 78). Info: measured-latency
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [39] 15.0 round/sec, 73.2 kB/s up, 0.0 kB/s down, 1.0 kB/s down(udp), 0.0 kB/s down(re-udp), 5495 cells, 27475000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [39] Schedules 0->695; 1->79;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [39] 0 ms +- 0 (over 100, happened 6274). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [39] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [39] 427.22 ms +- 50.36 (over 100, happened 6268). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [39] 36.28 ms +- 12.31 (over 100, happened 774). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [39] 40.14 ms +- 12.35 (over 100, happened 5495). Info: waiting-on-trustees
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [31] 324.91 ms +- 55.58 (over 80, happened 80). Info: latency-msg-stayed-in-buffer
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [32] 569.59 ms +- 74.03 (over 80, happened 80). Info: measured-latency
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [40] 20.8 round/sec, 101.6 kB/s up, 0.0 kB/s down, 2.0 kB/s down(udp), 0.0 kB/s down(re-udp), 5599 cells, 27995000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [40] Schedules 0->709; 1->80;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [40] 306.45 ms +- 32.45 (over 100, happened 6388). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [40] 38.43 ms +- 12.45 (over 100, happened 789). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [40] 31.2 ms +- 11.61 (over 100, happened 5600). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [40] 0 ms +- 0 (over 100, happened 6394). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [40] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [32] 328.12 ms +- 55.01 (over 82, happened 82). Info: latency-msg-stayed-in-buffer
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [33] 574.04 ms +- 73.07 (over 82, happened 82). Info: measured-latency
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [41] 26.4 round/sec, 128.9 kB/s up, 0.0 kB/s down, 3.0 kB/s down(udp), 0.0 kB/s down(re-udp), 5731 cells, 28655000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [41] Schedules 0->724; 1->83;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [41] 235.34 ms +- 17.51 (over 100, happened 6539). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [41] 35.99 ms +- 11.99 (over 100, happened 807). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [41] 29.32 ms +- 9.63 (over 100, happened 5733). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [41] 0 ms +- 0 (over 100, happened 6545). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [41] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (trustee.(*PriFiLibTrusteeInstance).Send_TRU_REL_DC_CIPHER: 132) - Trustee 2 : rate changed from 1 to HALVED
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [33] 325.59 ms +- 53.25 (over 85, happened 85). Info: latency-msg-stayed-in-buffer
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [34] 572.15 ms +- 70.75 (over 85, happened 85). Info: measured-latency
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [42] 23.2 round/sec, 113.3 kB/s up, 0.0 kB/s down, 2.0 kB/s down(udp), 0.0 kB/s down(re-udp), 5847 cells, 29235000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [42] Schedules 0->739; 1->85;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [42] 247.41 ms +- 13.07 (over 100, happened 6677). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [42] 37.09 ms +- 12.68 (over 100, happened 824). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [42] 28.34 ms +- 11.47 (over 100, happened 5854). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [42] 0 ms +- 0 (over 100, happened 6683). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [42] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [43] 27.4 round/sec, 133.8 kB/s up, 0.0 kB/s down, 2.0 kB/s down(udp), 0.0 kB/s down(re-udp), 5984 cells, 29920000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [43] Schedules 0->757; 1->87;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [43] 0 ms +- 0 (over 100, happened 6839). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [43] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [43] 219.24 ms +- 8.7 (over 100, happened 6833). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [43] 36.16 ms +- 11.5 (over 100, happened 844). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [43] 28.52 ms +- 7.87 (over 100, happened 5990). Info: waiting-on-trustees
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [34] 322.3 ms +- 51.67 (over 88, happened 88). Info: latency-msg-stayed-in-buffer
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [35] 568.31 ms +- 68.59 (over 88, happened 88). Info: measured-latency
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [44] 28.8 round/sec, 140.6 kB/s up, 0.0 kB/s down, 2.0 kB/s down(udp), 0.0 kB/s down(re-udp), 6128 cells, 30640000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [44] Schedules 0->775; 1->89;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [44] 231.31 ms +- 11.04 (over 100, happened 6998). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [44] 29.67 ms +- 10.25 (over 100, happened 864). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [44] 29.98 ms +- 7.67 (over 100, happened 6135). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [44] 0 ms +- 0 (over 100, happened 7004). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [44] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [35] 320.68 ms +- 50.58 (over 90, happened 90). Info: latency-msg-stayed-in-buffer
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [36] 566.74 ms +- 67.14 (over 90, happened 90). Info: measured-latency
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [45] 27.6 round/sec, 134.8 kB/s up, 0.0 kB/s down, 2.0 kB/s down(udp), 0.0 kB/s down(re-udp), 6266 cells, 31330000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [45] Schedules 0->792; 1->91;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [45] 27.76 ms +- 9.52 (over 100, happened 883). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [45] 27.96 ms +- 9.91 (over 100, happened 6266). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [45] 0.01 ms +- 0.02 (over 100, happened 7154). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [45] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [45] 224.9 ms +- 14.55 (over 100, happened 7148). Info: round-duration
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [46] 14.2 round/sec, 69.3 kB/s up, 0.0 kB/s down, 1.0 kB/s down(udp), 0.0 kB/s down(re-udp), 6337 cells, 31685000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [46] Schedules 0->800; 1->92;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [46] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [46] 392.27 ms +- 89 (over 100, happened 7228). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [46] 29.01 ms +- 9.96 (over 100, happened 892). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [46] 30 ms +- 15.63 (over 100, happened 6337). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [46] 0 ms +- 0 (over 100, happened 7234). Info: sending-data
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [36] 326.01 ms +- 51.87 (over 93, happened 93). Info: latency-msg-stayed-in-buffer
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [37] 573.08 ms +- 68.17 (over 93, happened 93). Info: measured-latency
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [47] 24.4 round/sec, 119.1 kB/s up, 0.0 kB/s down, 3.0 kB/s down(udp), 0.0 kB/s down(re-udp), 6459 cells, 32295000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [47] Schedules 0->815; 1->95;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [47] 29.72 ms +- 10.28 (over 100, happened 910). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [47] 27.61 ms +- 6.23 (over 100, happened 6459). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [47] 0 ms +- 0 (over 100, happened 7374). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [47] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [47] 237.23 ms +- 8.86 (over 100, happened 7368). Info: round-duration
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [37] 337.01 ms +- 54.14 (over 96, happened 96). Info: latency-msg-stayed-in-buffer
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [38] 585.5 ms +- 70.04 (over 96, happened 96). Info: measured-latency
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [48] 15.6 round/sec, 76.2 kB/s up, 0.0 kB/s down, 1.0 kB/s down(udp), 0.0 kB/s down(re-udp), 6537 cells, 32685000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [48] Schedules 0->825; 1->96;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [48] 370.71 ms +- 55.93 (over 100, happened 7457). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [48] 39.3 ms +- 16.02 (over 100, happened 921). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [48] 25.06 ms +- 8.75 (over 100, happened 6537). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [48] 0 ms +- 0 (over 100, happened 7463). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [48] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [38] 342.48 ms +- 53.66 (over 98, happened 98). Info: latency-msg-stayed-in-buffer
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [39] 593.28 ms +- 69.55 (over 98, happened 98). Info: measured-latency
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [49] 13.0 round/sec, 63.5 kB/s up, 0.0 kB/s down, 2.0 kB/s down(udp), 0.0 kB/s down(re-udp), 6602 cells, 33010000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [49] Schedules 0->831; 1->98;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [49] 457.46 ms +- 74.41 (over 100, happened 7530). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [49] 38.55 ms +- 15.44 (over 100, happened 929). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [49] 41.95 ms +- 14.3 (over 100, happened 6602). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [49] 0 ms +- 0 (over 100, happened 7536). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [49] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [39] 372.51 ms +- 79.06 (over 99, happened 99). Info: latency-msg-stayed-in-buffer
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [40] 633.28 ms +- 104.05 (over 99, happened 99). Info: measured-latency
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [50] 4.4 round/sec, 21.5 kB/s up, 0.0 kB/s down, 1.0 kB/s down(udp), 0.0 kB/s down(re-udp), 6624 cells, 33120000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [50] Schedules 0->833; 1->99;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [50] 672.04 ms +- 160.13 (over 100, happened 7555). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [50] 39.06 ms +- 15.49 (over 100, happened 932). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [50] 75.38 ms +- 62.54 (over 100, happened 6624). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [50] 0 ms +- 0 (over 100, happened 7561). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [50] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [51] 14.2 round/sec, 69.3 kB/s up, 0.0 kB/s down, 1.0 kB/s down(udp), 0.0 kB/s down(re-udp), 6695 cells, 33475000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [51] Schedules 0->842; 1->101;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [51] 661.1 ms +- 148.9 (over 100, happened 7637). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [51] 45.75 ms +- 16.83 (over 100, happened 943). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [51] 83.86 ms +- 63.71 (over 100, happened 6695). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [51] 0 ms +- 0 (over 100, happened 7643). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [51] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [40] 380.91 ms +- 79.44 (over 100, happened 102). Info: latency-msg-stayed-in-buffer
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [41] 656.29 ms +- 106.27 (over 100, happened 102). Info: measured-latency
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [52] 8.0 round/sec, 39.1 kB/s up, 0.0 kB/s down, 2.0 kB/s down(udp), 0.0 kB/s down(re-udp), 6735 cells, 33675000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [52] Schedules 0->846; 1->102;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [52] 0.06 ms +- 0.12 (over 100, happened 7688). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [52] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [52] 590.12 ms +- 61.57 (over 100, happened 7682). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [52] 50.58 ms +- 17.65 (over 100, happened 948). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [52] 51.13 ms +- 19.59 (over 100, happened 6735). Info: waiting-on-trustees
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [41] 400.24 ms +- 83.29 (over 100, happened 104). Info: latency-msg-stayed-in-buffer
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [42] 686.42 ms +- 111.44 (over 100, happened 104). Info: measured-latency
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [53] 10.6 round/sec, 51.8 kB/s up, 0.0 kB/s down, 2.0 kB/s down(udp), 0.0 kB/s down(re-udp), 6788 cells, 33940000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [53] Schedules 0->851; 1->104;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [53] 656.35 ms +- 63.07 (over 100, happened 7742). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [53] 54.03 ms +- 17.75 (over 100, happened 955). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [53] 57.02 ms +- 13.66 (over 100, happened 6788). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [53] 0.08 ms +- 0.12 (over 100, happened 7748). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [53] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [42] 410.1 ms +- 85.21 (over 100, happened 106). Info: latency-msg-stayed-in-buffer
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [43] 721.26 ms +- 124.74 (over 100, happened 106). Info: measured-latency
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [54] 3.0 round/sec, 14.6 kB/s up, 0.0 kB/s down, 2.0 kB/s down(udp), 0.0 kB/s down(re-udp), 6803 cells, 34015000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [54] Schedules 0->852; 1->105;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [54] 818.73 ms +- 128.26 (over 100, happened 7760). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [54] 56.56 ms +- 18.32 (over 100, happened 957). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [54] 83.19 ms +- 19.88 (over 100, happened 6804). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [54] 0.27 ms +- 0.39 (over 100, happened 7766). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [54] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [43] 435.17 ms +- 98.46 (over 100, happened 108). Info: latency-msg-stayed-in-buffer
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [44] 787.43 ms +- 150.46 (over 100, happened 108). Info: measured-latency
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [55] 4.2 round/sec, 20.5 kB/s up, 0.0 kB/s down, 1.0 kB/s down(udp), 0.0 kB/s down(re-udp), 6824 cells, 34120000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [55] Schedules 0->854; 1->106;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [55] 1036.72 ms +- 136.8 (over 100, happened 7783). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [55] 63.1 ms +- 19.34 (over 100, happened 960). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [55] 112.47 ms +- 22.09 (over 100, happened 6824). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [55] 0.6 ms +- 0.84 (over 100, happened 7789). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [55] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [44] 452.47 ms +- 103.05 (over 100, happened 111). Info: latency-msg-stayed-in-buffer
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [56] 5.6 round/sec, 27.3 kB/s up, 0.0 kB/s down, 2.0 kB/s down(udp), 0.0 kB/s down(re-udp), 6852 cells, 34260000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [56] Schedules 0->856; 1->108;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [56] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [56] 1237.87 ms +- 138.04 (over 100, happened 7815). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [56] 70.43 ms +- 20.33 (over 100, happened 964). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [56] 134.85 ms +- 24 (over 100, happened 6852). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [56] 0.78 ms +- 0.91 (over 100, happened 7821). Info: sending-data
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [45] 465.58 ms +- 106.68 (over 100, happened 113). Info: latency-msg-stayed-in-buffer
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [45] 870.81 ms +- 169.83 (over 100, happened 112). Info: measured-latency
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [57] 4.8 round/sec, 23.4 kB/s up, 0.0 kB/s down, 2.0 kB/s down(udp), 0.0 kB/s down(re-udp), 6876 cells, 34380000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [57] Schedules 0->858; 1->109;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [57] 1.02 ms +- 1.03 (over 100, happened 7848). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [57] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [57] 1410.42 ms +- 121.99 (over 100, happened 7842). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [57] 73.55 ms +- 20.51 (over 100, happened 967). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [57] 153.82 ms +- 25.04 (over 100, happened 6876). Info: waiting-on-trustees
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [46] 477.95 ms +- 107.32 (over 100, happened 115). Info: latency-msg-stayed-in-buffer
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [46] 891.02 ms +- 170.12 (over 100, happened 115). Info: measured-latency
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [58] 10.6 round/sec, 51.8 kB/s up, 0.0 kB/s down, 2.0 kB/s down(udp), 0.0 kB/s down(re-udp), 6929 cells, 34645000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [58] Schedules 0->863; 1->111;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [58] 800.15 ms +- 89.94 (over 100, happened 7902). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [58] 74.77 ms +- 20.43 (over 100, happened 974). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [58] 93.72 ms +- 18.72 (over 100, happened 6929). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [58] 0.53 ms +- 0.57 (over 100, happened 7908). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [58] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [59] 4.2 round/sec, 20.5 kB/s up, 0.0 kB/s down, 1.0 kB/s down(udp), 0.0 kB/s down(re-udp), 6950 cells, 34750000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [59] Schedules 0->865; 1->112;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [59] 113.52 ms +- 18.97 (over 100, happened 6950). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [59] 0.72 ms +- 0.68 (over 100, happened 7932). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [59] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [59] 891.6 ms +- 98.62 (over 100, happened 7926). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [59] 80.01 ms +- 21.43 (over 100, happened 977). Info: waiting-on-clients
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [47] 529.95 ms +- 129.74 (over 100, happened 118). Info: latency-msg-stayed-in-buffer
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [47] 975.7 ms +- 194.1 (over 100, happened 118). Info: measured-latency
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [60] 4.8 round/sec, 23.4 kB/s up, 0.0 kB/s down, 1.0 kB/s down(udp), 0.0 kB/s down(re-udp), 6974 cells, 34870000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [60] Schedules 0->867; 1->113;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [60] 2.32 ms +- 3.78 (over 100, happened 7959). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [60] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [60] 980.97 ms +- 109.25 (over 100, happened 7953). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [60] 80.14 ms +- 21.37 (over 100, happened 982). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [60] 111.26 ms +- 19.62 (over 100, happened 6972). Info: waiting-on-trustees
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [48] 545.65 ms +- 131.98 (over 100, happened 121). Info: latency-msg-stayed-in-buffer
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [48] 1022.66 ms +- 199.47 (over 100, happened 121). Info: measured-latency
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [61] 4.4 round/sec, 21.5 kB/s up, 0.0 kB/s down, 2.0 kB/s down(udp), 0.0 kB/s down(re-udp), 6996 cells, 34980000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [61] Schedules 0->869; 1->114;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [61] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [61] 1271.28 ms +- 82.22 (over 100, happened 7978). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [61] 83.46 ms +- 21.78 (over 100, happened 985). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [61] 136.65 ms +- 20.17 (over 100, happened 6994). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [61] 2.36 ms +- 3.78 (over 100, happened 7984). Info: sending-data
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [49] 557.28 ms +- 133.58 (over 100, happened 123). Info: latency-msg-stayed-in-buffer
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [49] 1054.11 ms +- 201.65 (over 100, happened 123). Info: measured-latency
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [62] 5.8 round/sec, 28.3 kB/s up, 0.0 kB/s down, 2.0 kB/s down(udp), 0.0 kB/s down(re-udp), 7025 cells, 35125000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [62] Schedules 0->872; 1->115;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [62] 2.49 ms +- 3.8 (over 100, happened 8017). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [62] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [62] 1320.7 ms +- 82.18 (over 100, happened 8011). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [62] 88.1 ms +- 21.91 (over 100, happened 989). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [62] 144.81 ms +- 20.68 (over 100, happened 7023). Info: waiting-on-trustees
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [50] 574.48 ms +- 134.82 (over 100, happened 125). Info: latency-msg-stayed-in-buffer
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [50] 1084.3 ms +- 202.8 (over 100, happened 125). Info: measured-latency
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [63] 7.4 round/sec, 36.1 kB/s up, 0.0 kB/s down, 2.0 kB/s down(udp), 0.0 kB/s down(re-udp), 7062 cells, 35310000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [63] Schedules 0->875; 1->117;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [63] 1080.72 ms +- 72 (over 100, happened 8053). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [63] 91.98 ms +- 21.66 (over 100, happened 994). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [63] 111.1 ms +- 17.7 (over 100, happened 7060). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [63] 0.41 ms +- 0.5 (over 100, happened 8059). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [63] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [64] 11.2 round/sec, 54.7 kB/s up, 0.0 kB/s down, 2.0 kB/s down(udp), 0.0 kB/s down(re-udp), 7118 cells, 35590000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [64] Schedules 0->882; 1->118;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [64] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [64] 653.44 ms +- 56.83 (over 100, happened 8117). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [64] 95.61 ms +- 21.55 (over 100, happened 1002). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [64] 73.06 ms +- 15.4 (over 100, happened 7116). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [64] 0.04 ms +- 0.08 (over 100, happened 8123). Info: sending-data
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [51] 581.52 ms +- 135.17 (over 100, happened 128). Info: latency-msg-stayed-in-buffer
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [51] 1101.39 ms +- 202.51 (over 100, happened 128). Info: measured-latency
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [65] 8.8 round/sec, 43.0 kB/s up, 0.0 kB/s down, 1.0 kB/s down(udp), 0.0 kB/s down(re-udp), 7162 cells, 35810000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [65] Schedules 0->886; 1->120;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [65] 643.86 ms +- 50.76 (over 100, happened 8167). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [65] 99.85 ms +- 21.4 (over 100, happened 1008). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [65] 59.61 ms +- 14.08 (over 100, happened 7160). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [65] 0.49 ms +- 0.68 (over 100, happened 8173). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [65] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [52] 589.98 ms +- 136.24 (over 100, happened 131). Info: latency-msg-stayed-in-buffer
+[0m[0;33m1 : (                  log.(*TimeStatistics).ReportWithInfo:  78) - [52] 1119.78 ms +- 203.09 (over 100, happened 131). Info: measured-latency
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [66] 10.0 round/sec, 48.8 kB/s up, 0.0 kB/s down, 2.9 kB/s down(udp), 0.0 kB/s down(re-udp), 7212 cells, 36060000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [66] Schedules 0->892; 1->121;  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [66] 617.65 ms +- 71.02 (over 100, happened 8224). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [66] 103.71 ms +- 21.29 (over 100, happened 1015). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [66] 72.07 ms +- 19.8 (over 100, happened 7210). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [66] 1.15 ms +- 1.89 (over 100, happened 8230). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [66] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (client.(*PriFiLibClientInstance).ProcessDownStreamData: 229) - Client 0 wants to send a latency test
+[0m

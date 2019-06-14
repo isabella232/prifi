@@ -1,0 +1,573 @@
+Building simulation... [32m[ok][0m
+Simulation ID is [33mP3P1srX1lJdQMkh8l1r6YbNxPtfCKlHm[0m, storing it in [33m~/remote/.simID[0m on remote... [32m[ok][0m
+Starting simulation [33mprifi_simul.toml[0m on [33mdeterlab[0m.
+[0;33m1 : (                        simul.startBuild:  54) - Deploying to deterlab
+[0mGoing to encode  rv {lbarman users.deterlab.net SAFER LB-LLD /home/jwhite/d/git/prifi/sda/simulation  /home/jwhite/d/git/prifi/sda/simulation/deploy /home/jwhite/d/git/prifi/sda/simulation/build /home/jwhite/d/go/src/gopkg.in/dedis/onet.v2/simul/platform [] [] <nil> false localhost users.isi.deterlab.net 10002 9 PriFi 14 0 10000000ms Ed25519 }
+Key  RV {lbarman users.deterlab.net SAFER LB-LLD /home/jwhite/d/git/prifi/sda/simulation  /home/jwhite/d/git/prifi/sda/simulation/deploy /home/jwhite/d/git/prifi/sda/simulation/build /home/jwhite/d/go/src/gopkg.in/dedis/onet.v2/simul/platform [] [] <nil> false localhost users.isi.deterlab.net 10002 9 PriFi 14 0 10000000ms Ed25519 } k is of type struct
+Key Login RV lbarman k is of type string
+Key Host RV users.deterlab.net k is of type string
+Key Project RV SAFER k is of type string
+Key Experiment RV LB-LLD k is of type string
+Key ProxyAddress RV localhost k is of type string
+Key MonitorAddress RV users.isi.deterlab.net k is of type string
+Key MonitorPort RV 10002 k is of type int
+Key Servers RV 9 k is of type int
+Key Simulation RV PriFi k is of type string
+Key Hosts RV 14 k is of type int
+Key Debug RV 0 k is of type int
+Key RunWait RV 10000000ms k is of type string
+Key Suite RV Ed25519 k is of type string
+Key PreScript RV  k is of type string
+[0;33m1 : (              platform.(*Deterlab).Build: 136) - Building for lbarman users.deterlab.net SAFER  simulDir= /home/jwhite/d/git/prifi/sda/simulation
+[0m[0;33m1 : (              platform.(*Deterlab).Build: 182) - Build is finished after 1.974677991s
+[0mGoing to encode  rv {lbarman users.deterlab.net SAFER LB-LLD /home/jwhite/d/git/prifi/sda/simulation  /home/jwhite/d/git/prifi/sda/simulation/deploy /home/jwhite/d/git/prifi/sda/simulation/build /home/jwhite/d/go/src/gopkg.in/dedis/onet.v2/simul/platform [client-0.LB-LLD.SAFER.isi.deterlab.net client-1.LB-LLD.SAFER.isi.deterlab.net client-2.LB-LLD.SAFER.isi.deterlab.net client-3.LB-LLD.SAFER.isi.deterlab.net client-4.LB-LLD.SAFER.isi.deterlab.net relay.LB-LLD.SAFER.isi.deterlab.net trustee-0.LB-LLD.SAFER.isi.deterlab.net trustee-1.LB-LLD.SAFER.isi.deterlab.net trustee-2.LB-LLD.SAFER.isi.deterlab.net trusteeinlan.LB-LLD.SAFER.isi.deterlab.net] [10.0.1.1 10.0.1.2 10.0.1.3 10.0.1.4 10.0.1.5 10.0.1.254 10.1.0.1 10.1.0.2 10.1.0.3 10.2.0.250] 0xc000086720 false localhost users.isi.deterlab.net 10002 9 PriFi 14 1 10000000ms Ed25519 }
+Key  RV {lbarman users.deterlab.net SAFER LB-LLD /home/jwhite/d/git/prifi/sda/simulation  /home/jwhite/d/git/prifi/sda/simulation/deploy /home/jwhite/d/git/prifi/sda/simulation/build /home/jwhite/d/go/src/gopkg.in/dedis/onet.v2/simul/platform [client-0.LB-LLD.SAFER.isi.deterlab.net client-1.LB-LLD.SAFER.isi.deterlab.net client-2.LB-LLD.SAFER.isi.deterlab.net client-3.LB-LLD.SAFER.isi.deterlab.net client-4.LB-LLD.SAFER.isi.deterlab.net relay.LB-LLD.SAFER.isi.deterlab.net trustee-0.LB-LLD.SAFER.isi.deterlab.net trustee-1.LB-LLD.SAFER.isi.deterlab.net trustee-2.LB-LLD.SAFER.isi.deterlab.net trusteeinlan.LB-LLD.SAFER.isi.deterlab.net] [10.0.1.1 10.0.1.2 10.0.1.3 10.0.1.4 10.0.1.5 10.0.1.254 10.1.0.1 10.1.0.2 10.1.0.3 10.2.0.250] 0xc000086720 false localhost users.isi.deterlab.net 10002 9 PriFi 14 1 10000000ms Ed25519 } k is of type struct
+Key Login RV lbarman k is of type string
+Key Host RV users.deterlab.net k is of type string
+Key Project RV SAFER k is of type string
+Key Experiment RV LB-LLD k is of type string
+Key Phys RV [client-0.LB-LLD.SAFER.isi.deterlab.net client-1.LB-LLD.SAFER.isi.deterlab.net client-2.LB-LLD.SAFER.isi.deterlab.net client-3.LB-LLD.SAFER.isi.deterlab.net client-4.LB-LLD.SAFER.isi.deterlab.net relay.LB-LLD.SAFER.isi.deterlab.net trustee-0.LB-LLD.SAFER.isi.deterlab.net trustee-1.LB-LLD.SAFER.isi.deterlab.net trustee-2.LB-LLD.SAFER.isi.deterlab.net trusteeinlan.LB-LLD.SAFER.isi.deterlab.net] k is of type slice
+Key Virt RV [10.0.1.1 10.0.1.2 10.0.1.3 10.0.1.4 10.0.1.5 10.0.1.254 10.1.0.1 10.1.0.2 10.1.0.3 10.2.0.250] k is of type slice
+Key ProxyAddress RV localhost k is of type string
+Key MonitorAddress RV users.isi.deterlab.net k is of type string
+Key MonitorPort RV 10002 k is of type int
+Key Servers RV 9 k is of type int
+Key Simulation RV PriFi k is of type string
+Key Hosts RV 14 k is of type int
+Key Debug RV 1 k is of type int
+Key RunWait RV 10000000ms k is of type string
+Key Suite RV Ed25519 k is of type string
+Key PreScript RV  k is of type string
+[0;33m1 : (             platform.(*Deterlab).Deploy: 293) - Copying over to lbarman @ users.deterlab.net
+[0m1 : (                               main.main:  50) - Cleaning up 10 hosts.
+1 : (                               main.main: 120) - starting 9 cothorities for a total of 14 processes.
+1 : (                       network.NewRouter:  73) - New router with address tcp://[::]:2000 and public key 0de640c57158b5460f5466fea04a9f265d35bcf90de41c0f38f6fe5482cc5628
+1 : (                       network.NewRouter:  73) - New router with address tcp://[::]:2000 and public key e0c3799640ddfd86532eeb1087bcff663cde39c6b71cf4ad52ac4933473595f6
+1 : (                       network.NewRouter:  73) - New router with address tcp://[::]:2002 and public key 61223c31ef0828749d0f54f77d256f70ba9e3e0874f915f6cef13ee36e59a22e
+1 : (                       network.NewRouter:  73) - New router with address tcp://[::]:2000 and public key 92bb0b5bee5f7ad9ab5726384afc0a082902914286847ef4f69a7abce8f341a1
+1 : (               onet%2ev2.(*Server).Start: 213) - Starting server at 2019-01-15 05:28:16 on address tcp://10.0.1.254:2000 with public key e0c3799640ddfd86532eeb1087bcff663cde39c6b71cf4ad52ac4933473595f6
+1 : (                       platform.Simulate: 115) - Started counting children with timeout of 1s
+1 : (                       network.NewRouter:  73) - New router with address tcp://[::]:2000 and public key c20ed24ca670dd7a17e19fe302e4911bdcda7ebcf35bf4dda01f13f7c47595db
+1 : (                       network.NewRouter:  73) - New router with address tcp://[::]:2002 and public key c6536801cbb411c2053f64722e9504b84eb80526079bcb025a866033a456a59d
+1 : (               onet%2ev2.(*Server).Start: 213) - Starting server at 2019-01-15 05:28:15 on address tcp://10.0.1.3:2000 with public key 0de640c57158b5460f5466fea04a9f265d35bcf90de41c0f38f6fe5482cc5628
+1 : (               onet%2ev2.(*Server).Start: 213) - Starting server at 2019-01-15 05:28:15 on address tcp://10.0.1.3:2002 with public key 61223c31ef0828749d0f54f77d256f70ba9e3e0874f915f6cef13ee36e59a22e
+1 : (                       network.NewRouter:  73) - New router with address tcp://[::]:2002 and public key 6f8b4701ee786a64e26d3b4bf942151538e87d7917eef17b488178807a111a69
+1 : (               onet%2ev2.(*Server).Start: 213) - Starting server at 2019-01-15 05:28:16 on address tcp://10.0.1.1:2000 with public key 92bb0b5bee5f7ad9ab5726384afc0a082902914286847ef4f69a7abce8f341a1
+1 : (               onet%2ev2.(*Server).Start: 213) - Starting server at 2019-01-15 05:28:16 on address tcp://10.0.1.1:2002 with public key c6536801cbb411c2053f64722e9504b84eb80526079bcb025a866033a456a59d
+1 : (               onet%2ev2.(*Server).Start: 213) - Starting server at 2019-01-15 05:28:16 on address tcp://10.0.1.5:2000 with public key c20ed24ca670dd7a17e19fe302e4911bdcda7ebcf35bf4dda01f13f7c47595db
+1 : (               onet%2ev2.(*Server).Start: 213) - Starting server at 2019-01-15 05:28:16 on address tcp://10.0.1.5:2002 with public key 6f8b4701ee786a64e26d3b4bf942151538e87d7917eef17b488178807a111a69
+1 : (                       network.NewRouter:  73) - New router with address tcp://[::]:2000 and public key 03e9441c2b75ff6ebbeaf1fc383a0368019f496a47f6aac5831a3570dcdf5f62
+1 : (                       network.NewRouter:  73) - New router with address tcp://[::]:2000 and public key 6e207a29e3f8daa55c8c75e7489849a9df1992fc27992c392b275a7c15cb6b48
+1 : (                       network.NewRouter:  73) - New router with address tcp://[::]:2000 and public key d642938682f795d79795535f4186cf0d0db06df5c4e6a97adeee00024a388c6d
+1 : (                       network.NewRouter:  73) - New router with address tcp://[::]:2000 and public key ea9304af7bbb3bb97da6a9caef900ba8ab2fd601a8de18796c828b9efcd87ec5
+1 : (               onet%2ev2.(*Server).Start: 213) - Starting server at 2019-01-15 05:28:16 on address tcp://10.1.0.2:2000 with public key 03e9441c2b75ff6ebbeaf1fc383a0368019f496a47f6aac5831a3570dcdf5f62
+1 : (               onet%2ev2.(*Server).Start: 213) - Starting server at 2019-01-15 05:28:16 on address tcp://10.1.0.3:2000 with public key 6e207a29e3f8daa55c8c75e7489849a9df1992fc27992c392b275a7c15cb6b48
+1 : (                       network.NewRouter:  73) - New router with address tcp://[::]:2002 and public key a1095e232c18872049c941a3634325e2d10128ca3372d9cbbe00ed48138204db
+1 : (               onet%2ev2.(*Server).Start: 213) - Starting server at 2019-01-15 05:28:16 on address tcp://10.1.0.1:2000 with public key ea9304af7bbb3bb97da6a9caef900ba8ab2fd601a8de18796c828b9efcd87ec5
+1 : (               onet%2ev2.(*Server).Start: 213) - Starting server at 2019-01-15 05:28:16 on address tcp://10.0.1.2:2000 with public key d642938682f795d79795535f4186cf0d0db06df5c4e6a97adeee00024a388c6d
+1 : (               onet%2ev2.(*Server).Start: 213) - Starting server at 2019-01-15 05:28:16 on address tcp://10.0.1.2:2002 with public key a1095e232c18872049c941a3634325e2d10128ca3372d9cbbe00ed48138204db
+1 : (                       network.NewRouter:  73) - New router with address tcp://[::]:2000 and public key e43f388ec253ec98820db0f36ba14e6aa3c4862213f4b3e3634745d43016a8e1
+1 : (                       network.NewRouter:  73) - New router with address tcp://[::]:2002 and public key d0658944fcd9c9165dfdd4723ab0036493399f958aabab32ba1559eaa6ce6fcf
+1 : (               onet%2ev2.(*Server).Start: 213) - Starting server at 2019-01-15 05:28:16 on address tcp://10.0.1.4:2000 with public key e43f388ec253ec98820db0f36ba14e6aa3c4862213f4b3e3634745d43016a8e1
+1 : (               onet%2ev2.(*Server).Start: 213) - Starting server at 2019-01-15 05:28:16 on address tcp://10.0.1.4:2002 with public key d0658944fcd9c9165dfdd4723ab0036493399f958aabab32ba1559eaa6ce6fcf
+1 : (                       platform.Simulate: 122) - Found only 6 children, counting again
+1 : (                       platform.Simulate: 115) - Started counting children with timeout of 2s
+1 : (                       platform.Simulate: 119) - Found all 14 children
+1 : (          main.(*SimulationService).Node: 101) - Node #0 running on server tcp://10.0.1.254:2000 and will be a relay
+[0;33m1 : (          main.(*SimulationService).Node: 146) - Initiating this node (index  0 ) as relay
+[0m[0;37;1mI : (     services.(*ServiceState).StartRelay: 133) - Service tcp://10.0.1.254:2000 running in relay mode
+[0m[0;33m1 : (     services.(*ServiceState).StartRelay: 161) - Starting EGRESS false
+[0m1 : (          main.(*SimulationService).Node: 101) - Node #13 running on server tcp://10.0.1.5:2002 and will be a client
+1 : (          main.(*SimulationService).Node: 101) - Node #11 running on server tcp://10.0.1.3:2002 and will be a client
+1 : (          main.(*SimulationService).Node: 101) - Node #12 running on server tcp://10.0.1.4:2002 and will be a client
+1 : (          main.(*SimulationService).Node: 101) - Node #9 running on server tcp://10.0.1.1:2002 and will be a client
+1 : (          main.(*SimulationService).Node: 101) - Node #5 running on server tcp://10.0.1.2:2000 and will be a client
+1 : (          main.(*SimulationService).Node: 101) - Node #4 running on server tcp://10.0.1.1:2000 and will be a client
+[0;33m1 : (          main.(*SimulationService).Node: 101) - Node #8 running on server tcp://10.0.1.5:2000 and will be a client
+[0m[0;33m1 : (          main.(*SimulationService).Node: 101) - Node #6 running on server tcp://10.0.1.3:2000 and will be a client
+[0m[0;33m1 : (          main.(*SimulationService).Node: 101) - Node #10 running on server tcp://10.0.1.2:2002 and will be a client
+[0m[0;33m1 : (          main.(*SimulationService).Node: 101) - Node #7 running on server tcp://10.0.1.4:2000 and will be a client
+[0m1 : (          main.(*SimulationService).Node: 101) - Node #1 running on server tcp://10.1.0.1:2000 and will be a trustee
+1 : (          main.(*SimulationService).Node: 101) - Node #2 running on server tcp://10.1.0.2:2000 and will be a trustee
+1 : (          main.(*SimulationService).Node: 101) - Node #3 running on server tcp://10.1.0.3:2000 and will be a trustee
+[0;33m1 : (          main.(*SimulationService).Node: 149) - Initiating this node (index  1 ) as trustee
+[0m[0;33m1 : (          main.(*SimulationService).Node: 149) - Initiating this node (index  2 ) as trustee
+[0m[0;33m1 : (          main.(*SimulationService).Node: 149) - Initiating this node (index  3 ) as trustee
+[0m[0;37;1mI : (    services.(*ServiceState).StartClient: 177) - Service tcp://10.0.1.5:2002 running in client mode
+[0m[0;33m1 : (    services.(*ServiceState).StartClient: 192) - Starting SOCKS server on port 8093
+[0m[0;37;1mI : (    services.(*ServiceState).StartClient: 177) - Service tcp://10.0.1.3:2002 running in client mode
+[0m[0;33m1 : (    services.(*ServiceState).StartClient: 192) - Starting SOCKS server on port 8091
+[0m[0;37;1mI : (    services.(*ServiceState).StartClient: 177) - Service tcp://10.0.1.4:2002 running in client mode
+[0m[0;33m1 : (    services.(*ServiceState).StartClient: 192) - Starting SOCKS server on port 8092
+[0m[0;37;1mI : (    services.(*ServiceState).StartClient: 177) - Service tcp://10.0.1.2:2000 running in client mode
+[0m[0;33m1 : (    services.(*ServiceState).StartClient: 192) - Starting SOCKS server on port 8085
+[0m[0;37;1mI : (    services.(*ServiceState).StartClient: 177) - Service tcp://10.0.1.2:2002 running in client mode
+[0m[0;33m1 : (    services.(*ServiceState).StartClient: 192) - Starting SOCKS server on port 8090
+[0m[0;37;1mI : (    services.(*ServiceState).StartClient: 177) - Service tcp://10.0.1.3:2000 running in client mode
+[0m[0;33m1 : (    services.(*ServiceState).StartClient: 192) - Starting SOCKS server on port 8086
+[0m[0;37;1mI : (    services.(*ServiceState).StartClient: 177) - Service tcp://10.0.1.5:2000 running in client mode
+[0m[0;33m1 : (    services.(*ServiceState).StartClient: 192) - Starting SOCKS server on port 8088
+[0m[0;37;1mI : (    services.(*ServiceState).StartClient: 177) - Service tcp://10.0.1.1:2002 running in client mode
+[0m[0;33m1 : (    services.(*ServiceState).StartClient: 192) - Starting SOCKS server on port 8089
+[0m[0;37;1mI : (    services.(*ServiceState).StartClient: 177) - Service tcp://10.0.1.4:2000 running in client mode
+[0m[0;33m1 : (    services.(*ServiceState).StartClient: 192) - Starting SOCKS server on port 8087
+[0m[0;37;1mI : (    services.(*ServiceState).StartClient: 177) - Service tcp://10.0.1.1:2000 running in client mode
+[0m[0;33m1 : (    services.(*ServiceState).StartClient: 192) - Starting SOCKS server on port 8084
+[0m[0;33m1 : (services.(*churnHandler).tryStartProtocol: 314) - Too few participants ( 1 clients and 0 trustees), waiting...
+[0m[0;33m1 : (services.(*churnHandler).tryStartProtocol: 314) - Too few participants ( 2 clients and 0 trustees), waiting...
+[0m[0;33m1 : (services.(*churnHandler).tryStartProtocol: 314) - Too few participants ( 3 clients and 0 trustees), waiting...
+[0m[0;33m1 : (services.(*churnHandler).tryStartProtocol: 314) - Too few participants ( 4 clients and 0 trustees), waiting...
+[0m[0;33m1 : (services.(*churnHandler).tryStartProtocol: 314) - Too few participants ( 5 clients and 0 trustees), waiting...
+[0m[0;33m1 : (services.(*churnHandler).tryStartProtocol: 314) - Too few participants ( 6 clients and 0 trustees), waiting...
+[0m[0;33m1 : (services.(*churnHandler).tryStartProtocol: 314) - Too few participants ( 7 clients and 0 trustees), waiting...
+[0m[0;33m1 : (services.(*churnHandler).tryStartProtocol: 314) - Too few participants ( 8 clients and 0 trustees), waiting...
+[0m[0;33m1 : (services.(*churnHandler).tryStartProtocol: 314) - Too few participants ( 9 clients and 0 trustees), waiting...
+[0m[0;33m1 : (services.(*churnHandler).tryStartProtocol: 314) - Too few participants ( 10 clients and 0 trustees), waiting...
+[0m[0;37;1mI : (   services.(*ServiceState).StartTrustee: 246) - Service tcp://10.1.0.1:2000 running in trustee mode
+[0m[0;37;1mI : (   services.(*ServiceState).StartTrustee: 246) - Service tcp://10.1.0.2:2000 running in trustee mode
+[0m[0;37;1mI : (   services.(*ServiceState).StartTrustee: 246) - Service tcp://10.1.0.3:2000 running in trustee mode
+[0m[0;33m1 : (services.(*churnHandler).tryStartProtocol: 309) - Enough participants ( 10 clients and 1 trustees), but no handler to start.
+[0m[0;33m1 : (                        platform.Simulate: 140) - Starting new node PriFi
+[0m[0;33m1 : (services.(*churnHandler).tryStartProtocol: 309) - Enough participants ( 10 clients and 2 trustees), but no handler to start.
+[0m[0;33m1 : (services.(*churnHandler).tryStartProtocol: 309) - Enough participants ( 10 clients and 3 trustees), but no handler to start.
+[0m[0;37;1mI : (            main.(*SimulationService).Run: 186) - Sleeping 15 seconds before starting the experiment...
+[0m[0;37;1mI : (            main.(*SimulationService).Run: 189) - Starting experiment P3P1srX1lJdQMkh8l1r6YbNxPtfCKlHm
+
+[0m[0;33m1 : (services.(*ServiceState).StartPriFiCommunicateProtocol: 137) - Starting PriFi protocol
+[0m[0;33m1 : (                         main.(*SimulationService).Run: 222) - Giving the experiment 360 seconds to finish before aborting...
+[0m[0;33m1 : (relay.(*PriFiLibRelayInstance).Received_ALL_ALL_PARAMETERS: 166) - Relay has been initialized by message; StartNow is true
+[0m[0;33m1 : (relay.(*PriFiLibRelayInstance).Received_ALL_ALL_PARAMETERS: 173) - Relay setup done, and setup sent to the trustees.
+[0m[0;33m1 : (                           utils.StopMeasureAndLogWithInfo:  67) - [StopMeasureAndLog] measured time for resync-boot : 4352002 ns, info: 10
+[0m[0;33m1 : (                           utils.StopMeasureAndLogWithInfo:  67) - [StopMeasureAndLog] measured time for resync-shuffle-collect-client-pk : 684488418 ns, info: 10
+[0m[0;33m1 : (                           utils.StopMeasureAndLogWithInfo:  67) - [StopMeasureAndLog] measured time for resync-shuffle-trustee-1step : 649749881 ns, info: 10
+[0m[0;33m1 : (                           utils.StopMeasureAndLogWithInfo:  67) - [StopMeasureAndLog] measured time for resync-shuffle-trustee-2step : 211566233 ns, info: 10
+[0m[0;33m1 : (                           utils.StopMeasureAndLogWithInfo:  67) - [StopMeasureAndLog] measured time for resync-shuffle : 1546031104 ns, info: 10
+[0m[0;33m1 : (                           utils.StopMeasureAndLogWithInfo:  67) - [StopMeasureAndLog] measured time for resync : 1550486479 ns, info: 10
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [0] 0 ms +- 0 (over 1, happened 1). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [0] 0 ms +- 0 (over 1, happened 1). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [0] 0 ms +- 0 (over 1, happened 1). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [0] 0 ms +- 0 (over 1, happened 1). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [0] 0 ms +- 0 (over 1, happened 1). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [0] 0 ms +- 0 (over 1, happened 1). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [0] 0 ms +- 0 (over 1, happened 1). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [0] 0 ms +- 0 (over 1, happened 1). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [0] 0 ms +- 0 (over 1, happened 1). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [0] 0 ms +- 0 (over 1, happened 1). Info: round-processing
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [0] 0.4 round/sec, 2.0 kB/s up, 0.0 kB/s down, 0.0 kB/s down(udp), 0.0 kB/s down(re-udp), 2 cells, 10000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [0] Schedules  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [0] 61 ms +- 0 (over 1, happened 1). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [0] -1 ms +- -1 (over -1, happened 0). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [0] 30 ms +- 41.58 (over 2, happened 2). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [0] 0 ms +- 0 (over 7, happened 7). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [0] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [1] 0.02 ms +- 0.04 (over 55, happened 55). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [1] 0.04 ms +- 0.07 (over 55, happened 55). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [1] 0.04 ms +- 0.07 (over 55, happened 55). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [1] 0.02 ms +- 0.04 (over 55, happened 55). Info: round-processing
+[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [1] 0 ms +- 0 (over 55, happened 55). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [1] 0.09 ms +- 0.14 (over 55, happened 55). Info: round-processing
+[0m[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [1] 0.02 ms +- 0.04 (over 55, happened 55). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [1] 0.02 ms +- 0.04 (over 55, happened 55). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [1] 0.05 ms +- 0.11 (over 55, happened 55). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [1] 0.04 ms +- 0.07 (over 55, happened 55). Info: round-processing
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [1] 9.8 round/sec, 47.9 kB/s up, 0.0 kB/s down, 0.0 kB/s down(udp), 0.0 kB/s down(re-udp), 51 cells, 255000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [1] Schedules  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [1] 587.64 ms +- 32.72 (over 50, happened 50). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [1] -1 ms +- -1 (over -1, happened 0). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [1] 3.43 ms +- 2.23 (over 51, happened 51). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [1] 0 ms +- 0 (over 56, happened 56). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [1] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [2] 0.01 ms +- 0.02 (over 100, happened 103). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [2] 0.06 ms +- 0.08 (over 100, happened 103). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [2] 0.02 ms +- 0.03 (over 100, happened 103). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [2] 0.03 ms +- 0.04 (over 100, happened 103). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [2] 0.03 ms +- 0.03 (over 100, happened 103). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [2] 0.02 ms +- 0.04 (over 100, happened 103). Info: round-processing
+[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [2] 0.01 ms +- 0.02 (over 100, happened 103). Info: round-processing
+[0m[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [2] 0.03 ms +- 0.03 (over 100, happened 103). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [2] 0.04 ms +- 0.06 (over 100, happened 103). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [2] 0.02 ms +- 0.04 (over 100, happened 103). Info: round-processing
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [2] 9.6 round/sec, 46.9 kB/s up, 0.0 kB/s down, 0.0 kB/s down(udp), 0.0 kB/s down(re-udp), 99 cells, 495000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [2] Schedules  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [2] 608.85 ms +- 17.24 (over 98, happened 98). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [2] -1 ms +- -1 (over -1, happened 0). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [2] 3.41 ms +- 1.16 (over 99, happened 99). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [2] 0 ms +- 0 (over 100, happened 104). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [2] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [3] 0.03 ms +- 0.03 (over 100, happened 151). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [3] 0.02 ms +- 0.03 (over 100, happened 151). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [3] 0.01 ms +- 0.02 (over 100, happened 151). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [3] 0.02 ms +- 0.03 (over 100, happened 151). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [3] 0.01 ms +- 0.02 (over 100, happened 151). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [3] 0.01 ms +- 0.02 (over 100, happened 151). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [3] 0.01 ms +- 0.02 (over 100, happened 151). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [3] 0 ms +- 0 (over 100, happened 151). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [3] 0 ms +- 0 (over 100, happened 151). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [3] 0.03 ms +- 0.03 (over 100, happened 151). Info: round-processing
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [3] 9.4 round/sec, 45.9 kB/s up, 0.0 kB/s down, 0.0 kB/s down(udp), 0.0 kB/s down(re-udp), 146 cells, 730000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [3] Schedules  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [3] 0 ms +- 0 (over 100, happened 151). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [3] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [3] 636.5 ms +- 1.84 (over 100, happened 145). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [3] -1 ms +- -1 (over -1, happened 0). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [3] 4.34 ms +- 0.33 (over 100, happened 146). Info: waiting-on-trustees
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [4] 0.02 ms +- 0.03 (over 100, happened 197). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [4] 0.02 ms +- 0.03 (over 100, happened 197). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [4] 0 ms +- 0 (over 100, happened 197). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [4] 0.04 ms +- 0.04 (over 100, happened 197). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [4] 0.02 ms +- 0.03 (over 100, happened 197). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [4] 0.02 ms +- 0.03 (over 100, happened 197). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [4] 0.02 ms +- 0.03 (over 100, happened 197). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [4] 0.02 ms +- 0.03 (over 100, happened 197). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [4] 0 ms +- 0 (over 100, happened 197). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [4] 0.04 ms +- 0.04 (over 100, happened 197). Info: round-processing
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [4] 9.2 round/sec, 44.9 kB/s up, 0.0 kB/s down, 0.0 kB/s down(udp), 0.0 kB/s down(re-udp), 192 cells, 960000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [4] Schedules  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [4] 649.9 ms +- 2.61 (over 100, happened 191). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [4] -1 ms +- -1 (over -1, happened 0). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [4] 6.42 ms +- 0.63 (over 100, happened 192). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [4] 0 ms +- 0 (over 100, happened 197). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [4] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [5] 0 ms +- 0 (over 100, happened 237). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [5] 0.03 ms +- 0.03 (over 100, happened 237). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [5] 0.01 ms +- 0.02 (over 100, happened 237). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [5] 0.03 ms +- 0.04 (over 100, happened 237). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [5] 0.03 ms +- 0.03 (over 100, happened 237). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [5] 0 ms +- 0 (over 100, happened 237). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [5] 0.02 ms +- 0.03 (over 100, happened 237). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [5] 0.01 ms +- 0.02 (over 100, happened 237). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [5] 0 ms +- 0 (over 100, happened 237). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [5] 0.03 ms +- 0.03 (over 100, happened 237). Info: round-processing
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [5] 8.0 round/sec, 39.1 kB/s up, 0.0 kB/s down, 0.0 kB/s down(udp), 0.0 kB/s down(re-udp), 232 cells, 1160000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [5] Schedules  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [5] 15.15 ms +- 3.21 (over 100, happened 232). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [5] 0 ms +- 0 (over 100, happened 237). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [5] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [5] 711.51 ms +- 13.62 (over 100, happened 231). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [5] -1 ms +- -1 (over -1, happened 0). Info: waiting-on-clients
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [6] 0 ms +- 0 (over 100, happened 276). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [6] 0.04 ms +- 0.04 (over 100, happened 276). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [6] 0 ms +- 0 (over 100, happened 276). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [6] 0.04 ms +- 0.04 (over 100, happened 276). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [6] 0.03 ms +- 0.03 (over 100, happened 276). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [6] 0.01 ms +- 0.02 (over 100, happened 276). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [6] 0.02 ms +- 0.03 (over 100, happened 276). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [6] 0.03 ms +- 0.04 (over 100, happened 276). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [6] 0.02 ms +- 0.03 (over 100, happened 276). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [6] 0.02 ms +- 0.03 (over 100, happened 276). Info: round-processing
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [6] 7.8 round/sec, 38.1 kB/s up, 0.0 kB/s down, 0.0 kB/s down(udp), 0.0 kB/s down(re-udp), 271 cells, 1355000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [6] Schedules  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [6] 765.36 ms +- 12.2 (over 100, happened 270). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [6] -1 ms +- -1 (over -1, happened 0). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [6] 23.29 ms +- 3.08 (over 100, happened 271). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [6] 0 ms +- 0 (over 100, happened 276). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [6] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [7] 0.01 ms +- 0.02 (over 100, happened 317). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [7] 0.01 ms +- 0.02 (over 100, happened 317). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [7] 0 ms +- 0 (over 100, happened 317). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [7] 0.03 ms +- 0.03 (over 100, happened 317). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [7] 0 ms +- 0 (over 100, happened 317). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [7] 0.03 ms +- 0.03 (over 100, happened 317). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [7] 0 ms +- 0 (over 100, happened 317). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [7] 0.04 ms +- 0.05 (over 100, happened 317). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [7] 0.02 ms +- 0.03 (over 100, happened 317). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [7] 0.01 ms +- 0.02 (over 100, happened 317). Info: round-processing
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [7] 8.2 round/sec, 40.0 kB/s up, 0.0 kB/s down, 0.0 kB/s down(udp), 0.0 kB/s down(re-udp), 312 cells, 1560000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [7] Schedules  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [7] 24.08 ms +- 1.52 (over 100, happened 312). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [7] 0 ms +- 0 (over 100, happened 317). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [7] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [7] 781.19 ms +- 6.95 (over 100, happened 311). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [7] -1 ms +- -1 (over -1, happened 0). Info: waiting-on-clients
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [8] 0.02 ms +- 0.03 (over 100, happened 363). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [8] 0.01 ms +- 0.02 (over 100, happened 363). Info: round-processing
+[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [8] 0 ms +- 0 (over 100, happened 363). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [8] 0.04 ms +- 0.04 (over 100, happened 363). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [8] 0.03 ms +- 0.03 (over 100, happened 363). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [8] 0.01 ms +- 0.02 (over 100, happened 363). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [8] 0.01 ms +- 0.02 (over 100, happened 363). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [8] 0.03 ms +- 0.04 (over 100, happened 363). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [8] 0.01 ms +- 0.02 (over 100, happened 363). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [8] 0.03 ms +- 0.03 (over 100, happened 363). Info: round-processing
+[0m[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [8] 9.2 round/sec, 44.9 kB/s up, 0.0 kB/s down, 0.0 kB/s down(udp), 0.0 kB/s down(re-udp), 358 cells, 1790000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [8] Schedules  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [8] 731.58 ms +- 12.7 (over 100, happened 357). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [8] -1 ms +- -1 (over -1, happened 0). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [8] 17.08 ms +- 2.01 (over 100, happened 358). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [8] 0 ms +- 0 (over 100, happened 363). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [8] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [9] 0 ms +- 0 (over 100, happened 409). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [9] 0.03 ms +- 0.03 (over 100, happened 409). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [9] 0.01 ms +- 0.02 (over 100, happened 409). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [9] 0.01 ms +- 0.02 (over 100, happened 409). Info: round-processing
+[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [9] 0 ms +- 0 (over 100, happened 409). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [9] 0.02 ms +- 0.03 (over 100, happened 409). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [9] 0.03 ms +- 0.03 (over 100, happened 409). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [9] 0.02 ms +- 0.03 (over 100, happened 409). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [9] 0.01 ms +- 0.02 (over 100, happened 409). Info: round-processing
+[0m[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [9] 0.01 ms +- 0.02 (over 100, happened 409). Info: round-processing
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [9] 9.2 round/sec, 44.9 kB/s up, 0.0 kB/s down, 0.0 kB/s down(udp), 0.0 kB/s down(re-udp), 404 cells, 2020000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [9] Schedules  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [9] 671.32 ms +- 2.17 (over 100, happened 403). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [9] -1 ms +- -1 (over -1, happened 0). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [9] 9.06 ms +- 0.47 (over 100, happened 404). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [9] 0 ms +- 0 (over 100, happened 409). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [9] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [10] 0.02 ms +- 0.03 (over 100, happened 455). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [10] 0 ms +- 0 (over 100, happened 455). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [10] 0.03 ms +- 0.03 (over 100, happened 455). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [10] 0.02 ms +- 0.03 (over 100, happened 455). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [10] 0.04 ms +- 0.04 (over 100, happened 455). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [10] 0 ms +- 0 (over 100, happened 455). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [10] 0.03 ms +- 0.03 (over 100, happened 455). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [10] 0.01 ms +- 0.02 (over 100, happened 455). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [10] 0.02 ms +- 0.03 (over 100, happened 455). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [10] 0.01 ms +- 0.02 (over 100, happened 455). Info: round-processing
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [10] 9.2 round/sec, 44.9 kB/s up, 0.0 kB/s down, 0.0 kB/s down(udp), 0.0 kB/s down(re-udp), 450 cells, 2250000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [10] Schedules  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [10] 671.18 ms +- 1.33 (over 100, happened 449). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [10] -1 ms +- -1 (over -1, happened 0). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [10] 9.1 ms +- 0.49 (over 100, happened 450). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [10] 0 ms +- 0 (over 100, happened 455). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [10] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [11] 0.02 ms +- 0.03 (over 100, happened 501). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [11] 0.01 ms +- 0.02 (over 100, happened 501). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [11] 0.01 ms +- 0.02 (over 100, happened 501). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [11] 0 ms +- 0 (over 100, happened 501). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [11] 0.02 ms +- 0.03 (over 100, happened 501). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [11] 0.01 ms +- 0.02 (over 100, happened 501). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [11] 0.01 ms +- 0.02 (over 100, happened 501). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [11] 0.01 ms +- 0.02 (over 100, happened 501). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [11] 0.02 ms +- 0.03 (over 100, happened 501). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [11] 0.02 ms +- 0.03 (over 100, happened 501). Info: round-processing
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [11] 9.2 round/sec, 44.9 kB/s up, 0.0 kB/s down, 0.0 kB/s down(udp), 0.0 kB/s down(re-udp), 496 cells, 2480000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [11] Schedules  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [11] 669.61 ms +- 1.38 (over 100, happened 495). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [11] -1 ms +- -1 (over -1, happened 0). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [11] 8.9 ms +- 0.51 (over 100, happened 496). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [11] 0 ms +- 0 (over 100, happened 501). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [11] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [12] 0.01 ms +- 0.02 (over 100, happened 547). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [12] 0.22 ms +- 0.41 (over 100, happened 547). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [12] 0.23 ms +- 0.41 (over 100, happened 547). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [12] 0.01 ms +- 0.02 (over 100, happened 547). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [12] 0.01 ms +- 0.02 (over 100, happened 547). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [12] 0.22 ms +- 0.41 (over 100, happened 547). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [12] 0.22 ms +- 0.41 (over 100, happened 547). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [12] 0.02 ms +- 0.03 (over 100, happened 547). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [12] 0.22 ms +- 0.41 (over 100, happened 547). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [12] 0 ms +- 0 (over 100, happened 547). Info: round-processing
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [12] 9.2 round/sec, 44.9 kB/s up, 0.0 kB/s down, 0.0 kB/s down(udp), 0.0 kB/s down(re-udp), 542 cells, 2710000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [12] Schedules  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [12] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [12] 669.14 ms +- 1.22 (over 100, happened 541). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [12] -1 ms +- -1 (over -1, happened 0). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [12] 8.8 ms +- 0.43 (over 100, happened 542). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [12] 0 ms +- 0 (over 100, happened 547). Info: sending-data
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [13] 0.01 ms +- 0.02 (over 100, happened 593). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [13] 0.23 ms +- 0.41 (over 100, happened 593). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [13] 0.22 ms +- 0.41 (over 100, happened 593). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [13] 0.03 ms +- 0.03 (over 100, happened 593). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [13] 0.22 ms +- 0.41 (over 100, happened 593). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [13] 0.01 ms +- 0.02 (over 100, happened 593). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [13] 0.01 ms +- 0.02 (over 100, happened 593). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [13] 0.22 ms +- 0.41 (over 100, happened 593). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [13] 0.22 ms +- 0.41 (over 100, happened 593). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [13] 0.02 ms +- 0.03 (over 100, happened 593). Info: round-processing
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [13] 9.2 round/sec, 44.9 kB/s up, 0.0 kB/s down, 0.0 kB/s down(udp), 0.0 kB/s down(re-udp), 588 cells, 2940000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [13] Schedules  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [13] 670.95 ms +- 1.07 (over 100, happened 587). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [13] -1 ms +- -1 (over -1, happened 0). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [13] 9.1 ms +- 0.43 (over 100, happened 588). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [13] 0 ms +- 0 (over 100, happened 593). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [13] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [14] 0.01 ms +- 0.02 (over 100, happened 639). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [14] 0.22 ms +- 0.41 (over 100, happened 639). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [14] 0 ms +- 0 (over 100, happened 639). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [14] 0.23 ms +- 0.41 (over 100, happened 639). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [14] 0.22 ms +- 0.41 (over 100, happened 639). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [14] 0.01 ms +- 0.02 (over 100, happened 639). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [14] 0.22 ms +- 0.41 (over 100, happened 639). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [14] 0.02 ms +- 0.03 (over 100, happened 639). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [14] 0.21 ms +- 0.41 (over 100, happened 639). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [14] 0.03 ms +- 0.03 (over 100, happened 639). Info: round-processing
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [14] 9.2 round/sec, 44.9 kB/s up, 0.0 kB/s down, 0.0 kB/s down(udp), 0.0 kB/s down(re-udp), 634 cells, 3170000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [14] Schedules  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [14] 669.53 ms +- 0.97 (over 100, happened 633). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [14] -1 ms +- -1 (over -1, happened 0). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [14] 8.97 ms +- 0.43 (over 100, happened 634). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [14] 0 ms +- 0 (over 100, happened 639). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [14] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [15] 0.02 ms +- 0.03 (over 100, happened 684). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [15] 0.01 ms +- 0.02 (over 100, happened 684). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [15] 0.03 ms +- 0.03 (over 100, happened 684). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [15] 0.01 ms +- 0.02 (over 100, happened 684). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [15] 0.02 ms +- 0.03 (over 100, happened 684). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [15] 0.01 ms +- 0.02 (over 100, happened 684). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [15] 0.03 ms +- 0.03 (over 100, happened 684). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [15] 0.01 ms +- 0.02 (over 100, happened 684). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [15] 0 ms +- 0 (over 100, happened 684). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [15] 0.04 ms +- 0.04 (over 100, happened 684). Info: round-processing
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [15] 9.0 round/sec, 43.9 kB/s up, 0.0 kB/s down, 0.0 kB/s down(udp), 0.0 kB/s down(re-udp), 679 cells, 3395000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [15] Schedules  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [15] 9.49 ms +- 0.48 (over 100, happened 679). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [15] 0 ms +- 0 (over 100, happened 684). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [15] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [15] 673.26 ms +- 1.29 (over 100, happened 678). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [15] -1 ms +- -1 (over -1, happened 0). Info: waiting-on-clients
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [16] 0.01 ms +- 0.02 (over 100, happened 730). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [16] 0 ms +- 0 (over 100, happened 730). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [16] 0.03 ms +- 0.03 (over 100, happened 730). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [16] 0.01 ms +- 0.02 (over 100, happened 730). Info: round-processing
+[0m[0;33m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [16] 0.03 ms +- 0.03 (over 100, happened 730). Info: round-processing
+[0m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [16] 0.02 ms +- 0.03 (over 100, happened 730). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [16] 0.03 ms +- 0.04 (over 100, happened 730). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [16] 0 ms +- 0 (over 100, happened 730). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [16] 0.01 ms +- 0.02 (over 100, happened 730). Info: round-processing
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [16] 9.2 round/sec, 44.9 kB/s up, 0.0 kB/s down, 0.0 kB/s down(udp), 0.0 kB/s down(re-udp), 725 cells, 3625000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [16] Schedules  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [16] 0 ms +- 0 (over 100, happened 730). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [16] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [16] 671.51 ms +- 1.76 (over 100, happened 724). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [16] -1 ms +- -1 (over -1, happened 0). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [16] 9.04 ms +- 0.49 (over 100, happened 725). Info: waiting-on-trustees
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [16] 0.01 ms +- 0.02 (over 100, happened 730). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [17] 0.02 ms +- 0.03 (over 100, happened 776). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [17] 0 ms +- 0 (over 100, happened 776). Info: round-processing
+[0m[0;33m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [17] 0.01 ms +- 0.02 (over 100, happened 776). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [17] 0.01 ms +- 0.02 (over 100, happened 776). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [17] 0.01 ms +- 0.02 (over 100, happened 776). Info: round-processing
+[0m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [17] 0.02 ms +- 0.03 (over 100, happened 776). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [17] 0.01 ms +- 0.02 (over 100, happened 776). Info: round-processing
+[0m[0;33m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [17] 0.02 ms +- 0.03 (over 100, happened 776). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [17] 0 ms +- 0 (over 100, happened 776). Info: round-processing
+[0m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [17] 0.02 ms +- 0.04 (over 100, happened 776). Info: round-processing
+[0m[0;33m1 : (                   log.(*BitrateStatistics).ReportWithInfo: 107) - [17] 9.2 round/sec, 44.9 kB/s up, 0.0 kB/s down, 0.0 kB/s down(udp), 0.0 kB/s down(re-udp), 771 cells, 3855000 total
+[0m[0;33m1 : (                 log.(*SchedulesStatistics).ReportWithInfo:  70) - [17] Schedules  Info: 
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [17] 666.76 ms +- 1.51 (over 100, happened 770). Info: round-duration
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [17] -1 ms +- -1 (over -1, happened 0). Info: waiting-on-clients
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [17] 8.37 ms +- 0.35 (over 100, happened 771). Info: waiting-on-trustees
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [17] 0 ms +- 0 (over 100, happened 776). Info: sending-data
+[0m[0;33m1 : (                      log.(*TimeStatistics).ReportWithInfo:  78) - [17] -1 ms +- -1 (over -1, happened 0). Info: pcap-delay
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [18] 0.02 ms +- 0.03 (over 100, happened 818). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [18] 0.01 ms +- 0.02 (over 100, happened 818). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [18] 0.01 ms +- 0.02 (over 100, happened 818). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [18] 0.02 ms +- 0.03 (over 100, happened 818). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [18] 0.02 ms +- 0.03 (over 100, happened 818). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [18] 0.03 ms +- 0.03 (over 100, happened 818). Info: round-processing
+[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [18] 0 ms +- 0 (over 100, happened 818). Info: round-processing
+[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [18] 0 ms +- 0 (over 100, happened 818). Info: round-processing
+[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [18] 0.03 ms +- 0.03 (over 100, happened 818). Info: round-processing
+[0m[0m[0m[0;33m1 : (    log.(*TimeStatistics).ReportWithInfo:  78) - [18] 0 ms +- 0 (over 100, happened 818). Info: round-processing
+[0m[0;33m1 : (relay.(*PriFiLibRelayInstance).checkIfRoundHasEndedAfterTimeOut_Phase1:  33) - WARNING: Timeout for round 813 , force closing. Already 1 consecutive missed rounds (killing when => 3 )
+[0m[0;33m1 : (relay.(*PriFiLibRelayInstance).checkIfRoundHasEndedAfterTimeOut_Phase1:  38) - missing clients [1 2 5 8 9 0 4 6 7 3] and trustees []
+[0m[0;33m1 : (relay.(*PriFiLibRelayInstance).checkIfRoundHasEndedAfterTimeOut_Phase1:  49) - Gonna Force close...
+[0m[0;33m1 : (                                  relay.(*BufferableRoundManager).Dump:  86) - ------------------------
+[0m[0;33m1 : (                                  relay.(*BufferableRoundManager).Dump:  87) - BufferableRoundManager with  10 clients 3 trustees, window = 7
+[0m[0;33m1 : (                                  relay.(*BufferableRoundManager).Dump:  89) - Current round: 811 open= true Has all ciphers ?  false
+[0m[0;33m1 : (                                  relay.(*BufferableRoundManager).Dump:  91) - Open rounds: 812 2019-01-15 05:30:09.12827732 -0800 PST m=+113.359673087
+[0m[0;33m1 : (                                  relay.(*BufferableRoundManager).Dump:  91) - Open rounds: 813 2019-01-15 05:30:09.232851526 -0800 PST m=+113.464247341
+[0m[0;33m1 : (                                  relay.(*BufferableRoundManager).Dump:  91) - Open rounds: 814 2019-01-15 05:30:09.354044695 -0800 PST m=+113.585440542
+[0m[0;33m1 : (                                  relay.(*BufferableRoundManager).Dump:  91) - Open rounds: 815 2019-01-15 05:30:09.470568533 -0800 PST m=+113.701964307
+[0m[0;33m1 : (                                  relay.(*BufferableRoundManager).Dump:  91) - Open rounds: 816 2019-01-15 05:30:09.580240472 -0800 PST m=+113.811636287
+[0m[0;33m1 : (                                  relay.(*BufferableRoundManager).Dump:  91) - Open rounds: 817 2019-01-15 05:30:09.775133313 -0800 PST m=+114.006529070
+[0m[0;33m1 : (                                  relay.(*BufferableRoundManager).Dump:  91) - Open rounds: 811 2019-01-15 05:30:09.020421112 -0800 PST m=+113.251816889
+[0m[0;33m1 : (                                  relay.(*BufferableRoundManager).Dump:  93) - ACK MAP Clients
+[0m[0;33m1 : (                                                relay.sortedIntMapDump:  77) -  0: false
+[0m[0;33m1 : (                                                relay.sortedIntMapDump:  77) -  1: false
+[0m[0;33m1 : (                                                relay.sortedIntMapDump:  77) -  2: false
+[0m[0;33m1 : (                                                relay.sortedIntMapDump:  77) -  3: false
+[0m[0;33m1 : (                                                relay.sortedIntMapDump:  77) -  4: false
+[0m[0;33m1 : (                                                relay.sortedIntMapDump:  77) -  5: false
+[0m[0;33m1 : (                                                relay.sortedIntMapDump:  77) -  6: false
+[0m[0;33m1 : (                                                relay.sortedIntMapDump:  77) -  7: false
+[0m[0;33m1 : (                                                relay.sortedIntMapDump:  77) -  8: false
+[0m[0;33m1 : (                                                relay.sortedIntMapDump:  77) -  9: false
+[0m[0;33m1 : (                                  relay.(*BufferableRoundManager).Dump:  95) - ACK MAP Trustees
+[0m[0;33m1 : (                                                relay.sortedIntMapDump:  77) -  0: true
+[0m[0;33m1 : (                                                relay.sortedIntMapDump:  77) -  1: true
+[0m[0;33m1 : (                                                relay.sortedIntMapDump:  77) -  2: true
+[0m[0;33m1 : (                                  relay.(*BufferableRoundManager).Dump: 101) - ------------------------
+[0m[0;33m1 : (                                  relay.(*BufferableRoundManager).Dump:  86) - ------------------------
+[0m[0;33m1 : (                                  relay.(*BufferableRoundManager).Dump:  87) - BufferableRoundManager with  10 clients 3 trustees, window = 7
+[0m[0;33m1 : (                                  relay.(*BufferableRoundManager).Dump:  89) - Current round: 812 open= true Has all ciphers ?  false
+[0m[0;33m1 : (                                  relay.(*BufferableRoundManager).Dump:  91) - Open rounds: 814 2019-01-15 05:30:09.354044695 -0800 PST m=+113.585440542
+[0m[0;33m1 : (                                  relay.(*BufferableRoundManager).Dump:  91) - Open rounds: 815 2019-01-15 05:30:09.470568533 -0800 PST m=+113.701964307
+[0m[0;33m1 : (                                  relay.(*BufferableRoundManager).Dump:  91) - Open rounds: 816 2019-01-15 05:30:09.580240472 -0800 PST m=+113.811636287
+[0m[0;33m1 : (                                  relay.(*BufferableRoundManager).Dump:  91) - Open rounds: 817 2019-01-15 05:30:09.775133313 -0800 PST m=+114.006529070
+[0m[0;33m1 : (                                  relay.(*BufferableRoundManager).Dump:  91) - Open rounds: 812 2019-01-15 05:30:09.12827732 -0800 PST m=+113.359673087
+[0m[0;33m1 : (                                  relay.(*BufferableRoundManager).Dump:  91) - Open rounds: 813 2019-01-15 05:30:09.232851526 -0800 PST m=+113.464247341
+[0m[0;33m1 : (                                  relay.(*BufferableRoundManager).Dump:  93) - ACK MAP Clients
+[0m[0;33m1 : (                                                relay.sortedIntMapDump:  77) -  0: false
+[0m[0;33m1 : (                                                relay.sortedIntMapDump:  77) -  1: false
+[0m[0;33m1 : (                                                relay.sortedIntMapDump:  77) -  2: false
+[0m[0;33m1 : (                                                relay.sortedIntMapDump:  77) -  3: false
+[0m[0;33m1 : (                                                relay.sortedIntMapDump:  77) -  4: false
+[0m[0;33m1 : (                                                relay.sortedIntMapDump:  77) -  5: false
+[0m[0;33m1 : (                                                relay.sortedIntMapDump:  77) -  6: false
+[0m[0;33m1 : (                                                relay.sortedIntMapDump:  77) -  7: false
+[0m[0;33m1 : (                                                relay.sortedIntMapDump:  77) -  8: false
+[0m[0;33m1 : (                                                relay.sortedIntMapDump:  77) -  9: false
+[0m[0;33m1 : (                                  relay.(*BufferableRoundManager).Dump:  95) - ACK MAP Trustees
+[0m[0;33m1 : (                                                relay.sortedIntMapDump:  77) -  0: true
+[0m[0;33m1 : (                                                relay.sortedIntMapDump:  77) -  1: true
+[0m[0;33m1 : (                                                relay.sortedIntMapDump:  77) -  2: true
+[0m[0;33m1 : (                                  relay.(*BufferableRoundManager).Dump: 101) - ------------------------
+[0m[0;33m1 : (relay.(*PriFiLibRelayInstance).checkIfRoundHasEndedAfterTimeOut_Phase1:  33) - WARNING: Timeout for round 812 , force closing. Already 2 consecutive missed rounds (killing when => 3 )
+[0m[0;33m1 : (relay.(*PriFiLibRelayInstance).checkIfRoundHasEndedAfterTimeOut_Phase1:  38) - missing clients [3 4 5 7 8 1 2 6 9 0] and trustees []
+[0m[0;33m1 : (relay.(*PriFiLibRelayInstance).checkIfRoundHasEndedAfterTimeOut_Phase1:  49) - Gonna Force close...
+[0m[0;33m1 : (                                  relay.(*BufferableRoundManager).Dump:  86) - ------------------------
+[0m[0;33m1 : (                                  relay.(*BufferableRoundManager).Dump:  87) - BufferableRoundManager with  10 clients 3 trustees, window = 7
+[0m[0;33m1 : (                                  relay.(*BufferableRoundManager).Dump:  89) - Current round: 812 open= true Has all ciphers ?  false
+[0m[0;33m1 : (                                  relay.(*BufferableRoundManager).Dump:  91) - Open rounds: 813 2019-01-15 05:30:09.232851526 -0800 PST m=+113.464247341
+[0m[0;33m1 : (                                  relay.(*BufferableRoundManager).Dump:  91) - Open rounds: 814 2019-01-15 05:30:09.354044695 -0800 PST m=+113.585440542
+[0m[0;33m1 : (                                  relay.(*BufferableRoundManager).Dump:  91) - Open rounds: 815 2019-01-15 05:30:09.470568533 -0800 PST m=+113.701964307
+[0m[0;33m1 : (                                  relay.(*BufferableRoundManager).Dump:  91) - Open rounds: 816 2019-01-15 05:30:09.580240472 -0800 PST m=+113.811636287
+[0m[0;33m1 : (                                  relay.(*BufferableRoundManager).Dump:  91) - Open rounds: 817 2019-01-15 05:30:09.775133313 -0800 PST m=+114.006529070
+[0m[0;33m1 : (                                  relay.(*BufferableRoundManager).Dump:  91) - Open rounds: 818 2019-01-15 05:30:10.563113488 -0800 PST m=+114.794509217
+[0m[0;33m1 : (                                  relay.(*BufferableRoundManager).Dump:  91) - Open rounds: 812 2019-01-15 05:30:09.12827732 -0800 PST m=+113.359673087
+[0m[0;33m1 : (                                  relay.(*BufferableRoundManager).Dump:  93) - ACK MAP Clients
+[0m[0;33m1 : (                                                relay.sortedIntMapDump:  77) -  0: false
+[0m[0;33m1 : (                                                relay.sortedIntMapDump:  77) -  1: false
+[0m[0;33m1 : (                                                relay.sortedIntMapDump:  77) -  2: false
+[0m[0;33m1 : (                                                relay.sortedIntMapDump:  77) -  3: false
+[0m[0;33m1 : (                                                relay.sortedIntMapDump:  77) -  4: false
+[0m[0;33m1 : (                                                relay.sortedIntMapDump:  77) -  5: false
+[0m[0;33m1 : (                                                relay.sortedIntMapDump:  77) -  6: false
+[0m[0;33m1 : (                                                relay.sortedIntMapDump:  77) -  7: false
+[0m[0;33m1 : (                                                relay.sortedIntMapDump:  77) -  8: false
+[0m[0;33m1 : (                                                relay.sortedIntMapDump:  77) -  9: false
+[0m[0;33m1 : (                                  relay.(*BufferableRoundManager).Dump:  95) - ACK MAP Trustees
+[0m[0;33m1 : (                                                relay.sortedIntMapDump:  77) -  0: true
+[0m[0;33m1 : (                                                relay.sortedIntMapDump:  77) -  1: true
+[0m[0;33m1 : (                                                relay.sortedIntMapDump:  77) -  2: true
+[0m[0;33m1 : (                                  relay.(*BufferableRoundManager).Dump: 101) - ------------------------
+[0m[0;33m1 : (                                  relay.(*BufferableRoundManager).Dump:  86) - ------------------------
+[0m[0;33m1 : (                                  relay.(*BufferableRoundManager).Dump:  87) - BufferableRoundManager with  10 clients 3 trustees, window = 7
+[0m[0;33m1 : (                                  relay.(*BufferableRoundManager).Dump:  89) - Current round: 813 open= true Has all ciphers ?  false
+[0m[0;33m1 : (                                  relay.(*BufferableRoundManager).Dump:  91) - Open rounds: 817 2019-01-15 05:30:09.775133313 -0800 PST m=+114.006529070
+[0m[0;33m1 : (                                  relay.(*BufferableRoundManager).Dump:  91) - Open rounds: 818 2019-01-15 05:30:10.563113488 -0800 PST m=+114.794509217
+[0m[0;33m1 : (                                  relay.(*BufferableRoundManager).Dump:  91) - Open rounds: 813 2019-01-15 05:30:09.232851526 -0800 PST m=+113.464247341
+[0m[0;33m1 : (                                  relay.(*BufferableRoundManager).Dump:  91) - Open rounds: 814 2019-01-15 05:30:09.354044695 -0800 PST m=+113.585440542
+[0m[0;33m1 : (                                  relay.(*BufferableRoundManager).Dump:  91) - Open rounds: 815 2019-01-15 05:30:09.470568533 -0800 PST m=+113.701964307
+[0m[0;33m1 : (                                  relay.(*BufferableRoundManager).Dump:  91) - Open rounds: 816 2019-01-15 05:30:09.580240472 -0800 PST m=+113.811636287
+[0m[0;33m1 : (                                  relay.(*BufferableRoundManager).Dump:  93) - ACK MAP Clients
+[0m[0;33m1 : (                                                relay.sortedIntMapDump:  77) -  0: false
+[0m[0;33m1 : (                                                relay.sortedIntMapDump:  77) -  1: false
+[0m[0;33m1 : (                                                relay.sortedIntMapDump:  77) -  2: false
+[0m[0;33m1 : (                                                relay.sortedIntMapDump:  77) -  3: false
+[0m[0;33m1 : (                                                relay.sortedIntMapDump:  77) -  4: false
+[0m[0;33m1 : (                                                relay.sortedIntMapDump:  77) -  5: false
+[0m[0;33m1 : (                                                relay.sortedIntMapDump:  77) -  6: false
+[0m[0;33m1 : (                                                relay.sortedIntMapDump:  77) -  7: false
+[0m[0;33m1 : (                                                relay.sortedIntMapDump:  77) -  8: false
+[0m[0;33m1 : (                                                relay.sortedIntMapDump:  77) -  9: false
+[0m[0;33m1 : (                                  relay.(*BufferableRoundManager).Dump:  95) - ACK MAP Trustees
+[0m[0;33m1 : (                                                relay.sortedIntMapDump:  77) -  0: true
+[0m[0;33m1 : (                                                relay.sortedIntMapDump:  77) -  1: true
+[0m[0;33m1 : (                                                relay.sortedIntMapDump:  77) -  2: true
+[0m[0;33m1 : (                                  relay.(*BufferableRoundManager).Dump: 101) - ------------------------
+[0m[0;33m1 : (relay.(*PriFiLibRelayInstance).checkIfRoundHasEndedAfterTimeOut_Phase1:  33) - WARNING: Timeout for round 814 , force closing. Already 3 consecutive missed rounds (killing when => 3 )
+[0m[0;33m1 : (relay.(*PriFiLibRelayInstance).checkIfRoundHasEndedAfterTimeOut_Phase1:  38) - missing clients [2 3 5 7 9 0 1 4 6 8] and trustees []
+[0m[0;31m[0m[0;31m[0m[0;33m1 : (                 services.(*ServiceState).StopPriFiCommunicateProtocol: 171) - Stopping PriFi protocol
+[0m
