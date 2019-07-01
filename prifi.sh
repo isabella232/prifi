@@ -90,9 +90,11 @@ case $1 in
 		echo -e "$okMsg"
 
 		echo -n "Getting all go packages... "
-		cd sda/app; go get ./... 1>/dev/null 2>&1
+		cd sda/app; go get -u ./... 1>/dev/null 2>&1
 		cd ../..
-		cd socks; go get ./... 1>/dev/null 2>&1
+		cd socks; go get -u ./... 1>/dev/null 2>&1
+		cd ..
+		cd prifi-mobile; go get -u ./...
 		cd ..
 		echo -e "$okMsg"
 
