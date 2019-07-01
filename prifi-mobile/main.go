@@ -1,7 +1,7 @@
 package prifimobile
 
 import (
-	prifi_service "github.com/lbarman/prifi/sda/services"
+	prifi_service "github.com/dedis/prifi/sda/services"
 	"gopkg.in/dedis/onet.v2"
 	"gopkg.in/dedis/onet.v2/log"
 	"time"
