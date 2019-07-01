@@ -24,7 +24,7 @@ import (
 const FILE_SIMULATION_ID = ".simID"
 
 // SIMULATION_ROUND_TIMEOUT_SECONDS is define the max duration of one round of the simulation
-var SIMULATION_ROUND_TIMEOUT_SECONDS = 360
+var SIMULATION_ROUND_TIMEOUT_SECONDS = 1 * 3600
 
 /*
  * Defines the simulation for the service-template
@@ -98,6 +98,7 @@ func (s *SimulationService) Node(config *onet.SimulationConfig) error {
 	// identify who we are given our IP (works only on deterlab !)
 	i, v := config.Roster.Search(config.Server.ServerIdentity.ID)
 	whoami := s.identifyNodeType(config, config.Server.ServerIdentity.ID)
+
 	log.Lvl1("Node #"+strconv.Itoa(i)+" running on server", v.Address, "and will be a", whoami)
 
 	// this is (should be) used in localhost instead of whoami above, AND on deterlab for having
@@ -171,6 +172,7 @@ func (s *SimulationService) Node(config *onet.SimulationConfig) error {
 // Run is used on the destination machines and runs a number of
 // rounds
 func (s *SimulationService) Run(config *onet.SimulationConfig) error {
+	//profiler := profile.Start(profile.MemProfile)
 
 	//this is run only on the relay. Get the simulation ID stored by the shell script
 	simulationIDBytes, err := ioutil.ReadFile(FILE_SIMULATION_ID)
@@ -234,7 +236,9 @@ func (s *SimulationService) Run(config *onet.SimulationConfig) error {
 	service.StopPriFiCommunicateProtocol()
 
 	duration := time.Now().Sub(startTime)
-	log.Info("Experiment", simulationID, "finished after", duration)
+	log.Error("Experiment", simulationID, "finished after", duration)
+
+	//profiler.Stop()
 
 	//stop the SOCKS stuff
 	service.GlobalShutDownSocks()

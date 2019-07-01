@@ -40,6 +40,7 @@ import (
 	"bytes"
 	"crypto/hmac"
 	"crypto/sha256"
+	"fmt"
 	"github.com/dedis/prifi/prifi-lib/config"
 	"github.com/dedis/prifi/prifi-lib/dcnet"
 	prifilog "github.com/dedis/prifi/prifi-lib/log"
@@ -48,6 +49,9 @@ import (
 	"github.com/dedis/prifi/utils"
 	"gopkg.in/dedis/kyber.v2"
 	"gopkg.in/dedis/onet.v2/log"
+	"os/exec"
+	"runtime"
+	"strings"
 )
 
 /*
@@ -279,11 +283,6 @@ func (p *PriFiLibRelayInstance) upstreamPhase1_processCiphers(finishedByTrustee 
 		}
 	}
 
-	// used if we're replaying a pcap. The first message we decode is "time0"
-	if roundID == 0 {
-		p.relayState.time0 = uint64(prifilog.MsTimeStampNow())
-	}
-
 	// one round has just passed ! Round start with downstream data, and end with upstream data, like here.
 	p.upstreamPhase3_finalizeRound(roundID)
 
@@ -399,41 +398,43 @@ func (p *PriFiLibRelayInstance) upstreamPhase2b_extractPayload() error {
 			p.relayState.PriorityDataForClients <- upstreamPlaintext
 		} else if pattern == 21845 {
 			//0101010101010101
-			ID := int32(binary.BigEndian.Uint32(upstreamPlaintext[2:6]))
-			timestamp := int64(binary.BigEndian.Uint64(upstreamPlaintext[6:14]))
+			clientID := uint16(binary.BigEndian.Uint16(upstreamPlaintext[2:4]))
+			ID := uint32(binary.BigEndian.Uint32(upstreamPlaintext[4:8]))
+			timestamp := int64(binary.BigEndian.Uint64(upstreamPlaintext[8:16]))
 			frag := false
-			if upstreamPlaintext[14] == byte(1) {
+			if upstreamPlaintext[17] == byte(1) {
 				frag = true
 			}
 			now := prifilog.MsTimeStampNow() - int64(p.relayState.time0)
 			diff := now - timestamp
 
-			log.Lvl2("Got a PCAP meta-message (id", ID, ",frag", frag, ") at", now, ", delay since original is", diff, "ms")
+			log.Lvl2("Got a PCAP meta-message (client", clientID, "id", ID, ",frag", frag, ") at", now, ", delay since original is", diff, "ms")
 			p.relayState.timeStatistics["pcap-delay"].AddTime(diff)
-			p.relayState.pcapLogger.ReceivedPcap(uint32(ID), frag, uint64(timestamp), p.relayState.time0, uint32(len(upstreamPlaintext)))
+			p.relayState.pcapLogger.ReceivedPcap(ID, clientID, frag, uint64(timestamp), p.relayState.time0, uint32(len(upstreamPlaintext)))
 
 			//also decode other messages
-			pos := 15
-			for pos+15 <= len(upstreamPlaintext) {
+			pos := 17
+			for pos+17 <= len(upstreamPlaintext) {
 				pattern := int(binary.BigEndian.Uint16(upstreamPlaintext[pos : pos+2]))
 				if pattern != 21845 {
 					break
 				}
-				ID := int32(binary.BigEndian.Uint32(upstreamPlaintext[pos+2 : pos+6]))
-				timestamp := int64(binary.BigEndian.Uint64(upstreamPlaintext[pos+6 : pos+14]))
+				clientID := uint16(binary.BigEndian.Uint16(upstreamPlaintext[pos + 2: pos + 4]))
+				ID := int32(binary.BigEndian.Uint32(upstreamPlaintext[pos+4 : pos+8]))
+				timestamp := int64(binary.BigEndian.Uint64(upstreamPlaintext[pos+8 : pos+16]))
 				frag := false
-				if upstreamPlaintext[pos+14] == byte(1) {
+				if upstreamPlaintext[pos+17] == byte(1) {
 					frag = true
 				}
 
 				now := prifilog.MsTimeStampNow() - int64(p.relayState.time0)
 				diff := now - timestamp
 
-				log.Lvl2("Got a PCAP meta-message (id", ID, ",frag", frag, ") at", now, ", delay since original is", diff, "ms")
+				log.Lvl2("Got a PCAP meta-message (client", clientID, "id", ID, ",frag", frag, ") at", now, ", delay since original is", diff, "ms")
 				p.relayState.timeStatistics["pcap-delay"].AddTime(diff)
-				p.relayState.pcapLogger.ReceivedPcap(uint32(ID), frag, uint64(timestamp), p.relayState.time0, uint32(len(upstreamPlaintext)))
+				p.relayState.pcapLogger.ReceivedPcap(uint32(ID), clientID, frag, uint64(timestamp), p.relayState.time0, uint32(len(upstreamPlaintext)))
 
-				pos += 15
+				pos += 17
 			}
 
 		}
@@ -477,6 +478,16 @@ func (p *PriFiLibRelayInstance) upstreamPhase3_finalizeRound(roundID int32) erro
 		p.relayState.timeStatistics["round-duration"].AddTime(timeSpent.Nanoseconds() / 1e6) //ms
 		for k, v := range p.relayState.timeStatistics {
 			p.collectExperimentResult(v.ReportWithInfo(k))
+		}
+		if false && roundID%1000 == 0 {
+			log.Info("Round", roundID, "Relay Memory\n", memoryUsage())
+			memoryUsage2()
+			i := 0
+			for _, s := range p.relayState.ExperimentResultData {
+				i += len(s)
+			}
+			log.Info("Size of experiment collect:", i, "B")
+			p.relayState.roundManager.MemoryUsage()
 		}
 	}
 
@@ -541,6 +552,11 @@ func (p *PriFiLibRelayInstance) downstreamPhase1_openRoundAndSendData() error {
 	}
 
 	nextDownstreamRoundID := p.relayState.roundManager.NextRoundToOpen()
+
+	// used if we're replaying a pcap. The first message we decode is "time0"
+	if nextDownstreamRoundID == 1 {
+		p.relayState.time0 = uint64(prifilog.MsTimeStampNow())
+	}
 
 	// TODO : if something went wrong before, this flag should be used to warn the clients that the config has changed
 	flagResync := false
@@ -849,4 +865,32 @@ func (p *PriFiLibRelayInstance) collectExperimentResult(str string) {
 	}
 
 	p.relayState.ExperimentResultData = append(p.relayState.ExperimentResultData, str)
+}
+
+func memoryUsage() string {
+
+	cmd_text := "ps aux --sort -rss | head -n 2"
+
+	cmd := "cat /proc/cpuinfo | egrep '^model name' | uniq | awk '{print substr($0, index($0,$4))}'"
+	out, err := exec.Command("bash", "-c", cmd_text).Output()
+	if err != nil {
+		return fmt.Sprintf("Failed to execute command: %s", cmd)
+	}
+	return strings.TrimSpace(string(out))
+}
+
+func memoryUsage2() {
+	var m runtime.MemStats
+	runtime.ReadMemStats(&m)
+	// For info on each, see: https://golang.org/pkg/runtime/#MemStats
+	fmt.Printf("Alloc = %v MiB", bToMb(m.Alloc))
+	fmt.Printf(" HeapObjects = %v MiB", bToMb(m.HeapObjects))
+	fmt.Printf(" HeapInuse = %v", bToMb(m.HeapInuse))
+	fmt.Printf(" HeapIdle = %v", bToMb(m.HeapIdle))
+	fmt.Printf(" HeapSys = %v", bToMb(m.HeapSys))
+	fmt.Printf(" StackSys = %v MiB", bToMb(m.StackSys))
+	fmt.Printf(" Sys = %v MiB\n", bToMb(m.Sys))
+}
+func bToMb(b uint64) uint64 {
+	return b / 1024 / 1024
 }

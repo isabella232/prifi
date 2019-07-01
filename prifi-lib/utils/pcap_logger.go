@@ -11,6 +11,7 @@ import (
 // PCAPReceivedPacket represents a PCAP that was transmitted through Prifi and received at the relay
 type PCAPReceivedPacket struct {
 	ID              uint32
+	clientID		uint16
 	ReceivedAt      uint64
 	SentAt          uint64
 	Delay           uint64
@@ -38,7 +39,7 @@ func NewPCAPLog() *PCAPLog {
 }
 
 // should be called with the received pcap packet
-func (pl *PCAPLog) ReceivedPcap(ID uint32, frag bool, tsSent uint64, tsExperimentStart uint64, dataLen uint32) {
+func (pl *PCAPLog) ReceivedPcap(ID uint32, clientID uint16, frag bool, tsSent uint64, tsExperimentStart uint64, dataLen uint32) {
 
 	if pl.receivedPackets == nil {
 		pl.receivedPackets = make([]*PCAPReceivedPacket, 0)
@@ -50,8 +51,11 @@ func (pl *PCAPLog) ReceivedPcap(ID uint32, frag bool, tsSent uint64, tsExperimen
 		receptionTime = 0
 	}
 
+	//log.Lvl1("Received PCAP", ID, "from client", clientID, "at time", receptionTime, "and it was sent at", tsSent, "so diff", receptionTime-tsSent)
+
 	p := &PCAPReceivedPacket{
 		ID:              ID,
+		clientID: clientID,
 		ReceivedAt:      receptionTime,
 		SentAt:          tsSent,
 		Delay:           receptionTime - tsSent,
@@ -109,12 +113,17 @@ func (pl *PCAPLog) Print() {
 	log.Lvl1("PCAPLog (", pl.reportID, "): ", totalFragments, "fragments,", totalUniquePackets, "final,", totalPackets, "fragments+final; mean",
 		math.Ceil(delayMean*100)/100, "ms, stddev", math.Ceil(stddev*100)/100, "max", math.Ceil(float64(delayMax)*100)/100, "ms")
 
-	str := ""
+	individualReports := make(map[uint16]string)
 	for _, v := range pl.receivedPackets {
-		str += strconv.Itoa(int(v.Delay)) + ";"
+		if _, ok := individualReports[v.clientID]; !ok {
+			individualReports[v.clientID] = ""
+		}
+		individualReports[v.clientID] += strconv.Itoa(int(v.Delay)) + ";"
 	}
 
-	log.Lvl1("PCAPLog-individuals (", pl.reportID, "): ", str)
+	for k, v := range individualReports {
+		log.Lvl1("PCAPLog-individuals (", pl.reportID, "): client ", k, ":", v)
+	}
 	pl.reportID++
 	pl.receivedPackets = make([]*PCAPReceivedPacket, 0)
 }

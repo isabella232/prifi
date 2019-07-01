@@ -5,6 +5,9 @@ import (
 	"github.com/dedis/prifi/utils"
 	"gopkg.in/dedis/onet.v2/log"
 	"gopkg.in/dedis/onet.v2/network"
+	"io/ioutil"
+	"os"
+	"runtime/pprof"
 	"time"
 )
 
@@ -105,6 +108,8 @@ func (s *ServiceState) handleTimeout(lateClients []string, lateTrustees []string
 // remain in some weird state)
 func (s *ServiceState) NetworkErrorHappened(si *network.ServerIdentity) {
 
+	pprof.StopCPUProfile()
+
 	if s.role != prifi_protocol.Relay {
 		log.Lvl3("A network error occurred with node", si, ", but we're not the relay, nothing to do.")
 		s.connectToRelayStopChan <- true //"nothing" except stop this goroutine
@@ -135,6 +140,14 @@ func (s *ServiceState) CountParticipants() (int, int) {
 // ready (one trustee and two clients).
 func (s *ServiceState) StartPriFiCommunicateProtocol() {
 	log.Lvl1("Starting PriFi protocol")
+
+	tmpFile, err := ioutil.TempFile(os.TempDir(), "prifi-")
+	if err != nil {
+		log.Fatal("Cannot create temporary file", err)
+	}
+
+	log.Info("Outputting CPU profile in", tmpFile.Name())
+	pprof.StartCPUProfile(tmpFile)
 
 	if s.role != prifi_protocol.Relay {
 		log.Error("Trying to start PriFi protocol from a non-relay node.")

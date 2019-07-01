@@ -2,6 +2,7 @@ package relay
 
 import (
 	"errors"
+	"fmt"
 	"github.com/dedis/prifi/prifi-lib/net"
 	"gopkg.in/dedis/onet.v2/log"
 	"runtime/debug"
@@ -51,9 +52,9 @@ type BufferableRoundManager struct {
 	LowBound                 int //restart sending at lowerbound
 	HighBound                int //stop sending at higherbound
 	stopFunction             func(int)
-	stopSent                 bool
+	stopSent                 map[int]bool
 	resumeFunction           func(int)
-	resumeSent               bool
+	resumeSent               map[int]bool
 }
 
 func sortedIntMapOfIntMapDump(m map[int]map[int32][]byte) {
@@ -65,6 +66,48 @@ func sortedIntMapOfIntMapDump(m map[int]map[int32][]byte) {
 	for _, i := range nodes {
 		log.Lvlf1("%2d: %+v", i, m[i])
 	}
+}
+
+// Dumps precise statistics about the memory used by this datastructure
+func (b *BufferableRoundManager) MemoryUsage() {
+
+	clientNumberOfCipherBuffered := uint32(0)
+	clientSizeOfCipherBuffered := uint64(0)
+	trusteeNumberOfCipherBuffered := uint32(0)
+	trusteeSizeOfCipherBuffered := uint64(0)
+
+	strClients := ""
+	strTrustees := ""
+
+	for i := 0; i < b.nClients; i++ {
+		thisClientCiphers := b.bufferedClientCiphers[i]
+		clientNumberOfCipherBuffered += uint32(len(thisClientCiphers))
+
+		thisClientSize := uint64(0)
+		for _, v := range thisClientCiphers {
+			thisClientSize += uint64(len(v))
+		}
+		if thisClientSize != 0 {
+			strClients += fmt.Sprintf("%v:%v B ", i, thisClientSize)
+		}
+		clientSizeOfCipherBuffered += thisClientSize
+	}
+	for i := 0; i < b.nTrustees; i++ {
+		thisTrusteeCiphers := b.bufferedClientCiphers[i]
+		trusteeNumberOfCipherBuffered += uint32(len(thisTrusteeCiphers))
+
+		thisTrusteeSize := uint64(0)
+		for _, v := range thisTrusteeCiphers {
+			thisTrusteeSize += uint64(len(v))
+		}
+		if thisTrusteeSize != 0 {
+			strTrustees += fmt.Sprintf("%v:%v B ", i, thisTrusteeSize)
+		}
+		trusteeSizeOfCipherBuffered += thisTrusteeSize
+	}
+	log.Lvl1("[BufferableRoundManager] trustees:", trusteeNumberOfCipherBuffered, "=", trusteeSizeOfCipherBuffered,
+		"B (", strTrustees, "); clients:", clientNumberOfCipherBuffered, "=", clientSizeOfCipherBuffered, "B (", strClients, ")")
+	// (config:", b.nClients, "clients", b.nTrustees, "trustees, window =", b.maxNumberOfConcurrentRounds, "b.sendStopResumeMessage =",	b.DoSendStopResumeMessages, ", lowBound =", b.LowBound, ", highBound =", b.HighBound, ")")
 }
 
 func sortedIntMapDump(m map[int]bool) {
@@ -494,6 +537,7 @@ func (b *BufferableRoundManager) AddTrusteeCipher(roundID int32, trusteeID int, 
 
 // AddClientCipher adds a client cipher for a given round
 func (b *BufferableRoundManager) AddClientCipher(roundID int32, clientID int, data []byte) error {
+
 	b.Lock()
 	defer b.Unlock()
 
@@ -599,20 +643,28 @@ func (b *BufferableRoundManager) AddRateLimiter(lowBound, highBound int, stopFun
 	b.stopFunction = stopFunction
 	b.resumeFunction = resumeFunction
 
+	b.stopSent = make(map[int]bool)
+	for i := 0; i < b.nTrustees; i++ {
+		b.stopSent[i] = false
+	}
+	b.resumeSent = make(map[int]bool)
+	for i := 0; i < b.nTrustees; i++ {
+		b.resumeSent[i] = false
+	}
 	return nil
 }
 
 func (b *BufferableRoundManager) sendRateChangeIfNeeded(trusteeID int) {
 	if b.DoSendStopResumeMessages {
 		n := b.NumberOfBufferedCiphers(trusteeID)
-		if n >= b.HighBound && !b.stopSent {
+		if n >= b.HighBound && !b.stopSent[trusteeID] {
 			b.stopFunction(trusteeID)
-			b.stopSent = true
-			b.resumeSent = false
-		} else if n <= b.LowBound && !b.resumeSent {
+			b.stopSent[trusteeID] = true
+			b.resumeSent[trusteeID] = false
+		} else if n <= b.LowBound && !b.resumeSent[trusteeID] {
 			b.resumeFunction(trusteeID)
-			b.stopSent = false
-			b.resumeSent = true
+			b.stopSent[trusteeID] = false
+			b.resumeSent[trusteeID] = true
 		}
 	}
 }
