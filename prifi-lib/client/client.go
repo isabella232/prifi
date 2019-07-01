@@ -393,7 +393,7 @@ func (p *PriFiLibClientInstance) SendUpstreamData(ownerSlotID int) error {
 					//all packets >= currentPacket AND <= relativeNow should be sent
 					basePacketID := p.clientState.pcapReplay.currentPacket
 					lastPacketID := p.clientState.pcapReplay.currentPacket
-					for p.clientState.pcapReplay.currentPacket < len(p.clientState.pcapReplay.Packets) - 1 &&
+					for p.clientState.pcapReplay.currentPacket < len(p.clientState.pcapReplay.Packets)-1 &&
 						currentPacket.MsSinceBeginningOfCapture <= relativeNow &&
 						payloadRealLength+currentPacket.RealLength <= actualPayloadSize {
 

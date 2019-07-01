@@ -11,7 +11,7 @@ import (
 // PCAPReceivedPacket represents a PCAP that was transmitted through Prifi and received at the relay
 type PCAPReceivedPacket struct {
 	ID              uint32
-	clientID		uint16
+	clientID        uint16
 	ReceivedAt      uint64
 	SentAt          uint64
 	Delay           uint64
@@ -55,7 +55,7 @@ func (pl *PCAPLog) ReceivedPcap(ID uint32, clientID uint16, frag bool, tsSent ui
 
 	p := &PCAPReceivedPacket{
 		ID:              ID,
-		clientID: clientID,
+		clientID:        clientID,
 		ReceivedAt:      receptionTime,
 		SentAt:          tsSent,
 		Delay:           receptionTime - tsSent,

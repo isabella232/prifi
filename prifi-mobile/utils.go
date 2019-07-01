@@ -1,4 +1,4 @@
-package prifiMobile
+package prifimobile
 
 import (
 	"errors"
@@ -29,6 +29,7 @@ func GetRelayAddress() (string, error) {
 	return relayAddress, err
 }
 
+// Sets RelayAddress
 func SetRelayAddress(host string) error {
 	c, err := getGroupConfig()
 	if err != nil {
@@ -40,9 +41,8 @@ func SetRelayAddress(host string) error {
 	if fullAddress.Valid() {
 		c.Roster.Get(relayIndex).Address = fullAddress
 		return nil
-	} else {
-		return errors.New("not a host:port address")
 	}
+	return errors.New("not a host:port address")
 }
 
 // Relay Port
@@ -53,6 +53,7 @@ func GetRelayPort() (int, error) {
 	return port, err
 }
 
+// Sets Relay Port
 func SetRelayPort(port int) error {
 	c, err := getGroupConfig()
 	if err != nil {
@@ -65,9 +66,8 @@ func SetRelayPort(port int) error {
 	if fullAddress.Valid() {
 		c.Roster.Get(relayIndex).Address = fullAddress
 		return nil
-	} else {
-		return errors.New("not a host:port address")
 	}
+	return errors.New("not a host:port address")
 }
 
 // Relay Socks Port
@@ -76,6 +76,7 @@ func GetRelaySocksPort() (int, error) {
 	return c.SocksClientPort, err
 }
 
+// Sets relay socks port
 func SetRelaySocksPort(port int) error {
 	c, err := getPrifiConfig()
 	if err != nil {
@@ -116,11 +117,13 @@ func GenerateNewKeyPairAndAssign() error {
 	return nil
 }
 
+// Gets Public Key
 func GetPublicKey() (string, error) {
 	c, err := getCothorityConfig()
 	return c.Public, err
 }
 
+// Sets Public Key
 func SetPublicKey(pubKey string) error {
 	c, err := getCothorityConfig()
 	if err != nil {
@@ -131,11 +134,13 @@ func SetPublicKey(pubKey string) error {
 	return nil
 }
 
+// Get Private Key
 func GetPrivateKey() (string, error) {
 	c, err := getCothorityConfig()
 	return c.Private, err
 }
 
+//Sets Private Key
 func SetPrivateKey(priKey string) error {
 	c, err := getCothorityConfig()
 	if err != nil {

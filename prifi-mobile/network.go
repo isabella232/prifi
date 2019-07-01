@@ -1,4 +1,4 @@
-package prifiMobile
+package prifimobile
 
 import (
 	"github.com/parnurzeal/gorequest"
@@ -7,14 +7,15 @@ import (
 )
 
 // Used for latency test
-type HttpRequestResult struct {
+type HTTPRequestResult struct {
 	Latency    int64
 	StatusCode int
 	BodySize   int
 }
 
-func NewHttpRequestResult() *HttpRequestResult {
-	return &HttpRequestResult{0, 0, 0}
+// Creates an HTTPRequestResult
+func NewHTTPRequestResult() *HTTPRequestResult {
+	return &HTTPRequestResult{0, 0, 0}
 }
 
 /*
@@ -22,7 +23,7 @@ func NewHttpRequestResult() *HttpRequestResult {
  *
  * It is a method instead of a function due to the type restriction of gomobile.
  */
-func (result *HttpRequestResult) RetrieveHttpResponseThroughPrifi(targetUrlString string, timeout int, throughPrifi bool) error {
+func (result *HTTPRequestResult) RetrieveHTTPResponseThroughPrifi(targetURLString string, timeout int, throughPrifi bool) error {
 	// Get the localhost PriFi server port
 	prifiPort, err := GetPrifiPort()
 	if err != nil {
@@ -30,19 +31,19 @@ func (result *HttpRequestResult) RetrieveHttpResponseThroughPrifi(targetUrlStrin
 	}
 
 	// Construct the proxy host address
-	proxyUrl := "socks5://127.0.0.1:" + strconv.Itoa(prifiPort)
+	proxyURL := "socks5://127.0.0.1:" + strconv.Itoa(prifiPort)
 
 	// Construct a request object with proxy and timeout value
 	var request *gorequest.SuperAgent
 	if throughPrifi {
-		request = gorequest.New().Proxy(proxyUrl).Timeout(time.Duration(timeout) * time.Second)
+		request = gorequest.New().Proxy(proxyURL).Timeout(time.Duration(timeout) * time.Second)
 	} else {
 		request = gorequest.New().Timeout(time.Duration(timeout) * time.Second)
 	}
 
 	// Used for latency test
 	start := time.Now()
-	resp, bodyBytes, errs := request.Get(targetUrlString).EndBytes()
+	resp, bodyBytes, errs := request.Get(targetURLString).EndBytes()
 	elapsed := time.Since(start)
 
 	if len(errs) > 0 {

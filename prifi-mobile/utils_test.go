@@ -1,4 +1,4 @@
-package prifiMobile
+package prifimobile
 
 import (
 	"fmt"

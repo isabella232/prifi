@@ -1,4 +1,4 @@
-package prifiMobile
+package prifimobile
 
 // Configuration files read & write and related structs
 

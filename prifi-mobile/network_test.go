@@ -1,4 +1,4 @@
-package prifiMobile
+package prifimobile
 
 import (
 	"fmt"
@@ -6,10 +6,10 @@ import (
 )
 
 func TestMakeHttpRequestThroughPrifi(t *testing.T) {
-	r := NewHttpRequestResult()
+	r := NewHTTPRequestResult()
 	fmt.Println(r)
 
-	e := r.RetrieveHttpResponseThroughPrifi("http://128.178.151.111", 5, false)
+	e := r.RetrieveHTTPResponseThroughPrifi("http://128.178.151.111", 5, false)
 	if e != nil {
 		fmt.Println(e)
 	}

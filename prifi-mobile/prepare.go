@@ -1,4 +1,4 @@
-package prifiMobile
+package prifimobile
 
 // Functions that are needed to initialize a server are all here
 

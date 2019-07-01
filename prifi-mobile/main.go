@@ -1,7 +1,4 @@
-/*
- * The package name must NOT contain underscore.
- */
-package prifiMobile
+package prifimobile
 
 import (
 	prifi_service "github.com/lbarman/prifi/sda/services"
@@ -30,11 +27,12 @@ func StartClient() {
 	case <-stopChan:
 		globalHost.Close()
 		globalService.ShutdownSocks()
-		globalService.ShutdownConnexionToRelay()
+		//TODO: re-enable globalService.ShutdownConnexionToRelay()
 		log.Info("PriFi Shutdown")
 	}
 }
 
+// Unused
 func StopClient() {
 	stopChan <- true
 }

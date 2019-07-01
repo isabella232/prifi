@@ -419,7 +419,7 @@ func (p *PriFiLibRelayInstance) upstreamPhase2b_extractPayload() error {
 				if pattern != 21845 {
 					break
 				}
-				clientID := uint16(binary.BigEndian.Uint16(upstreamPlaintext[pos + 2: pos + 4]))
+				clientID := uint16(binary.BigEndian.Uint16(upstreamPlaintext[pos+2 : pos+4]))
 				ID := int32(binary.BigEndian.Uint32(upstreamPlaintext[pos+4 : pos+8]))
 				timestamp := int64(binary.BigEndian.Uint64(upstreamPlaintext[pos+8 : pos+16]))
 				frag := false
