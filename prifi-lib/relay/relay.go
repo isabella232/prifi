@@ -52,6 +52,8 @@ import (
 	"os/exec"
 	"runtime"
 	"strings"
+	//CARLOS
+	//"reflect"
 )
 
 /*
@@ -352,6 +354,7 @@ func (p *PriFiLibRelayInstance) upstreamPhase2a_extractOCMap(roundID int32) erro
 // If it's a pcap message, update the statistics accordingly
 func (p *PriFiLibRelayInstance) upstreamPhase2b_extractPayload() error {
 
+	log.Lvl1("CARLOS--> upstreamPhase2b_extractPayload")
 	// we decode the DC-net cell
 	roundID := p.relayState.roundManager.CurrentRound()
 	clientSlices, trusteesSlices, err := p.relayState.roundManager.CollectRoundData()
@@ -367,15 +370,38 @@ func (p *PriFiLibRelayInstance) upstreamPhase2b_extractPayload() error {
 		p.relayState.DCNet.DecodeTrustee(roundID, s)
 	}
 	upstreamPlaintext := p.relayState.DCNet.DecodeCell()
+	log.Lvl1("CARLOS--> 1")
 
 	p.relayState.bitrateStatistics.AddUpstreamCell(int64(len(upstreamPlaintext)))
+	log.Lvl1("CARLOS--> 2")
 
 	//disruption-protection
 	if p.relayState.DisruptionProtectionEnabled {
+		log.Lvl1("CARLOS--> 3 ee")
 
-		log.Lvl3("Verifying HMAC for disruption protection")
-		hmac := upstreamPlaintext[0:32]
-		upstreamPlaintext = upstreamPlaintext[32:]
+		log.Lvl3("Looking at b_echo_flag for disruption protection")
+		//CARLOS
+		//upstreamPlaintext = upstreamPlaintext[32:]
+		var b_echo_flag byte
+		b_echo_flag = upstreamPlaintext[0]
+		if(b_echo_flag == 1){
+			log.Error("Disruption detected, going into blame protocol.")
+			// TODO: Blame protocol
+		}else{
+			
+		}
+		log.Lvl1("CARLOS --> b_echo_flag:", b_echo_flag)
+		upstreamPlaintext = upstreamPlaintext[1:]
+		hash := sha256.Sum256([]byte(upstreamPlaintext))
+		//log.Lvl1("CARLOS--> hasH", reflect.TypeOf(hash))
+
+		p.relayState.HASHForClients = hash
+		log.Lvl1("CARLOS--> HASH: ", hash, "from", len(upstreamPlaintext), upstreamPlaintext[:15])
+		log.Lvl1("CARLOS--> 44")
+		//CARLOS
+
+		/*hmac := upstreamPlaintext[0:32]
+		
 
 		clientID := -1 // todo loop with the schedule
 		valid := ValidateHmac256(upstreamPlaintext, hmac, clientID)
@@ -383,14 +409,17 @@ func (p *PriFiLibRelayInstance) upstreamPhase2b_extractPayload() error {
 		if !valid {
 			// start blame
 			log.Error("Warning: Disruption Protection check failed")
-		}
+		}*/
 	}
-
+	//log.Lvl1("CARLOS--> RECEIVING: ", reflect.TypeOf(upstreamPlaintext))
 	log.Lvl4("Decoded cell is", upstreamPlaintext)
+	log.Lvl1("CARLOS--> 4")
 
 	// check if we have a latency test message, or a pcap meta message
 	if len(upstreamPlaintext) >= 2 {
+		log.Lvl1("CARLOS--> 5")
 		pattern := int(binary.BigEndian.Uint16(upstreamPlaintext[0:2]))
+		log.Lvl1("CARLOS--> 6", pattern)
 		if pattern == 43690 {
 			// 1010101010101010
 			// then, we simply have to send it down
@@ -441,10 +470,13 @@ func (p *PriFiLibRelayInstance) upstreamPhase2b_extractPayload() error {
 	}
 
 	if upstreamPlaintext != nil {
+		log.Lvl1("CARLOS--> 7")
 		// verify that the decoded payload has the correct size
 		expectedSize := p.relayState.PayloadSize
 		if p.relayState.DisruptionProtectionEnabled {
-			expectedSize -= 32
+			//CARLOS
+			expectedSize -= 1
+			//CARLOS
 		}
 		if len(upstreamPlaintext) != expectedSize {
 			e := "Relay : DecodeCell produced wrong-size payload, " + strconv.Itoa(len(upstreamPlaintext)) + "!=" + strconv.Itoa(p.relayState.PayloadSize)
@@ -453,6 +485,7 @@ func (p *PriFiLibRelayInstance) upstreamPhase2b_extractPayload() error {
 		}
 
 		if p.relayState.DataOutputEnabled {
+			//log.Lvl1("CARLOS--> 8", upstreamPlaintext)
 			p.relayState.DataFromDCNet <- upstreamPlaintext
 		}
 	}
@@ -543,6 +576,17 @@ func (p *PriFiLibRelayInstance) downstreamPhase1_openRoundAndSendData() error {
 			downstreamCellContent = make([]byte, 1)
 		}
 	}
+	//CARLOS
+	if p.relayState.DisruptionProtectionEnabled {
+		hash := p.relayState.HASHForClients
+		
+		data := make([]byte, len(hash) + len(downstreamCellContent))
+		copy(data[0:len(hash)], hash[:])
+		copy(data[len(hash):], downstreamCellContent)
+		downstreamCellContent = data
+		
+	}
+	//CARLOS
 
 	// if we want to use dummy data down, pad to the correct size
 	if p.relayState.UseDummyDataDown && len(downstreamCellContent) < p.relayState.DownstreamCellSize {

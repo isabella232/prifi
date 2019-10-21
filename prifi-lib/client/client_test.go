@@ -686,7 +686,7 @@ func TestDisruptionClient(t *testing.T) {
 	sharedSecrets_t2 := make([]kyber.Point, 1)
 	sharedSecrets_t2[0] = cs.sharedSecrets[1]
 
-	t1 := dcnet.NewDCNetEntity(1, dcnet.DCNET_TRUSTEE, upCellSize, true, sharedSecrets_t1)
+	t1 := dcnet.NewDCNetEntity(1, dcnet.DCNET_TRUSTEE, upCellSize, true, sharedSecrets_t1)//CARLOS, add, disrruption protection
 	t2 := dcnet.NewDCNetEntity(2, dcnet.DCNET_TRUSTEE, upCellSize, true, sharedSecrets_t2)
 
 	x := t1.TrusteeEncodeForRound(0)

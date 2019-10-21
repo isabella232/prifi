@@ -43,6 +43,8 @@ type ClientState struct {
 	NextDataForDCNet              *[]byte     //if not nil, send this before polling DataForDCNet
 	DataFromDCNet                 chan []byte //Data from the relay : VPN / SOCKS should read data from there !
 	DataOutputEnabled             bool        //if FALSE, nothing will be written to DataFromDCNet
+	HASHFromPreviousMessage 	  [32]byte    //CARLOS
+	B_echo_last					  byte		  //CARLOS
 	ephemeralPrivateKey           kyber.Scalar
 	EphemeralPublicKey            kyber.Point
 	ID                            int

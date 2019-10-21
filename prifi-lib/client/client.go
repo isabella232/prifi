@@ -197,7 +197,7 @@ latency-test message, test if the resync flag is on (which triggers a re-setup).
 When this function ends, it calls SendUpstreamData() which continues the communication loop.
 */
 func (p *PriFiLibClientInstance) ProcessDownStreamData(msg net.REL_CLI_DOWNSTREAM_DATA) error {
-
+	log.Lvl1("CARLOS: RECEIVING DATA")
 	timing.StartMeasure("round-processing")
 
 	/*
@@ -209,7 +209,28 @@ func (p *PriFiLibClientInstance) ProcessDownStreamData(msg net.REL_CLI_DOWNSTREA
 
 		//pass the data to the VPN/SOCKS5 proxy, if enabled
 		if p.clientState.DataOutputEnabled {
-			p.clientState.DataFromDCNet <- msg.Data
+			//CARLOS
+			if(p.clientState.DisruptionProtectionEnabled){
+				var data []byte 
+				data = msg.Data
+				hash := data[:32]
+				
+				previousHash := p.clientState.HASHFromPreviousMessage[:]
+				
+				if(!Equal(hash, previousHash)){
+					log.Error("THE HASH DOES NOT MATCH!")
+					log.Lvl1("CARLOS HASH: ", hash, previousHash)
+					p.clientState.B_echo_last = 1
+				}else{
+					p.clientState.B_echo_last = 0
+				}
+				
+				p.clientState.DataFromDCNet <- data[:32]
+				
+			}else{
+			//CARLOS
+				p.clientState.DataFromDCNet <- msg.Data
+			}
 		}
 		//test if it is the answer from our ping (for latency test)
 		if p.clientState.LatencyTest.DoLatencyTests && len(msg.Data) > 2 {
@@ -355,12 +376,14 @@ func (p *PriFiLibClientInstance) SendUpstreamData(ownerSlotID int) error {
 
 	//how much data we can send
 	actualPayloadSize := p.clientState.PayloadSize
+	//CARLOS
 	if p.clientState.DisruptionProtectionEnabled {
-		actualPayloadSize -= 32
+		actualPayloadSize -= 1
 		if actualPayloadSize <= 0 {
-			log.Fatal("Client", p.clientState.ID, "Cannot have disruption protection with less than 32 bytes payload")
+			log.Fatal("Client", p.clientState.ID, "Cannot have disruption protection with less than 1 bytes payload")
 		}
 	}
+	//CARLOS
 
 	//if we can send data
 	slotOwner := false
@@ -447,11 +470,44 @@ func (p *PriFiLibClientInstance) SendUpstreamData(ownerSlotID int) error {
 	}
 
 	//produce the next upstream cell
-	var hmac []byte
-	if p.clientState.DisruptionProtectionEnabled {
+	//var hmac []byte
+	//CARLOS
+	/*if p.clientState.DisruptionProtectionEnabled {
 		hmac = p.computeHmac256(upstreamCellContent)
+	}*/
+	
+	//CARLOS
+	
+	//log.Lvl1("CARLOS--> SENDING: ", payload)
+	
+	//CARLOS
+	if p.clientState.DisruptionProtectionEnabled {
+		//EXPLANTION 1
+		var hash [32]byte
+		if(upstreamCellContent == nil){
+			log.Lvl1("HERE")
+			payload_to_hash := make([]byte, p.clientState.DCNet.DCNetPayloadSize - 1)
+			hash = sha256.Sum256(payload_to_hash)
+		}else{
+			hash = sha256.Sum256([]byte(upstreamCellContent))
+		}
+		p.clientState.HASHFromPreviousMessage = hash
+		if len(upstreamCellContent) < 15{
+			log.Lvl1("CARLOS--> HASH: ", hash, "from", len(upstreamCellContent), upstreamCellContent, upstreamCellContent == nil)
+		}else{
+			log.Lvl1("CARLOS--> HASH: ", hash, "from", len(upstreamCellContent), upstreamCellContent[1:15])
+		}
 	}
-	payload := append(hmac, upstreamCellContent...)
+	var slice_b_echo_last []byte
+	if p.clientState.DisruptionProtectionEnabled {
+		
+		slice_b_echo_last = make([]byte, 1)
+		b_echo_last := p.clientState.B_echo_last
+		slice_b_echo_last[0] = b_echo_last
+	}
+	payload := append(slice_b_echo_last, upstreamCellContent...)
+	//CARLOS
+	
 	upstreamCell := p.clientState.DCNet.EncodeForRound(p.clientState.RoundNo, slotOwner, payload)
 
 	//send the data to the relay
@@ -562,19 +618,44 @@ func (p *PriFiLibClientInstance) Received_REL_CLI_TELL_EPH_PKS_AND_TRUSTEES_SIG(
 	data := make([]byte, p.clientState.PayloadSize)
 	slotOwner := false
 	if p.clientState.DisruptionProtectionEnabled {
-		if p.clientState.PayloadSize < 32 {
+		/*if p.clientState.PayloadSize < 32 {
 			log.Fatal("Client", p.clientState.ID, "Cannot have disruption protection with less than 32 bytes payload")
 		}
 		data2 := make([]byte, p.clientState.PayloadSize-32)
-		hmac := p.computeHmac256(data2)
+		//hmac := p.computeHmac256(data2)
+		var hmac []byte
 
-		data = append(hmac, data2...)
+		data = append(hmac, data2...)*/
+		//CARLOS
+		data2 := make([]byte, p.clientState.PayloadSize-1)
+
+		var hash [32]byte
+		if(data2 == nil){
+			log.Lvl1("HERE")
+			payload_to_hash := make([]byte, p.clientState.DCNet.DCNetPayloadSize)
+			hash = sha256.Sum256(payload_to_hash)
+		}else{
+			hash = sha256.Sum256([]byte(data2))
+		}
+		p.clientState.HASHFromPreviousMessage = hash
+		if len(data2) < 15{
+			log.Lvl1("CARLOS--> HASH: ", hash, "from", len(data2), data2, data2 == nil)
+		}else{
+			log.Lvl1("CARLOS--> HASH: ", hash, "from", len(data2), data2[:15])
+		}
+		
+		slice_b_echo_last := make([]byte, 1)
+		p.clientState.B_echo_last = 0
+		b_echo_last := p.clientState.B_echo_last
+		slice_b_echo_last[0] = b_echo_last
+		data = append(slice_b_echo_last, data2...)
 	}
 	if p.clientState.ID == 0 {
 		slotOwner = true // we need one guy that takes the responsability for this first slot
 	}
 
 	upstreamCell := p.clientState.DCNet.EncodeForRound(0, slotOwner, data)
+	log.Lvl1("CARLOS--> SENDING-FIRST: ", len(data), data[:15])
 
 	//send the data to the relay
 	toSend := &net.CLI_REL_UPSTREAM_DATA{
@@ -587,4 +668,16 @@ func (p *PriFiLibClientInstance) Received_REL_CLI_TELL_EPH_PKS_AND_TRUSTEES_SIG(
 	p.clientState.RoundNo++
 
 	return nil
+}
+
+func Equal(a, b []byte) bool {
+    if len(a) != len(b) {
+        return false
+    }
+    for i, v := range a {
+        if v != b[i] {
+            return false
+        }
+    }
+    return true
 }
