@@ -208,7 +208,7 @@ func (p *PriFiLibClientInstance) ProcessDownStreamData(msg net.REL_CLI_DOWNSTREA
 
 		//pass the data to the VPN/SOCKS5 proxy, if enabled
 		if p.clientState.DataOutputEnabled {
-			if p.clientState.DisruptionProtectionEnabled {
+			if p.clientState.DisruptionProtectionEnabled && len(msg.Data) > 32 {
 				// Getting hash sent by realy
 				var data []byte
 				data = msg.Data
