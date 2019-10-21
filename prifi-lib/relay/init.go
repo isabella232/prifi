@@ -126,8 +126,7 @@ type RelayState struct {
 	neffShuffle                            *scheduler.NeffShuffleRelay
 	currentState                           int16
 	DataForClients                         chan []byte // VPN / SOCKS should put data there !
-	//HASHForClients                         chan [32]byte //CARLOS
-	HASHForClients                         [32]byte //CARLOS
+	HASHForClients                         [32]byte
 	PriorityDataForClients                 chan []byte
 	DataFromDCNet                          chan []byte // VPN / SOCKS should read data from there !
 	DataOutputEnabled                      bool        // If FALSE, nothing will be written to DataFromDCNet

@@ -29,7 +29,6 @@ type DCNetEntity struct {
 	EntityID                      int
 	Entity                        DCNET_ENTITY
 	EquivocationProtectionEnabled bool
-	//DisruptionProtectionEnabled   bool //CARLOS
 	DCNetPayloadSize              int
 
 	cryptoSuite  suites.Suite
@@ -61,7 +60,6 @@ func NewDCNetEntity(
 	entity DCNET_ENTITY,
 	PayloadSize int,
 	equivocationProtection bool,
-	//disruptionProtection bool, //CARLOS
 	sharedKeys []kyber.Point) *DCNetEntity {
 
 	e := new(DCNetEntity)
@@ -69,7 +67,6 @@ func NewDCNetEntity(
 	e.Entity = entity
 	e.DCNetPayloadSize = PayloadSize
 	e.EquivocationProtectionEnabled = equivocationProtection
-	//e.DisruptionProtectionEnabled = disruptionProtection //CARLOS
 	e.DCNetRoundDecoder = nil
 	e.currentRound = 0
 
@@ -220,11 +217,6 @@ func (e *DCNetEntity) clientEncode(slotOwner bool, payload []byte) *DCNetCipher 
 		c.Payload = payload // replace the Payload with the encrypted version
 		c.EquivocationProtectionTag = sigma_j
 	}
-	//CARLOS
-	// Adding the flag of previous message hash correct or incorrect
-	//if 
-
-	//CARLOS
 
 	// DC-net encrypt the Payload
 	for i := range p_ij {
