@@ -9,7 +9,7 @@ import (
 	"github.com/dedis/prifi/prifi-lib/dcnet"
 	prifilog "github.com/dedis/prifi/prifi-lib/log"
 	"github.com/dedis/prifi/prifi-lib/net"
-	"github.com/dedis/prifi/prifi-lib/relay"
+	//"github.com/dedis/prifi/prifi-lib/relay"
 	"github.com/dedis/prifi/prifi-lib/scheduler"
 	"gopkg.in/dedis/kyber.v2"
 	"gopkg.in/dedis/onet.v2/log"
@@ -701,19 +701,14 @@ func TestDisruptionClient(t *testing.T) {
 		dcNetDecoded[i] = pad1.Payload[i] ^ pad2.Payload[i] ^ clientPad.Payload[i]
 		i++
 	}
-	log.Error("dcNetDecoded", dcNetDecoded)
-
-	hmac := dcNetDecoded[0:32]
-	data := dcNetDecoded[32:]
-
-	success := relay.ValidateHmac256(data, hmac, clientID)
-	if !success {
-		t.Error("HMAC should be valid")
+	b_echo_last := dcNetDecoded[0]
+	if b_echo_last != 0 {
+		t.Error("The first b_echo_last flag should always be 0, now its:", b_echo_last)
 	}
 
 	// now in a normal round (possibly the client will send 0's but it's a different path)
-	//Receive some data down
-	dataDown := []byte{1, 2, 3}
+	// Receive some data down which is the CORRECT HASH of the previous message + [1, 2, 3]
+	dataDown := []byte{107, 219, 188, 254, 65, 196, 247, 119, 151, 176, 195, 248, 159, 252, 197, 57, 155, 53, 5, 34, 114, 223, 170, 75, 157, 208, 187, 59, 93, 214, 67, 191, 1, 2, 3}
 	msg7 := net.REL_CLI_DOWNSTREAM_DATA{
 		RoundID:    1,
 		Data:       dataDown,
@@ -723,6 +718,7 @@ func TestDisruptionClient(t *testing.T) {
 	if err != nil {
 		t.Error("Client should be able to receive this data")
 	}
+
 	msg8 := sentToRelay[0].(*net.CLI_REL_UPSTREAM_DATA)
 	sentToRelay = make([]interface{}, 0)
 
@@ -737,17 +733,17 @@ func TestDisruptionClient(t *testing.T) {
 		dcNetDecoded[i] = pad1.Payload[i] ^ pad2.Payload[i] ^ clientPad.Payload[i]
 		i++
 	}
+	log.Error("dcNetDecoded", dcNetDecoded)
 
-	hmac = dcNetDecoded[0:32]
-	data = dcNetDecoded[32:]
-
-	success = relay.ValidateHmac256(data, hmac, clientID)
-	if !success {
-		t.Error("HMAC should be valid")
+	b_echo_last = dcNetDecoded[0]
+	if b_echo_last != 0 {
+		t.Error("The b_echo_last flag be 0, now its:", b_echo_last)
 	}
 
 	// now with disruption
-	//Receive some data down
+	//Receive some data down. Now the same data, but without the hash
+	dataDown = []byte{1, 2, 3}
+
 	msg9 := net.REL_CLI_DOWNSTREAM_DATA{
 		RoundID:    2,
 		Data:       dataDown,
@@ -760,37 +756,22 @@ func TestDisruptionClient(t *testing.T) {
 	msg10 := sentToRelay[0].(*net.CLI_REL_UPSTREAM_DATA)
 	sentToRelay = make([]interface{}, 0)
 
-	//disruption !
-	if msg10.Data[upCellSize-1] == 0 {
-		msg10.Data[upCellSize-1] = 255
-	} else {
-		msg10.Data[upCellSize-1] = 0
-	}
-
 	//dcnet decode
-	pad1 = dcnet.DCNetCipherFromBytes(t1.TrusteeEncodeForRound(3))
-	pad2 = dcnet.DCNetCipherFromBytes(t2.TrusteeEncodeForRound(3))
+	pad1 = dcnet.DCNetCipherFromBytes(t1.TrusteeEncodeForRound(2))
+	pad2 = dcnet.DCNetCipherFromBytes(t2.TrusteeEncodeForRound(2))
 	clientPad = dcnet.DCNetCipherFromBytes(msg10.Data)
+	dcNetDecoded = make([]byte, upCellSize)
 	i = 0
 	for i < len(dcNetDecoded) {
 		dcNetDecoded[i] = pad1.Payload[i] ^ pad2.Payload[i] ^ clientPad.Payload[i]
 		i++
 	}
 
-	hmac = dcNetDecoded[0:32]
-	data = dcNetDecoded[32:]
+	log.Error("dcNetDecoded", dcNetDecoded)
 
-	success = relay.ValidateHmac256(data, hmac, clientID)
-	if success {
-		t.Error("HMAC should not be valid")
-	}
-	//re-bitflip to original
-	data[len(data)-1] = 0
-
-	//should fail, wrong client ID
-	success = relay.ValidateHmac256(data, hmac, clientID+1)
-	if success {
-		t.Error("HMAC should not be valid")
+	b_echo_last = dcNetDecoded[0]
+	if b_echo_last != 1 {
+		t.Error("The b_echo_last flag should be 1, now its:", b_echo_last)
 	}
 
 	t.SkipNow() //we started a goroutine, let's kill everything, we're good

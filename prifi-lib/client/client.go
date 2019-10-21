@@ -208,24 +208,31 @@ func (p *PriFiLibClientInstance) ProcessDownStreamData(msg net.REL_CLI_DOWNSTREA
 
 		//pass the data to the VPN/SOCKS5 proxy, if enabled
 		if p.clientState.DataOutputEnabled {
-			if p.clientState.DisruptionProtectionEnabled && len(msg.Data) > 32 {
-				// Getting hash sent by realy
-				var data []byte
-				data = msg.Data
-				hash := data[:32]
-
-				// Getting previously calculated hash
-				previousHash := p.clientState.HASHFromPreviousMessage[:]
-
-				// Compering both hashes
-				if !Equal(hash, previousHash) {
-					log.Error("Disruption protection hash comparision failed.")
+			if p.clientState.DisruptionProtectionEnabled {
+				if len(msg.Data) < 32 {
+					// The realy did not send the hash or atleast all of it
+					// TODO: How should I treat this
+					log.Error("The realy did not send the hash back.")
 					p.clientState.B_echo_last = 1
 				} else {
-					p.clientState.B_echo_last = 0
-				}
+					// Getting hash sent by realy
+					var data []byte
+					data = msg.Data
+					hash := data[:32]
 
-				p.clientState.DataFromDCNet <- data[32:]
+					// Getting previously calculated hash
+					previousHash := p.clientState.HASHFromPreviousMessage[:]
+
+					// Compering both hashes
+					if !ValidateHash(hash, previousHash) {
+						log.Error("Disruption protection hash comparision failed.")
+						p.clientState.B_echo_last = 1
+					} else {
+						p.clientState.B_echo_last = 0
+					}
+
+					p.clientState.DataFromDCNet <- data[32:]
+				}
 
 			} else {
 				p.clientState.DataFromDCNet <- msg.Data
@@ -634,12 +641,13 @@ func (p *PriFiLibClientInstance) Received_REL_CLI_TELL_EPH_PKS_AND_TRUSTEES_SIG(
 	return nil
 }
 
-func Equal(a, b []byte) bool {
-	if len(a) != len(b) {
+// ValidateHash returns true iff both hashes passed to the fnction are equal
+func ValidateHash(hash_relay, hash_client []byte) bool {
+	if len(hash_relay) != len(hash_client) {
 		return false
 	}
-	for i, v := range a {
-		if v != b[i] {
+	for i, b := range hash_relay {
+		if b != hash_client[i] {
 			return false
 		}
 	}
