@@ -384,7 +384,7 @@ func (p *PriFiLibClientInstance) SendUpstreamData(ownerSlotID int) error {
 	actualPayloadSize := p.clientState.PayloadSize
 	if p.clientState.DisruptionProtectionEnabled {
 		// Making room for the b_echo_last flag
-		actualPayloadSize -= 1
+		actualPayloadSize--
 		if actualPayloadSize <= 0 {
 			log.Fatal("Client", p.clientState.ID, "Cannot have disruption protection with less than 1 bytes payload")
 		}

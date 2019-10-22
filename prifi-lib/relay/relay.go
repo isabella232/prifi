@@ -449,7 +449,7 @@ func (p *PriFiLibRelayInstance) upstreamPhase2b_extractPayload() error {
 		expectedSize := p.relayState.PayloadSize
 		if p.relayState.DisruptionProtectionEnabled {
 			// One less because of the b_echo_last flag
-			expectedSize -= 1
+			expectedSize--
 		}
 		if len(upstreamPlaintext) != expectedSize {
 			e := "Relay : DecodeCell produced wrong-size payload, " + strconv.Itoa(len(upstreamPlaintext)) + "!=" + strconv.Itoa(p.relayState.PayloadSize)
