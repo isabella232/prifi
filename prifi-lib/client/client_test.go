@@ -15,6 +15,7 @@ import (
 	"gopkg.in/dedis/onet.v2/log"
 	"testing"
 	"time"
+	"crypto/sha256"
 )
 
 /**
@@ -708,7 +709,12 @@ func TestDisruptionClient(t *testing.T) {
 
 	// now in a normal round (possibly the client will send 0's but it's a different path)
 	// Receive some data down which is the CORRECT HASH of the previous message + [1, 2, 3]
-	dataDown := []byte{107, 219, 188, 254, 65, 196, 247, 119, 151, 176, 195, 248, 159, 252, 197, 57, 155, 53, 5, 34, 114, 223, 170, 75, 157, 208, 187, 59, 93, 214, 67, 191, 1, 2, 3}
+	hash := sha256.Sum256(dcNetDecoded[1:])
+	data := []byte{1, 2, 3}
+	dataDown := make([]byte, len(hash)+len(data))
+	copy(dataDown[0:len(hash)], hash[:])
+	copy(dataDown[len(hash):], data)
+	
 	msg7 := net.REL_CLI_DOWNSTREAM_DATA{
 		RoundID:    1,
 		Data:       dataDown,
@@ -733,7 +739,6 @@ func TestDisruptionClient(t *testing.T) {
 		dcNetDecoded[i] = pad1.Payload[i] ^ pad2.Payload[i] ^ clientPad.Payload[i]
 		i++
 	}
-	log.Error("dcNetDecoded", dcNetDecoded)
 
 	b_echo_last = dcNetDecoded[0]
 	if b_echo_last != 0 {
@@ -767,7 +772,6 @@ func TestDisruptionClient(t *testing.T) {
 		i++
 	}
 
-	log.Error("dcNetDecoded", dcNetDecoded)
 
 	b_echo_last = dcNetDecoded[0]
 	if b_echo_last != 1 {

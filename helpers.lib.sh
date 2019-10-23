@@ -42,7 +42,6 @@ test_go(){
 
 # tests if the cothority exists and is on the correct branch
 test_cothority() {
-    return 0
     branchOk=$(cd "$GOPATH/src/gopkg.in/dedis/onet.v2"; git status | grep "On branch $cothorityBranchRequired" | wc -l)
 
     if [ "$branchOk" -ne 1 ]; then

@@ -32,6 +32,7 @@ import (
 	"gopkg.in/dedis/kyber.v2"
 	"gopkg.in/dedis/onet.v2/log"
 
+	"bytes"
 	"crypto/hmac"
 	"crypto/sha256"
 	"github.com/dedis/prifi/prifi-lib/dcnet"
@@ -210,7 +211,7 @@ func (p *PriFiLibClientInstance) ProcessDownStreamData(msg net.REL_CLI_DOWNSTREA
 		if p.clientState.DataOutputEnabled {
 			if p.clientState.DisruptionProtectionEnabled {
 				if len(msg.Data) < 32 {
-					// The realy did not send the hash or atleast all of it
+					// The realy did not send the hash or at least all of it
 					// TODO: How should I treat this
 					log.Error("The realy did not send the hash back.")
 					p.clientState.B_echo_last = 1
@@ -221,10 +222,10 @@ func (p *PriFiLibClientInstance) ProcessDownStreamData(msg net.REL_CLI_DOWNSTREA
 					hash := data[:32]
 
 					// Getting previously calculated hash
-					previousHash := p.clientState.HASHFromPreviousMessage[:]
+					previousHash := p.clientState.HashFromPreviousMessage[:]
 
-					// Compering both hashes
-					if !ValidateHash(hash, previousHash) {
+					// Comparing both hashes
+					if !bytes.Equal(hash, previousHash) {
 						log.Error("Disruption protection hash comparision failed.")
 						p.clientState.B_echo_last = 1
 					} else {
@@ -484,7 +485,7 @@ func (p *PriFiLibClientInstance) SendUpstreamData(ownerSlotID int) error {
 		} else {
 			hash = sha256.Sum256([]byte(upstreamCellContent))
 		}
-		p.clientState.HASHFromPreviousMessage = hash
+		p.clientState.HashFromPreviousMessage = hash
 		log.Lvl3("Hash stored:", hash)
 	}
 	// Adding the b_echo_last if the disruption protection is enabled
@@ -613,7 +614,7 @@ func (p *PriFiLibClientInstance) Received_REL_CLI_TELL_EPH_PKS_AND_TRUSTEES_SIG(
 		// Creating and storing hash
 		var hash [32]byte
 		hash = sha256.Sum256([]byte(data2))
-		p.clientState.HASHFromPreviousMessage = hash
+		p.clientState.HashFromPreviousMessage = hash
 
 		// As is inicialization, b_echo_last is 0
 		slice_b_echo_last := make([]byte, 1)
@@ -639,17 +640,4 @@ func (p *PriFiLibClientInstance) Received_REL_CLI_TELL_EPH_PKS_AND_TRUSTEES_SIG(
 	p.clientState.RoundNo++
 
 	return nil
-}
-
-// ValidateHash returns true iff both hashes passed to the fnction are equal
-func ValidateHash(hash_relay, hash_client []byte) bool {
-	if len(hash_relay) != len(hash_client) {
-		return false
-	}
-	for i, b := range hash_relay {
-		if b != hash_client[i] {
-			return false
-		}
-	}
-	return true
 }
