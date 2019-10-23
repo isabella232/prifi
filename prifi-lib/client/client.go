@@ -397,7 +397,7 @@ func (p *PriFiLibClientInstance) SendUpstreamData(ownerSlotID int) error {
 		slotOwner = true
 	}
 	if slotOwner {
-		
+
 		//this data has already been polled out of the DataForDCNet chan, so send it first
 		//this is non-nil when OpenClosedSlot is true, and that it had to poll data out
 		if p.clientState.NextDataForDCNet != nil {

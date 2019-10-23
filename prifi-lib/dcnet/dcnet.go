@@ -193,7 +193,7 @@ func (e *DCNetEntity) clientEncode(slotOwner bool, payload []byte) *DCNetCipher 
 	c := new(DCNetCipher)
 
 	if payload == nil {
-		payload = make([]byte, e.DCNetPayloadSize) 
+		payload = make([]byte, e.DCNetPayloadSize)
 	} else {
 		// deep clone and pad
 		payload2 := make([]byte, e.DCNetPayloadSize)
