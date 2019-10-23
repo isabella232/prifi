@@ -397,7 +397,7 @@ func (p *PriFiLibClientInstance) SendUpstreamData(ownerSlotID int) error {
 		slotOwner = true
 	}
 	if slotOwner {
-
+		
 		//this data has already been polled out of the DataForDCNet chan, so send it first
 		//this is non-nil when OpenClosedSlot is true, and that it had to poll data out
 		if p.clientState.NextDataForDCNet != nil {
@@ -476,6 +476,7 @@ func (p *PriFiLibClientInstance) SendUpstreamData(ownerSlotID int) error {
 	}
 
 	if p.clientState.DisruptionProtectionEnabled {
+		// TODO: Should I put this here, or only if is our slot
 		// Making and storing HASH
 		var hash [32]byte
 		if upstreamCellContent == nil {
@@ -512,6 +513,7 @@ func (p *PriFiLibClientInstance) SendUpstreamData(ownerSlotID int) error {
 	return nil
 }
 
+// TODO: Delete
 func (p *PriFiLibClientInstance) computeHmac256(message []byte) []byte {
 	key := []byte("client-secret" + strconv.Itoa(p.clientState.ID))
 	h := hmac.New(sha256.New, key)

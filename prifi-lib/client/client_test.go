@@ -10,12 +10,12 @@ import (
 	prifilog "github.com/dedis/prifi/prifi-lib/log"
 	"github.com/dedis/prifi/prifi-lib/net"
 	//"github.com/dedis/prifi/prifi-lib/relay"
+	"crypto/sha256"
 	"github.com/dedis/prifi/prifi-lib/scheduler"
 	"gopkg.in/dedis/kyber.v2"
 	"gopkg.in/dedis/onet.v2/log"
 	"testing"
 	"time"
-	"crypto/sha256"
 )
 
 /**
@@ -714,7 +714,7 @@ func TestDisruptionClient(t *testing.T) {
 	dataDown := make([]byte, len(hash)+len(data))
 	copy(dataDown[0:len(hash)], hash[:])
 	copy(dataDown[len(hash):], data)
-	
+
 	msg7 := net.REL_CLI_DOWNSTREAM_DATA{
 		RoundID:    1,
 		Data:       dataDown,
@@ -771,7 +771,6 @@ func TestDisruptionClient(t *testing.T) {
 		dcNetDecoded[i] = pad1.Payload[i] ^ pad2.Payload[i] ^ clientPad.Payload[i]
 		i++
 	}
-
 
 	b_echo_last = dcNetDecoded[0]
 	if b_echo_last != 1 {
