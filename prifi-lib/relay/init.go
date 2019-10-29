@@ -131,6 +131,8 @@ type RelayState struct {
 	DataFromDCNet                          chan []byte // VPN / SOCKS should read data from there !
 	DataOutputEnabled                      bool        // If FALSE, nothing will be written to DataFromDCNet
 	DownstreamCellSize                     int
+	LastMessageOfClients				   map[int32][]byte
+	BEchoFlags							   map[int32]byte
 	MessageHistory                         kyber.XOF
 	Name                                   string
 	nClients                               int

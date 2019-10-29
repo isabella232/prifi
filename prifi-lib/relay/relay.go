@@ -145,6 +145,8 @@ func (p *PriFiLibRelayInstance) Received_ALL_ALL_PARAMETERS(msg net.ALL_ALL_PARA
 	p.relayState.trusteeBitMap = make(map[int]map[int]int)
 	p.relayState.blamingData = make([]int, 6)
 	p.relayState.OpenClosedSlotsRequestsRoundID = make(map[int32]bool)
+	p.relayState.LastMessageOfClients = make(map[int32][]byte)
+	p.relayState.BEchoFlags = make(map[int32]byte)
 
 	switch dcNetType {
 	case "Verifiable":
@@ -372,18 +374,55 @@ func (p *PriFiLibRelayInstance) upstreamPhase2b_extractPayload() error {
 
 	//disruption-protection
 	if p.relayState.DisruptionProtectionEnabled {
+		// IF last flag is active
+		previous_round := p.relayState.roundManager.CurrentRound() - int32(p.relayState.nClients)
+		
 		// Getting and checking the b_echo_last flag
 
 		log.Lvl3("Looking at b_echo_flag for disruption protection")
 		var b_echo_flag byte
 		b_echo_flag = upstreamPlaintext[0]
+		p.relayState.BEchoFlags[p.relayState.roundManager.CurrentRound()] = b_echo_flag
+		//log.Lvl1("CARLOS: SAVING B_ECHO_FLAG", p.relayState.roundManager.CurrentRound())
 		if b_echo_flag == 1 {
+			// Mistake in the hash
 			log.Error("Disruption detected, going into blame protocol.")
 			// TODO: Blame protocol
+		} else if b_echo_flag == 2{
+			// Client sending bit position
+			if(string(upstreamPlaintext[1:6])  == "BLAME"){
+				numberOfFigures, _ := strconv.ParseInt(string(upstreamPlaintext[6]), 10, 64)
+				log.Lvl1("number", numberOfFigures)
+				var pos_string string
+				pos_string = string(upstreamPlaintext[7:7+numberOfFigures])
+				log.Lvl1(pos_string, len(pos_string), )
+				pos, err := strconv.ParseInt(pos_string, 10, 64)			
+				if err != nil {
+					log.Fatal(err)
+				}	
+				// TODO: Check error
+				// TODO: Continue blame
+				log.Lvl1("CARLOS: ", upstreamPlaintext[:10], string(upstreamPlaintext[6:8]), string(upstreamPlaintext[6:]))
+				log.Error("Blame in bit", pos, "round", previous_round, (previous_round - int32(p.relayState.nClients)), p.relayState.nClients)
+				log.Fatal("CARLOS")
+			}else{
+				// TODO: Client found nothing
+				log.Error("Bit not found")
+			}
 		} else {
-
+			// TODO: Check if it is nt 0, what should the relay do
 		}
 		upstreamPlaintext = upstreamPlaintext[1:]
+		log.Lvl1("CARLOS :", p.relayState.roundManager.CurrentRound(), upstreamPlaintext[:5])
+		// Saving in history
+		p.relayState.LastMessageOfClients[p.relayState.roundManager.CurrentRound()] = upstreamPlaintext
+		// TODO: Clean the lastmessageofclients map
+		//log.Lvl1("CARLOS: HISTORY:", p.relayState.LastMessageOfClients)
+
+		//TEST
+		if(p.relayState.roundManager.CurrentRound() == 100){
+			upstreamPlaintext[3] = 8
+		}
 
 		// Generating and storing the hash from the payload
 		hash := sha256.Sum256([]byte(upstreamPlaintext))
@@ -549,12 +588,21 @@ func (p *PriFiLibRelayInstance) downstreamPhase1_openRoundAndSendData() error {
 	}
 
 	if p.relayState.DisruptionProtectionEnabled {
-		// Add the hash for the client
-		hash := p.relayState.HASHForClients
-		data := make([]byte, len(hash)+len(downstreamCellContent))
-		copy(data[0:len(hash)], hash[:])
-		copy(data[len(hash):], downstreamCellContent)
-		downstreamCellContent = data
+		// Chack if the b_echo_last flag from the client was set.
+		// If so, send the previous round message
+		if(p.relayState.BEchoFlags[p.relayState.roundManager.lastRoundClosed] == 1){
+			previousRound := p.relayState.roundManager.lastRoundClosed - int32(p.relayState.nClients)
+			downstreamCellContent = p.relayState.LastMessageOfClients[previousRound]
+		}else{
+			// Add the hash for the client
+			hash := p.relayState.HASHForClients
+			data := make([]byte, len(hash)+len(downstreamCellContent))
+			copy(data[0:len(hash)], hash[:])
+			copy(data[len(hash):], downstreamCellContent)
+			downstreamCellContent = data
+			log.Lvl1("CARLOS SENDING for round", p.relayState.roundManager.lastRoundClosed, "HASH", hash[:5], "\n")
+		}
+		
 
 	}
 
