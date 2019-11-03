@@ -102,6 +102,7 @@ func (p *PriFiLibClientInstance) Received_ALL_ALL_PARAMETERS(msg net.ALL_ALL_PAR
 	p.clientState.MessageHistory = config.CryptoSuite.XOF([]byte("init")) //any non-nil, non-empty, constant array
 	p.clientState.DisruptionProtectionEnabled = disruptionProtection
 	p.clientState.EquivocationProtectionEnabled = equivProtection
+	p.clientState.Cheater = false
 
 	//we know our client number, if needed, parse the pcap for replay
 	if p.clientState.pcapReplay.Enabled {
@@ -206,16 +207,15 @@ func (p *PriFiLibClientInstance) ProcessDownStreamData(msg net.REL_CLI_DOWNSTREA
 
 	//if it's just one byte, no data
 	if len(msg.Data) > 1 {
-		if p.clientState.DisruptionProtectionEnabled && (p.clientState.RoundNo-1 == p.clientState.MyLastRound){// CARLOS: Here or out of the if?
+		if p.clientState.DisruptionProtectionEnabled && (p.clientState.RoundNo-1 == p.clientState.MyLastRound){
 			if p.clientState.B_echo_last == 1 {
 				// We are in the disruption protection blame protocol
 				if bytes.Equal(msg.Data, p.clientState.LastMsg){
-					// TODO: No disrruption
+					// CARLOS TODO: No disrruption
 					p.clientState.B_echo_last = 0
 					p.clientState.WrongBitPosition = -1
 					log.Lvl1("NO DISRUPTION")
 				}else{
-					//log.Lvl1("CARLOS DISRUP HERE",len(msg.Data), len(p.clientState.LastMsg), msg.Data[:5], msg.Data[len(msg.Data)-5:len(msg.Data)], "\n", p.clientState.LastMsg[:5], msg.Data[len(p.clientState.LastMsg)-5:len(p.clientState.LastMsg)])
 					// Get the l bit
 					found := false
 					for index, b := range(msg.Data){
@@ -226,10 +226,10 @@ func (p *PriFiLibClientInstance) ProcessDownStreamData(msg net.REL_CLI_DOWNSTREA
 								mask := byte(1 << uint(j))
 								if (b & mask) != (p.clientState.LastMsg[index] & mask){
 									// Found bit
-									bit_pos := index*8 + (8-j) //TODO: check this
+									bit_pos := index*8 + (7-j) //TODO: check this
 									p.clientState.WrongBitPosition = bit_pos
 									p.clientState.B_echo_last = 2
-									log.Lvl1("CARLOS DISRUPT POS", p.clientState.WrongBitPosition)
+									log.Lvl1("Disrruption bit position:", p.clientState.WrongBitPosition)
 									found = true
 									break
 								}
@@ -256,7 +256,6 @@ func (p *PriFiLibClientInstance) ProcessDownStreamData(msg net.REL_CLI_DOWNSTREA
 					var data []byte
 					data = msg.Data
 					hash := data[:32]
-					log.Lvl1("CARLOS: Processing data stream for round", p.clientState.RoundNo, "HASH", hash[:5], "\n")
 
 					// Getting previously calculated hash
 					previousHash := p.clientState.HashFromPreviousMessage[:]
@@ -435,7 +434,6 @@ func (p *PriFiLibClientInstance) SendUpstreamData(ownerSlotID int) error {
 	if ownerSlotID == p.clientState.MySlot {
 		slotOwner = true
 		p.clientState.MyLastRound = p.clientState.RoundNo
-		log.Lvl1("CARLOS: UPSTREAM, ROUND",p.clientState.RoundNo,": I AM SLOT OWNER:", slotOwner)
 	}
 	if slotOwner {
 
@@ -541,7 +539,6 @@ func (p *PriFiLibClientInstance) SendUpstreamData(ownerSlotID int) error {
 				hash = sha256.Sum256(payload_to_hash)
 			} else {
 
-				//CARLOS
 				upstreamCellContent[3] = byte(p.clientState.ID)
 				// Saving data for possible disruption
 				p.clientState.LastMsg = upstreamCellContent
@@ -550,11 +547,6 @@ func (p *PriFiLibClientInstance) SendUpstreamData(ownerSlotID int) error {
 			}
 
 			p.clientState.HashFromPreviousMessage = hash
-			if upstreamCellContent == nil {
-				//log.Lvl1("CARLOS: Hash stored for round:", p.clientState.RoundNo, hash[:5], upstreamCellContent)
-			}else{
-				log.Lvl1("CARLOS: Hash stored for round:", p.clientState.RoundNo, hash[:5], upstreamCellContent[:5], len(upstreamCellContent))
-			}
 		}
 	}
 		
@@ -567,8 +559,13 @@ func (p *PriFiLibClientInstance) SendUpstreamData(ownerSlotID int) error {
 		slice_b_echo_last[0] = b_echo_last
 	}
 	payload := append(slice_b_echo_last, upstreamCellContent...)
+	
 	upstreamCell := p.clientState.DCNet.EncodeForRound(p.clientState.RoundNo, slotOwner, payload)
-
+	if !slotOwner && p.clientState.RoundNo == 100{
+		// TESTING DISRUPTION
+		// upstreamCell[15] += 2	
+		p.clientState.Cheater = true
+	}
 	//send the data to the relay
 	toSend := &net.CLI_REL_UPSTREAM_DATA{
 		ClientID: p.clientState.ID,
@@ -714,3 +711,4 @@ func (p *PriFiLibClientInstance) Received_REL_CLI_TELL_EPH_PKS_AND_TRUSTEES_SIG(
 
 	return nil
 }
+

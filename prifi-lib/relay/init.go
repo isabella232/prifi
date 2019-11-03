@@ -131,8 +131,6 @@ type RelayState struct {
 	DataFromDCNet                          chan []byte // VPN / SOCKS should read data from there !
 	DataOutputEnabled                      bool        // If FALSE, nothing will be written to DataFromDCNet
 	DownstreamCellSize                     int
-	LastMessageOfClients				   map[int32][]byte
-	BEchoFlags							   map[int32]byte
 	MessageHistory                         kyber.XOF
 	Name                                   string
 	nClients                               int
@@ -174,6 +172,11 @@ type RelayState struct {
 	processingLock sync.Mutex // either we treat a message, or a timeout, never both
 
 	//disruption protection
+	LastMessageOfClients				   map[int32][]byte
+	BEchoFlags							   map[int32]byte
+	ChiperHistoryTrustee				   map[int32][][]byte
+	ChiperHistoryClient					   map[int32][][]byte
+	DisruptionReveal bool
 	clientBitMap  map[int]map[int]int
 	trusteeBitMap map[int]map[int]int
 	blamingData   []int //[round#, bitPos, clientID, bitRevealed, trusteeID, bitRevealed]
@@ -202,6 +205,22 @@ func (p *PriFiLibRelayInstance) ReceivedMessage(msg interface{}) error {
 	case net.CLI_REL_UPSTREAM_DATA:
 		if p.stateMachine.AssertState("COMMUNICATING") {
 			err = p.Received_CLI_REL_UPSTREAM_DATA(typedMsg)
+		}
+	case net.CLI_REL_DISRUPTION_REVEAL:
+		if p.stateMachine.AssertState("COMMUNICATING") {
+			err = p.Received_CLI_REL_DISRUPTION_REVEAL(typedMsg)
+		}
+	case net.TRU_REL_DISRUPTION_REVEAL:
+		if p.stateMachine.AssertState("COMMUNICATING") {
+			err = p.Received_TRU_REL_DISRUPTION_REVEAL(typedMsg)
+		}
+	case net.CLI_REL_DISRUPTION_SECRET:
+		if p.stateMachine.AssertState("COMMUNICATING") {
+			err = p.Received_CLI_REL_SECRET(typedMsg)
+		}
+	case net.TRU_REL_DISRUPTION_SECRET:
+		if p.stateMachine.AssertState("COMMUNICATING") {
+			err = p.Received_TRU_REL_SECRET(typedMsg)
 		}
 	case net.CLI_REL_OPENCLOSED_DATA:
 		if p.stateMachine.AssertState("COMMUNICATING") {

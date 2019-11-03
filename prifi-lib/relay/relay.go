@@ -147,6 +147,8 @@ func (p *PriFiLibRelayInstance) Received_ALL_ALL_PARAMETERS(msg net.ALL_ALL_PARA
 	p.relayState.OpenClosedSlotsRequestsRoundID = make(map[int32]bool)
 	p.relayState.LastMessageOfClients = make(map[int32][]byte)
 	p.relayState.BEchoFlags = make(map[int32]byte)
+	p.relayState.ChiperHistoryTrustee = make(map[int32][][]byte)
+	p.relayState.ChiperHistoryClient = make(map[int32][][]byte)
 
 	switch dcNetType {
 	case "Verifiable":
@@ -220,6 +222,8 @@ If we finished a round (we had collected all data, and called DecodeCell()), we 
 Either we send something from the SOCKS/VPN buffer, or we answer the latency-test message if we received any, or we send 1 bit.
 */
 func (p *PriFiLibRelayInstance) Received_CLI_REL_UPSTREAM_DATA(msg net.CLI_REL_UPSTREAM_DATA) error {
+	p.relayState.ChiperHistoryClient[int32(msg.ClientID)] = append(p.relayState.ChiperHistoryClient[int32(msg.ClientID)], msg.Data)
+	//CARLOS TODO: CLEAN HISTORY
 	p.relayState.roundManager.AddClientCipher(msg.RoundID, msg.ClientID, msg.Data)
 	if p.relayState.roundManager.HasAllCiphersForCurrentRound() {
 		p.upstreamPhase1_processCiphers(true)
@@ -234,6 +238,8 @@ If it's for this round, we call decode on it, and remember we received it.
 If for a future round we need to Buffer it.
 */
 func (p *PriFiLibRelayInstance) Received_TRU_REL_DC_CIPHER(msg net.TRU_REL_DC_CIPHER) error {
+	p.relayState.ChiperHistoryTrustee[int32(msg.TrusteeID)] = append(p.relayState.ChiperHistoryTrustee[int32(msg.TrusteeID)], msg.Data)
+	//CARLOS TODO: CLEAN HISTORY
 	p.relayState.roundManager.AddTrusteeCipher(msg.RoundID, msg.TrusteeID, msg.Data)
 	if p.relayState.roundManager.HasAllCiphersForCurrentRound() {
 		p.upstreamPhase1_processCiphers(true)
@@ -316,7 +322,7 @@ func (p *PriFiLibRelayInstance) upstreamPhase2a_extractOCMap(roundID int32) erro
 		return err
 	}
 	for _, s := range clientSlices {
-		p.relayState.DCNet.DecodeClient(roundID, s)
+		p.relayState.DCNet.DecodeClient(roundID, s) 
 	}
 	for _, s := range trusteesSlices {
 		p.relayState.DCNet.DecodeTrustee(roundID, s)
@@ -383,11 +389,10 @@ func (p *PriFiLibRelayInstance) upstreamPhase2b_extractPayload() error {
 		var b_echo_flag byte
 		b_echo_flag = upstreamPlaintext[0]
 		p.relayState.BEchoFlags[p.relayState.roundManager.CurrentRound()] = b_echo_flag
-		//log.Lvl1("CARLOS: SAVING B_ECHO_FLAG", p.relayState.roundManager.CurrentRound())
+		p.relayState.DisruptionReveal = false
 		if b_echo_flag == 1 {
 			// Mistake in the hash
 			log.Error("Disruption detected, going into blame protocol.")
-			// TODO: Blame protocol
 		} else if b_echo_flag == 2{
 			// Client sending bit position
 			if(string(upstreamPlaintext[1:6])  == "BLAME"){
@@ -400,11 +405,15 @@ func (p *PriFiLibRelayInstance) upstreamPhase2b_extractPayload() error {
 				if err != nil {
 					log.Fatal(err)
 				}	
-				// TODO: Check error
-				// TODO: Continue blame
-				log.Lvl1("CARLOS: ", upstreamPlaintext[:10], string(upstreamPlaintext[6:8]), string(upstreamPlaintext[6:]))
 				log.Error("Blame in bit", pos, "round", previous_round, (previous_round - int32(p.relayState.nClients)), p.relayState.nClients)
-				log.Fatal("CARLOS")
+				p.relayState.DisruptionReveal = true
+				if len(p.relayState.blamingData) != 0{
+					p.relayState.blamingData = make([]int, 6)
+				}
+				blaming_round := int(previous_round) - p.relayState.nClients
+				p.relayState.blamingData[0] = blaming_round
+				p.relayState.blamingData[1] = int(pos)
+				//log.Fatal("SEND", p.relayState.blamingData)
 			}else{
 				// TODO: Client found nothing
 				log.Error("Bit not found")
@@ -413,15 +422,13 @@ func (p *PriFiLibRelayInstance) upstreamPhase2b_extractPayload() error {
 			// TODO: Check if it is nt 0, what should the relay do
 		}
 		upstreamPlaintext = upstreamPlaintext[1:]
-		log.Lvl1("CARLOS :", p.relayState.roundManager.CurrentRound(), upstreamPlaintext[:5])
 		// Saving in history
 		p.relayState.LastMessageOfClients[p.relayState.roundManager.CurrentRound()] = upstreamPlaintext
-		// TODO: Clean the lastmessageofclients map
-		//log.Lvl1("CARLOS: HISTORY:", p.relayState.LastMessageOfClients)
+		// CARLOS TODO: Clean the lastmessageofclients map
 
 		//TEST
 		if(p.relayState.roundManager.CurrentRound() == 100){
-			upstreamPlaintext[3] = 8
+			//upstreamPlaintext[3] = 8
 		}
 
 		// Generating and storing the hash from the payload
@@ -600,7 +607,6 @@ func (p *PriFiLibRelayInstance) downstreamPhase1_openRoundAndSendData() error {
 			copy(data[0:len(hash)], hash[:])
 			copy(data[len(hash):], downstreamCellContent)
 			downstreamCellContent = data
-			log.Lvl1("CARLOS SENDING for round", p.relayState.roundManager.lastRoundClosed, "HASH", hash[:5], "\n")
 		}
 		
 
@@ -640,36 +646,63 @@ func (p *PriFiLibRelayInstance) downstreamPhase1_openRoundAndSendData() error {
 	} else {
 		log.Lvl2("Relay is gonna broadcast messages for round "+strconv.Itoa(int(nextDownstreamRoundID))+" (OCRequest=false), owner=", nextOwner, ", len", len(downstreamCellContent))
 	}
+	
+	if p.relayState.DisruptionReveal {
+		toSend := &net.REL_ALL_DISRUPTION_REVEAL{
+			RoundID:               int32(p.relayState.blamingData[0]),
+			BitPos: 			   p.relayState.blamingData[1],
+		}
+	
+		if roundOpened, _ := p.relayState.roundManager.currentRound(); !roundOpened {
+			//prepare for the next round (this empties the dc-net buffer, making them ready for a new round)
+			p.relayState.DCNet.DecodeStart(nextDownstreamRoundID)
+		}
+	
+		p.relayState.roundManager.OpenNextRound()
 
-	toSend := &net.REL_CLI_DOWNSTREAM_DATA{
-		RoundID:               nextDownstreamRoundID,
-		OwnershipID:           nextOwner,
-		Data:                  downstreamCellContent,
-		FlagResync:            flagResync,
-		FlagOpenClosedRequest: flagOpenClosedRequest}
-
-	if roundOpened, _ := p.relayState.roundManager.currentRound(); !roundOpened {
-		//prepare for the next round (this empties the dc-net buffer, making them ready for a new round)
-		p.relayState.DCNet.DecodeStart(nextDownstreamRoundID)
-	}
-
-	p.relayState.roundManager.OpenNextRound()
-	p.relayState.roundManager.SetDataAlreadySent(nextDownstreamRoundID, toSend)
-
-	if !p.relayState.UseUDP {
-		// broadcast to all clients
-		for i := 0; i < p.relayState.nClients; i++ {
-			//send to the i-th client
-			p.messageSender.SendToClientWithLog(i, toSend, "(client "+strconv.Itoa(i)+", round "+strconv.Itoa(int(nextDownstreamRoundID))+")")
+		// Send this shutdown to all clients
+		for j := 0; j < p.relayState.nClients; j++ {
+			p.messageSender.SendToClientWithLog(j, toSend, "")
 		}
 
-		p.relayState.bitrateStatistics.AddDownstreamCell(int64(len(downstreamCellContent)))
-	} else {
-		toSend2 := &net.REL_CLI_DOWNSTREAM_DATA_UDP{REL_CLI_DOWNSTREAM_DATA: *toSend}
-		p.messageSender.BroadcastToAllClientsWithLog(toSend2, "(UDP broadcast, round "+strconv.Itoa(int(nextDownstreamRoundID))+")")
-
-		p.relayState.bitrateStatistics.AddDownstreamUDPCell(int64(len(downstreamCellContent)), p.relayState.nClients)
+			// Send this shutdown to all trustees
+		for j := 0; j < p.relayState.nTrustees; j++ {
+			p.messageSender.SendToTrusteeWithLog(j, toSend, "")
+		}
+		
+	}else{
+		toSend := &net.REL_CLI_DOWNSTREAM_DATA{
+			RoundID:               nextDownstreamRoundID,
+			OwnershipID:           nextOwner,
+			Data:                  downstreamCellContent,
+			FlagResync:            flagResync,
+			FlagOpenClosedRequest: flagOpenClosedRequest}
+	
+		if roundOpened, _ := p.relayState.roundManager.currentRound(); !roundOpened {
+			//prepare for the next round (this empties the dc-net buffer, making them ready for a new round)
+			p.relayState.DCNet.DecodeStart(nextDownstreamRoundID)
+		}
+	
+		p.relayState.roundManager.OpenNextRound()
+		p.relayState.roundManager.SetDataAlreadySent(nextDownstreamRoundID, toSend)
+	
+		if !p.relayState.UseUDP {
+			// broadcast to all clients
+			for i := 0; i < p.relayState.nClients; i++ {
+				//send to the i-th client
+				p.messageSender.SendToClientWithLog(i, toSend, "(client "+strconv.Itoa(i)+", round "+strconv.Itoa(int(nextDownstreamRoundID))+")")
+			}
+	
+			p.relayState.bitrateStatistics.AddDownstreamCell(int64(len(downstreamCellContent)))
+		} else {
+			toSend2 := &net.REL_CLI_DOWNSTREAM_DATA_UDP{REL_CLI_DOWNSTREAM_DATA: *toSend}
+			p.messageSender.BroadcastToAllClientsWithLog(toSend2, "(UDP broadcast, round "+strconv.Itoa(int(nextDownstreamRoundID))+")")
+	
+			p.relayState.bitrateStatistics.AddDownstreamUDPCell(int64(len(downstreamCellContent)), p.relayState.nClients)
+		}
 	}
+
+	
 
 	timeMs := timing.StopMeasure("sending-data").Nanoseconds() / 1e6
 	p.relayState.timeStatistics["sending-data"].AddTime(timeMs)
@@ -898,6 +931,8 @@ func (p *PriFiLibRelayInstance) Received_TRU_REL_SHUFFLE_SIG(msg net.TRU_REL_SHU
 			// send to the i-th client
 			p.messageSender.SendToClientWithLog(i, msg, "(client "+strconv.Itoa(i+1)+")")
 		}
+
+
 
 		//client will answer will CLI_REL_UPSTREAM_DATA. There is no data down on round 0. We set the following variable to 1 since the reception of CLI_REL_UPSTREAM_DATA decrements it.
 		p.relayState.numberOfNonAckedDownstreamPackets = 1

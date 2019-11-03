@@ -71,6 +71,11 @@ type ClientState struct {
 	LastWantToSend                time.Time
 	EquivocationProtectionEnabled bool
 
+	// TEST DISRUPTION
+	Cheater 					  bool
+
+
+
 	//concurrent stuff
 	RoundNo           int32
 	BufferedRoundData map[int32]net.REL_CLI_DOWNSTREAM_DATA
@@ -170,6 +175,14 @@ func (p *PriFiLibClientInstance) ReceivedMessage(msg interface{}) error {
 	case net.REL_CLI_TELL_EPH_PKS_AND_TRUSTEES_SIG:
 		if p.stateMachine.AssertState("EPH_KEYS_SENT") {
 			err = p.Received_REL_CLI_TELL_EPH_PKS_AND_TRUSTEES_SIG(typedMsg)
+		}
+	case net.REL_ALL_DISRUPTION_REVEAL:
+		if p.stateMachine.AssertState("READY") {
+			err = p.Received_REL_ALL_DISRUPTION_REVEAL(typedMsg)
+		}
+	case net.REL_ALL_DISRUPTION_SECRET:
+		if p.stateMachine.AssertState("READY") {
+			err = p.Received_REL_ALL_DISRUPTION_SECRET(typedMsg)
 		}
 	default:
 		err = errors.New("Unrecognized message, type" + reflect.TypeOf(msg).String())

@@ -127,13 +127,11 @@ func (p *PriFiLibTrusteeInstance) ReceivedMessage(msg interface{}) error {
 		}
 	case net.REL_ALL_DISRUPTION_REVEAL:
 		if p.stateMachine.AssertState("READY") {
-			log.Fatal("not implemented")
-			//err = p.Received_REL_ALL_REVEAL(typedMsg)
+			err = p.Received_REL_ALL_DISRUPTION_REVEAL(typedMsg)
 		}
 	case net.REL_ALL_DISRUPTION_SECRET:
-		if p.stateMachine.AssertState("BLAMING") {
-			log.Fatal("not implemented")
-			//err = p.Received_REL_ALL_SECRET(typedMsg)
+		if p.stateMachine.AssertState("READY") {
+			err = p.Received_REL_ALL_DISRUPTION_SECRET(typedMsg)
 		}
 	default:
 		err = errors.New("Unrecognized message, type" + reflect.TypeOf(msg).String())
