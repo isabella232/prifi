@@ -44,10 +44,10 @@ type ClientState struct {
 	DataFromDCNet                 chan []byte //Data from the relay : VPN / SOCKS should read data from there !
 	DataOutputEnabled             bool        //if FALSE, nothing will be written to DataFromDCNet
 	HashFromPreviousMessage       [32]byte
-	MyLastRound					  int32
-	LastMsg						  []byte
+	MyLastRound                   int32
+	LastMsg                       []byte
 	B_echo_last                   byte
-	WrongBitPosition			  int					
+	WrongBitPosition              int
 	ephemeralPrivateKey           kyber.Scalar
 	EphemeralPublicKey            kyber.Point
 	ID                            int
@@ -72,9 +72,7 @@ type ClientState struct {
 	EquivocationProtectionEnabled bool
 
 	// TEST DISRUPTION
-	Cheater 					  bool
-
-
+	Cheater bool
 
 	//concurrent stuff
 	RoundNo           int32

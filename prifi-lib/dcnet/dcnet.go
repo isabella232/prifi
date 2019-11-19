@@ -66,7 +66,6 @@ func NewDCNetEntity(
 	e.EntityID = entityID
 	e.Entity = entity
 	e.DCNetPayloadSize = PayloadSize
-	log.Lvl1("PAYLOAD SIZE", PayloadSize)
 	e.EquivocationProtectionEnabled = equivocationProtection
 	e.DCNetRoundDecoder = nil
 	e.currentRound = 0
@@ -168,15 +167,15 @@ func (e *DCNetEntity) EncodeForRound(roundID int32, slotOwner bool, payload []by
 		round := int32(0)
 		for round < roundID {
 			//discard crypto material
-	
+
 			// consume the PRNGs
 			for i := range e.sharedPRNGs {
 				dummy := make([]byte, e.DCNetPayloadSize)
 				sharedPRNGsCopy[i].XORKeyStream(dummy, dummy)
 			}
-	
+
 			round++
-			
+
 		}
 		e.sharedPRNGs = sharedPRNGsCopy
 		e.currentRound = roundID
@@ -251,7 +250,6 @@ func (e *DCNetEntity) clientEncode(slotOwner bool, payload []byte) *DCNetCipher 
 			c.Payload[k] ^= p_ij[i][k] // XORs in the pads
 		}
 	}
-	log.Lvl1("PIJ", len(p_ij[0]), len(c.ToBytes()))
 	return c
 }
 
@@ -284,8 +282,8 @@ func (e *DCNetEntity) trusteeEncode() *DCNetCipher {
 }
 
 func (e *DCNetEntity) GetBitsOfRound(roundID int32, bitPosition int32) map[int]int {
-	if roundID >= e.currentRound{
-		return nil	
+	if roundID >= e.currentRound {
+		return nil
 	}
 
 	sharedKeys := e.sharedKeys
@@ -311,7 +309,7 @@ func (e *DCNetEntity) GetBitsOfRound(roundID int32, bitPosition int32) map[int]i
 		}
 
 		round++
-		
+
 	}
 	e.sharedPRNGs = sharedPRNGsCopy
 	e.currentRound = roundID
@@ -319,7 +317,7 @@ func (e *DCNetEntity) GetBitsOfRound(roundID int32, bitPosition int32) map[int]i
 	rtn := make(map[int]int)
 
 	// prepare the pads
-	
+
 	p_ij := make([][]byte, len(e.sharedPRNGs))
 	for i := range p_ij {
 		p_ij[i] = make([]byte, e.DCNetPayloadSize)
@@ -330,22 +328,18 @@ func (e *DCNetEntity) GetBitsOfRound(roundID int32, bitPosition int32) map[int]i
 	for i := range p_ij {
 		bytePosition := int(bitPosition/8) + 1
 		byte_toGet := p_ij[i][bytePosition]
-		byte_2 := p_ij[i][bytePosition+1]
-		bitInByte := (8 - bitPosition%8)%8 - 1
+		bitInByte := (8-bitPosition%8)%8 - 1
 		mask := byte(1 << uint(bitInByte))
-		log.Lvl1(bitPosition, bytePosition, bitInByte,byte_2, byte_toGet, mask, mask & byte_toGet)
-		if (byte_toGet & mask) == 0{
+		if (byte_toGet & mask) == 0 {
 			rtn[i] = 0
-		}else{
+		} else {
 			rtn[i] = 1
 		}
-		
+
 	}
 
 	return rtn
 }
-
-
 
 // Used by the relay to start decoding a round
 func (e *DCNetEntity) DecodeStart(roundID int32) {

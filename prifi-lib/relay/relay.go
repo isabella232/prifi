@@ -322,7 +322,7 @@ func (p *PriFiLibRelayInstance) upstreamPhase2a_extractOCMap(roundID int32) erro
 		return err
 	}
 	for _, s := range clientSlices {
-		p.relayState.DCNet.DecodeClient(roundID, s) 
+		p.relayState.DCNet.DecodeClient(roundID, s)
 	}
 	for _, s := range trusteesSlices {
 		p.relayState.DCNet.DecodeTrustee(roundID, s)
@@ -382,7 +382,7 @@ func (p *PriFiLibRelayInstance) upstreamPhase2b_extractPayload() error {
 	if p.relayState.DisruptionProtectionEnabled {
 		// IF last flag is active
 		previous_round := p.relayState.roundManager.CurrentRound() - int32(p.relayState.nClients)
-		
+
 		// Getting and checking the b_echo_last flag
 
 		log.Lvl3("Looking at b_echo_flag for disruption protection")
@@ -392,31 +392,29 @@ func (p *PriFiLibRelayInstance) upstreamPhase2b_extractPayload() error {
 		p.relayState.DisruptionReveal = false
 		if b_echo_flag == 1 {
 			// Mistake in the hash
-			log.Error("Disruption detected, going into blame protocol.")
-		} else if b_echo_flag == 2{
+			log.Lvl1("Disruption detected, sending full message to client.")
+		} else if b_echo_flag == 2 {
 			// Client sending bit position
-			if(string(upstreamPlaintext[1:6])  == "BLAME"){
+			if string(upstreamPlaintext[1:6]) == "BLAME" {
 				numberOfFigures, _ := strconv.ParseInt(string(upstreamPlaintext[6]), 10, 64)
-				log.Lvl1("number", numberOfFigures)
 				var pos_string string
-				pos_string = string(upstreamPlaintext[7:7+numberOfFigures])
-				log.Lvl1(pos_string, len(pos_string), )
-				pos, err := strconv.ParseInt(pos_string, 10, 64)			
+				pos_string = string(upstreamPlaintext[7 : 7+numberOfFigures])
+				pos, err := strconv.ParseInt(pos_string, 10, 64)
 				if err != nil {
 					log.Fatal(err)
-				}	
-				log.Error("Blame in bit", pos, "round", previous_round, (previous_round - int32(p.relayState.nClients)), p.relayState.nClients)
+				}
+				log.Error("Disruption: Going into blame phase. Round: ", int(previous_round)-p.relayState.nClients, ", bit position: ", pos)
 				p.relayState.DisruptionReveal = true
-				if len(p.relayState.blamingData) != 0{
+				if len(p.relayState.blamingData) != 0 {
 					p.relayState.blamingData = make([]int, 6)
 				}
 				blaming_round := int(previous_round) - p.relayState.nClients
 				p.relayState.blamingData[0] = blaming_round
 				p.relayState.blamingData[1] = int(pos)
 				//log.Fatal("SEND", p.relayState.blamingData)
-			}else{
+			} else {
 				// TODO: Client found nothing
-				log.Error("Bit not found")
+				log.Error("Disruptive bit not found")
 			}
 		} else {
 			// TODO: Check if it is nt 0, what should the relay do
@@ -427,7 +425,7 @@ func (p *PriFiLibRelayInstance) upstreamPhase2b_extractPayload() error {
 		// CARLOS TODO: Clean the lastmessageofclients map
 
 		//TEST
-		if(p.relayState.roundManager.CurrentRound() == 100){
+		if p.relayState.roundManager.CurrentRound() == 100 {
 			//upstreamPlaintext[3] = 8
 		}
 
@@ -597,10 +595,10 @@ func (p *PriFiLibRelayInstance) downstreamPhase1_openRoundAndSendData() error {
 	if p.relayState.DisruptionProtectionEnabled {
 		// Chack if the b_echo_last flag from the client was set.
 		// If so, send the previous round message
-		if(p.relayState.BEchoFlags[p.relayState.roundManager.lastRoundClosed] == 1){
+		if p.relayState.BEchoFlags[p.relayState.roundManager.lastRoundClosed] == 1 {
 			previousRound := p.relayState.roundManager.lastRoundClosed - int32(p.relayState.nClients)
 			downstreamCellContent = p.relayState.LastMessageOfClients[previousRound]
-		}else{
+		} else {
 			// Add the hash for the client
 			hash := p.relayState.HASHForClients
 			data := make([]byte, len(hash)+len(downstreamCellContent))
@@ -608,7 +606,6 @@ func (p *PriFiLibRelayInstance) downstreamPhase1_openRoundAndSendData() error {
 			copy(data[len(hash):], downstreamCellContent)
 			downstreamCellContent = data
 		}
-		
 
 	}
 
@@ -646,18 +643,18 @@ func (p *PriFiLibRelayInstance) downstreamPhase1_openRoundAndSendData() error {
 	} else {
 		log.Lvl2("Relay is gonna broadcast messages for round "+strconv.Itoa(int(nextDownstreamRoundID))+" (OCRequest=false), owner=", nextOwner, ", len", len(downstreamCellContent))
 	}
-	
+
 	if p.relayState.DisruptionReveal {
 		toSend := &net.REL_ALL_DISRUPTION_REVEAL{
-			RoundID:               int32(p.relayState.blamingData[0]),
-			BitPos: 			   p.relayState.blamingData[1],
+			RoundID: int32(p.relayState.blamingData[0]),
+			BitPos:  p.relayState.blamingData[1],
 		}
-	
+
 		if roundOpened, _ := p.relayState.roundManager.currentRound(); !roundOpened {
 			//prepare for the next round (this empties the dc-net buffer, making them ready for a new round)
 			p.relayState.DCNet.DecodeStart(nextDownstreamRoundID)
 		}
-	
+
 		p.relayState.roundManager.OpenNextRound()
 
 		// Send this shutdown to all clients
@@ -665,44 +662,42 @@ func (p *PriFiLibRelayInstance) downstreamPhase1_openRoundAndSendData() error {
 			p.messageSender.SendToClientWithLog(j, toSend, "")
 		}
 
-			// Send this shutdown to all trustees
+		// Send this shutdown to all trustees
 		for j := 0; j < p.relayState.nTrustees; j++ {
 			p.messageSender.SendToTrusteeWithLog(j, toSend, "")
 		}
-		
-	}else{
+
+	} else {
 		toSend := &net.REL_CLI_DOWNSTREAM_DATA{
 			RoundID:               nextDownstreamRoundID,
 			OwnershipID:           nextOwner,
 			Data:                  downstreamCellContent,
 			FlagResync:            flagResync,
 			FlagOpenClosedRequest: flagOpenClosedRequest}
-	
+
 		if roundOpened, _ := p.relayState.roundManager.currentRound(); !roundOpened {
 			//prepare for the next round (this empties the dc-net buffer, making them ready for a new round)
 			p.relayState.DCNet.DecodeStart(nextDownstreamRoundID)
 		}
-	
+
 		p.relayState.roundManager.OpenNextRound()
 		p.relayState.roundManager.SetDataAlreadySent(nextDownstreamRoundID, toSend)
-	
+
 		if !p.relayState.UseUDP {
 			// broadcast to all clients
 			for i := 0; i < p.relayState.nClients; i++ {
 				//send to the i-th client
 				p.messageSender.SendToClientWithLog(i, toSend, "(client "+strconv.Itoa(i)+", round "+strconv.Itoa(int(nextDownstreamRoundID))+")")
 			}
-	
+
 			p.relayState.bitrateStatistics.AddDownstreamCell(int64(len(downstreamCellContent)))
 		} else {
 			toSend2 := &net.REL_CLI_DOWNSTREAM_DATA_UDP{REL_CLI_DOWNSTREAM_DATA: *toSend}
 			p.messageSender.BroadcastToAllClientsWithLog(toSend2, "(UDP broadcast, round "+strconv.Itoa(int(nextDownstreamRoundID))+")")
-	
+
 			p.relayState.bitrateStatistics.AddDownstreamUDPCell(int64(len(downstreamCellContent)), p.relayState.nClients)
 		}
 	}
-
-	
 
 	timeMs := timing.StopMeasure("sending-data").Nanoseconds() / 1e6
 	p.relayState.timeStatistics["sending-data"].AddTime(timeMs)
@@ -931,8 +926,6 @@ func (p *PriFiLibRelayInstance) Received_TRU_REL_SHUFFLE_SIG(msg net.TRU_REL_SHU
 			// send to the i-th client
 			p.messageSender.SendToClientWithLog(i, msg, "(client "+strconv.Itoa(i+1)+")")
 		}
-
-
 
 		//client will answer will CLI_REL_UPSTREAM_DATA. There is no data down on round 0. We set the following variable to 1 since the reception of CLI_REL_UPSTREAM_DATA decrements it.
 		p.relayState.numberOfNonAckedDownstreamPackets = 1

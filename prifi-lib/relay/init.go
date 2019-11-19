@@ -172,14 +172,14 @@ type RelayState struct {
 	processingLock sync.Mutex // either we treat a message, or a timeout, never both
 
 	//disruption protection
-	LastMessageOfClients				   map[int32][]byte
-	BEchoFlags							   map[int32]byte
-	ChiperHistoryTrustee				   map[int32][][]byte
-	ChiperHistoryClient					   map[int32][][]byte
-	DisruptionReveal bool
-	clientBitMap  map[int]map[int]int
-	trusteeBitMap map[int]map[int]int
-	blamingData   []int //[round#, bitPos, clientID, bitRevealed, trusteeID, bitRevealed]
+	LastMessageOfClients map[int32][]byte
+	BEchoFlags           map[int32]byte
+	ChiperHistoryTrustee map[int32][][]byte
+	ChiperHistoryClient  map[int32][][]byte
+	DisruptionReveal     bool
+	clientBitMap         map[int]map[int]int
+	trusteeBitMap        map[int]map[int]int
+	blamingData          []int //[round#, bitPos, clientID, bitRevealed, trusteeID, bitRevealed]
 
 	//Used for verifiable DC-net, part of the dcnet.old/owned.go
 	VerifiableDCNetKeys [][]byte

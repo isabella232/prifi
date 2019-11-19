@@ -3,7 +3,6 @@ package dcnet
 import (
 	"encoding/binary"
 	"math"
-	"fmt"
 )
 
 // DCNetCipher is the output of a DC-net round
