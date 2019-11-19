@@ -214,6 +214,7 @@ func (e *DCNetEntity) UpdateReceivedMessageHistory(newData []byte) {
 	}
 }
 
+// Encode for clients
 func (e *DCNetEntity) clientEncode(slotOwner bool, payload []byte) *DCNetCipher {
 
 	c := new(DCNetCipher)
@@ -253,6 +254,7 @@ func (e *DCNetEntity) clientEncode(slotOwner bool, payload []byte) *DCNetCipher 
 	return c
 }
 
+// Encode for trustees
 func (e *DCNetEntity) trusteeEncode() *DCNetCipher {
 	c := new(DCNetCipher)
 
@@ -281,6 +283,7 @@ func (e *DCNetEntity) trusteeEncode() *DCNetCipher {
 	return c
 }
 
+// Function to get the bits from previous round in an exact position.
 func (e *DCNetEntity) GetBitsOfRound(roundID int32, bitPosition int32) map[int]int {
 	if roundID >= e.currentRound {
 		return nil
