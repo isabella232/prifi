@@ -53,7 +53,7 @@ func (p *PriFiLibRelayInstance) Received_CLI_REL_DISRUPTION_REVEAL(msg net.CLI_R
 	if result {
 		log.Fatal("DISRUPTOR IS CLIENT", msg.ClientID, ". Detected in first phase of the blame protocol.")
 	} else if (len(p.relayState.clientBitMap) == p.relayState.nClients) && (len(p.relayState.trusteeBitMap) == p.relayState.nTrustees) {
-		p.checkMismachesPairs()
+		p.checkMismatchingPairs()
 	}
 
 	return nil
@@ -73,7 +73,7 @@ func (p *PriFiLibRelayInstance) Received_TRU_REL_DISRUPTION_REVEAL(msg net.TRU_R
 	if result {
 		log.Fatal("DISRUPTOR IS TRUSTEE", msg.TrusteeID, ". Detected in first phase of the blame protocol.")
 	} else if (len(p.relayState.clientBitMap) == p.relayState.nClients) && (len(p.relayState.trusteeBitMap) == p.relayState.nTrustees) {
-		p.checkMismachesPairs()
+		p.checkMismatchingPairs()
 	}
 	p.relayState.trusteeBitMap[msg.TrusteeID] = msg.Bits
 	return nil
@@ -88,7 +88,7 @@ func (p *PriFiLibRelayInstance) compareBitsClient(id int, bits map[int]int) bool
 	bitPosition := p.relayState.blamingData[1]
 
 	bytePosition := int(bitPosition/8) + 9
-	byte_toGet := p.relayState.ChiperHistoryClient[int32(id)][int32(round)][bytePosition]
+	byte_toGet := p.relayState.CiphertextsHistoryClients[int32(id)][int32(round)][bytePosition]
 	bitInBytePosition := (8-bitPosition%8)%8 - 1
 	mask := byte(1 << uint(bitInBytePosition))
 	result := 0
@@ -108,11 +108,14 @@ func (p *PriFiLibRelayInstance) compareBitsClient(id int, bits map[int]int) bool
 * For trustees.
  */
 func (p *PriFiLibRelayInstance) compareBitsTrustee(id int, bits map[int]int) bool {
+
+	//LB->CV: This function seems to be identical with the one above. Can you factor out the common part and pass the correct map p.relayState.CiphertextsHistoryTrustees or p.relayState.CiphertextsHistoryClients
+
 	round := p.relayState.blamingData[0]
 	bitPosition := p.relayState.blamingData[1]
 
 	bytePosition := int(bitPosition/8) + 9
-	byte_toGet := p.relayState.ChiperHistoryTrustee[int32(id)][int32(round)][bytePosition]
+	byte_toGet := p.relayState.CiphertextsHistoryTrustees[int32(id)][int32(round)][bytePosition]
 	bitInBytePosition := (8-bitPosition%8)%8 - 1
 	mask := byte(1 << uint(bitInBytePosition))
 	result := 0
@@ -132,20 +135,20 @@ func (p *PriFiLibRelayInstance) compareBitsTrustee(id int, bits map[int]int) boo
 * the relay checks the bits between pairsof trustees and clients.
 * When a mismatch is found, the Reveal secret message is called to the client and trustee.
  */
-func (p *PriFiLibRelayInstance) checkMismachesPairs() {
+func (p *PriFiLibRelayInstance) checkMismatchingPairs() {
 	for clientID, clientBits := range p.relayState.clientBitMap {
 		for trusteeID, clientBit := range clientBits {
 			trusteeBit := p.relayState.trusteeBitMap[trusteeID][clientID]
 			if clientBit != trusteeBit {
-				log.Error("Disrruption: mismatch between trustee", trusteeID, "and client", clientID)
+				log.Error("Disruption: mismatch between trustee", trusteeID, "and client", clientID)
 				p.relayState.blamingData[2] = clientID
 				p.relayState.blamingData[3] = clientBit
 				p.relayState.blamingData[4] = trusteeID
 				p.relayState.blamingData[5] = trusteeBit
-				toClient := &net.REL_ALL_DISRUPTION_SECRET{
+				toClient := &net.REL_ALL_REVEAL_SHARED_SECRETS{
 					UserID: trusteeID,
 				}
-				toTrustee := &net.REL_ALL_DISRUPTION_SECRET{
+				toTrustee := &net.REL_ALL_REVEAL_SHARED_SECRETS{
 					UserID: clientID,
 				}
 				p.messageSender.SendToTrusteeWithLog(clientID, toClient, "")
@@ -154,15 +157,14 @@ func (p *PriFiLibRelayInstance) checkMismachesPairs() {
 			}
 		}
 	}
-	log.Fatal("NO DISRRUPTION ?")
-
+	log.Fatal("NO DISRUPTION ?")
 }
 
 /*
-Received_TRU_REL_SECRET handles TRU_REL_SECRET messages
+Received_TRU_REL_SHARED_SECRETS handles TRU_REL_SECRET messages
 Check the NIZK, if correct regenerate the cipher up to the disrupted round and check if this trustee is the disruptor
 */
-func (p *PriFiLibRelayInstance) Received_TRU_REL_SECRET(msg net.TRU_REL_DISRUPTION_SECRET) error {
+func (p *PriFiLibRelayInstance) Received_TRU_REL_SHARED_SECRETS(msg net.TRU_REL_SHARED_SECRET) error {
 	// CARLOS TODO: Check ntzk
 	val := p.replayRounds(msg.Secret)
 	if val != p.relayState.blamingData[5] {
@@ -172,10 +174,10 @@ func (p *PriFiLibRelayInstance) Received_TRU_REL_SECRET(msg net.TRU_REL_DISRUPTI
 }
 
 /*
-Received_CLI_REL_SECRET handles CLI_REL_SECRET messages
+Received_CLI_REL_SHARED_SECRET handles CLI_REL_SECRET messages
 Check the NIZK, if correct regenerate the cipher up to the disrupted round and check if this client is the disruptor
 */
-func (p *PriFiLibRelayInstance) Received_CLI_REL_SECRET(msg net.CLI_REL_DISRUPTION_SECRET) error {
+func (p *PriFiLibRelayInstance) Received_CLI_REL_SHARED_SECRET(msg net.CLI_REL_SHARED_SECRET) error {
 	// CARLOS TODO: Check ntzk
 	val := p.replayRounds(msg.Secret)
 	if val != p.relayState.blamingData[3] {

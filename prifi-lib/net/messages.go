@@ -274,19 +274,19 @@ type TRU_REL_DISRUPTION_REVEAL struct {
 	Bits      map[int]int
 }
 
-// REL_ALL_DISRUPTION_SECRET contains request ro reveal the shared secret with the specified recipient, and is sent by the relay
-type REL_ALL_DISRUPTION_SECRET struct {
+// REL_ALL_REVEAL_SHARED_SECRETS contains request ro reveal the shared secret with the specified recipient, and is sent by the relay
+type REL_ALL_REVEAL_SHARED_SECRETS struct {
 	UserID int
 }
 
-// CLI_REL_DISRUPTION_SECRET contains the shared secret requested by the relay, with a proof we computed it correctly
-type CLI_REL_DISRUPTION_SECRET struct {
+// CLI_REL_SHARED_SECRET contains the shared secret requested by the relay, with a proof we computed it correctly
+type CLI_REL_SHARED_SECRET struct {
 	Secret kyber.Point
 	NIZK   []byte
 }
 
-// TRU_REL_DISRUPTION_SECRET contains the shared secret requested by the relay, with a proof we computed it correctly
-type TRU_REL_DISRUPTION_SECRET struct {
+// TRU_REL_SHARED_SECRET contains the shared secret requested by the relay, with a proof we computed it correctly
+type TRU_REL_SHARED_SECRET struct {
 	Secret kyber.Point
 	NIZK   []byte
 }

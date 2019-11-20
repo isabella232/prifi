@@ -172,14 +172,14 @@ type RelayState struct {
 	processingLock sync.Mutex // either we treat a message, or a timeout, never both
 
 	//disruption protection
-	LastMessageOfClients map[int32][]byte
-	BEchoFlags           map[int32]byte
-	ChiperHistoryTrustee map[int32][][]byte
-	ChiperHistoryClient  map[int32][][]byte
-	DisruptionReveal     bool
-	clientBitMap         map[int]map[int]int
-	trusteeBitMap        map[int]map[int]int
-	blamingData          []int //[round#, bitPos, clientID, bitRevealed, trusteeID, bitRevealed]
+	LastMessageOfClients       map[int32][]byte
+	BEchoFlags                 map[int32]byte
+	CiphertextsHistoryTrustees map[int32][][]byte
+	CiphertextsHistoryClients  map[int32][][]byte
+	DisruptionReveal           bool
+	clientBitMap               map[int]map[int]int
+	trusteeBitMap              map[int]map[int]int
+	blamingData                []int //[round#, bitPos, clientID, bitRevealed, trusteeID, bitRevealed]
 
 	//Used for verifiable DC-net, part of the dcnet.old/owned.go
 	VerifiableDCNetKeys [][]byte
@@ -214,13 +214,13 @@ func (p *PriFiLibRelayInstance) ReceivedMessage(msg interface{}) error {
 		if p.stateMachine.AssertState("COMMUNICATING") {
 			err = p.Received_TRU_REL_DISRUPTION_REVEAL(typedMsg)
 		}
-	case net.CLI_REL_DISRUPTION_SECRET:
+	case net.CLI_REL_SHARED_SECRET:
 		if p.stateMachine.AssertState("COMMUNICATING") {
-			err = p.Received_CLI_REL_SECRET(typedMsg)
+			err = p.Received_CLI_REL_SHARED_SECRET(typedMsg)
 		}
-	case net.TRU_REL_DISRUPTION_SECRET:
+	case net.TRU_REL_SHARED_SECRET:
 		if p.stateMachine.AssertState("COMMUNICATING") {
-			err = p.Received_TRU_REL_SECRET(typedMsg)
+			err = p.Received_TRU_REL_SHARED_SECRETS(typedMsg)
 		}
 	case net.CLI_REL_OPENCLOSED_DATA:
 		if p.stateMachine.AssertState("COMMUNICATING") {

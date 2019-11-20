@@ -134,9 +134,9 @@ func init() {
 	network.RegisterMessage(net.REL_ALL_DISRUPTION_REVEAL{})
 	network.RegisterMessage(net.CLI_REL_DISRUPTION_REVEAL{})
 	network.RegisterMessage(net.TRU_REL_DISRUPTION_REVEAL{})
-	network.RegisterMessage(net.REL_ALL_DISRUPTION_SECRET{})
-	network.RegisterMessage(net.CLI_REL_DISRUPTION_SECRET{})
-	network.RegisterMessage(net.TRU_REL_DISRUPTION_SECRET{})
+	network.RegisterMessage(net.REL_ALL_REVEAL_SHARED_SECRETS{})
+	network.RegisterMessage(net.CLI_REL_SHARED_SECRET{})
+	network.RegisterMessage(net.TRU_REL_SHARED_SECRET{})
 
 	onet.GlobalProtocolRegister(ProtocolName, NewPriFiSDAWrapperProtocol)
 }

@@ -119,20 +119,20 @@ type Struct_TRU_REL_DISRUPTION_REVEAL struct {
 	net.TRU_REL_DISRUPTION_REVEAL
 }
 
-//Struct_REL_ALL_DISRUPTION_SECRET is a wrapper for REL_ALL_DISRUPTION_SECRET (but also contains a *onet.TreeNode)
+//Struct_REL_ALL_DISRUPTION_SECRET is a wrapper for REL_ALL_REVEAL_SHARED_SECRETS (but also contains a *onet.TreeNode)
 type Struct_REL_ALL_DISRUPTION_SECRET struct {
 	*onet.TreeNode
-	net.REL_ALL_DISRUPTION_SECRET
+	net.REL_ALL_REVEAL_SHARED_SECRETS
 }
 
-//Struct_CLI_REL_DISRUPTION_SECRET is a wrapper for CLI_REL_DISRUPTION_SECRET (but also contains a *onet.TreeNode)
+//Struct_CLI_REL_DISRUPTION_SECRET is a wrapper for CLI_REL_SHARED_SECRET (but also contains a *onet.TreeNode)
 type Struct_CLI_REL_DISRUPTION_SECRET struct {
 	*onet.TreeNode
-	net.CLI_REL_DISRUPTION_SECRET
+	net.CLI_REL_SHARED_SECRET
 }
 
-//Struct_TRU_REL_DISRUPTION_SECRET is a wrapper for TRU_REL_DISRUPTION_SECRET (but also contains a *onet.TreeNode)
+//Struct_TRU_REL_DISRUPTION_SECRET is a wrapper for TRU_REL_SHARED_SECRET (but also contains a *onet.TreeNode)
 type Struct_TRU_REL_DISRUPTION_SECRET struct {
 	*onet.TreeNode
-	net.TRU_REL_DISRUPTION_SECRET
+	net.TRU_REL_SHARED_SECRET
 }

@@ -38,29 +38,29 @@ import (
 // ClientState contains the mutable state of the client.
 type ClientState struct {
 	DCNet                         *dcnet.DCNetEntity
-	currentState                  int16
-	DataForDCNet                  chan []byte //Data to the relay : VPN / SOCKS should put data there !
-	NextDataForDCNet              *[]byte     //if not nil, send this before polling DataForDCNet
-	DataFromDCNet                 chan []byte //Data from the relay : VPN / SOCKS should read data from there !
-	DataOutputEnabled             bool        //if FALSE, nothing will be written to DataFromDCNet
-	HashFromPreviousMessage       [32]byte
-	MyLastRound                   int32
-	LastMsg                       []byte
-	B_echo_last                   byte
-	WrongBitPosition              int
-	ephemeralPrivateKey           kyber.Scalar
-	EphemeralPublicKey            kyber.Point
-	ID                            int
-	LatencyTest                   *prifilog.LatencyTests
-	MySlot                        int
-	Name                          string
-	nClients                      int
-	nTrustees                     int
-	PayloadSize                   int
-	privateKey                    kyber.Scalar
-	PublicKey                     kyber.Point
-	sharedSecrets                 []kyber.Point
-	TrusteePublicKey              []kyber.Point
+	currentState               int16
+	DataForDCNet               chan []byte //Data to the relay : VPN / SOCKS should put data there !
+	NextDataForDCNet           *[]byte     //if not nil, send this before polling DataForDCNet
+	DataFromDCNet              chan []byte //Data from the relay : VPN / SOCKS should read data from there !
+	DataOutputEnabled          bool        //if FALSE, nothing will be written to DataFromDCNet
+	HashFromPreviousMessage    [32]byte
+	MyLastRound                int32
+	LastMessage                []byte
+	B_echo_last                byte
+	DisruptionWrongBitPosition int
+	ephemeralPrivateKey        kyber.Scalar
+	EphemeralPublicKey         kyber.Point
+	ID                         int
+	LatencyTest                *prifilog.LatencyTests
+	MySlot                     int
+	Name                       string
+	nClients                   int
+	nTrustees                  int
+	PayloadSize                int
+	privateKey                 kyber.Scalar
+	PublicKey                  kyber.Point
+	sharedSecrets              []kyber.Point
+	TrusteePublicKey           []kyber.Point
 	UseSocksProxy                 bool
 	UseUDP                        bool
 	MessageHistory                kyber.XOF
@@ -72,7 +72,7 @@ type ClientState struct {
 	EquivocationProtectionEnabled bool
 
 	// TEST DISRUPTION
-	Cheater bool
+	ForceDisruption bool
 
 	//concurrent stuff
 	RoundNo           int32
@@ -178,9 +178,9 @@ func (p *PriFiLibClientInstance) ReceivedMessage(msg interface{}) error {
 		if p.stateMachine.AssertState("READY") {
 			err = p.Received_REL_ALL_DISRUPTION_REVEAL(typedMsg)
 		}
-	case net.REL_ALL_DISRUPTION_SECRET:
+	case net.REL_ALL_REVEAL_SHARED_SECRETS:
 		if p.stateMachine.AssertState("READY") {
-			err = p.Received_REL_ALL_DISRUPTION_SECRET(typedMsg)
+			err = p.Received_REL_ALL_REVEAL_SHARED_SECRETS(typedMsg)
 		}
 	default:
 		err = errors.New("Unrecognized message, type" + reflect.TypeOf(msg).String())

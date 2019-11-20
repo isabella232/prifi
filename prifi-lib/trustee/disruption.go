@@ -22,13 +22,14 @@ func (p *PriFiLibTrusteeInstance) Received_REL_ALL_DISRUPTION_REVEAL(msg net.REL
 }
 
 /*
-* Received_REL_ALL_DISRUPTION_SECRET handles REL_ALL_DISRUPTION_SECRET messages.
+* Received_REL_ALL_REVEAL_SHARED_SECRETS handles REL_ALL_REVEAL_SHARED_SECRETS messages.
 * The method gets the shared secret and sends it to the relay.
  */
-func (p *PriFiLibTrusteeInstance) Received_REL_ALL_DISRUPTION_SECRET(msg net.REL_ALL_DISRUPTION_SECRET) error {
+func (p *PriFiLibTrusteeInstance) Received_REL_ALL_REVEAL_SHARED_SECRETS(msg net.REL_ALL_REVEAL_SHARED_SECRETS) error {
 	// CARLOS TODO: NIZK
+	// TODO: check that the relay asks for the correct entity, and not a honest entity. There should be a signature check on the TRU_REL_DISRUPTION_REVEAL the relay received (and forwarded to the client)
 	secret := p.trusteeState.sharedSecrets[msg.UserID]
-	toSend := &net.TRU_REL_DISRUPTION_SECRET{
+	toSend := &net.TRU_REL_SHARED_SECRET{
 		Secret: secret,
 		NIZK:   make([]byte, 0)}
 	p.messageSender.SendToRelayWithLog(toSend, "Sent secret to relay")

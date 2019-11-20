@@ -102,7 +102,7 @@ func (p *PriFiLibClientInstance) Received_ALL_ALL_PARAMETERS(msg net.ALL_ALL_PAR
 	p.clientState.MessageHistory = config.CryptoSuite.XOF([]byte("init")) //any non-nil, non-empty, constant array
 	p.clientState.DisruptionProtectionEnabled = disruptionProtection
 	p.clientState.EquivocationProtectionEnabled = equivProtection
-	p.clientState.Cheater = false
+	p.clientState.ForceDisruption = false
 
 	//we know our client number, if needed, parse the pcap for replay
 	if p.clientState.pcapReplay.Enabled {
@@ -207,28 +207,31 @@ func (p *PriFiLibClientInstance) ProcessDownStreamData(msg net.REL_CLI_DOWNSTREA
 
 	//if it's just one byte, no data
 	if len(msg.Data) > 1 {
+
+		//LB->CV: -N no ? why -1 ?
 		if p.clientState.DisruptionProtectionEnabled && (p.clientState.RoundNo-1 == p.clientState.MyLastRound) {
+			// Disruption protection checks
+
 			if p.clientState.B_echo_last == 1 {
 				// We are in the disruption protection blame protocol
-				if bytes.Equal(msg.Data, p.clientState.LastMsg) {
-					// CARLOS TODO: No disrruption
+				if bytes.Equal(msg.Data, p.clientState.LastMessage) {
 					p.clientState.B_echo_last = 0
-					p.clientState.WrongBitPosition = -1
-					log.Error("There was no disrruption. Possible error in hash creation.")
+					p.clientState.DisruptionWrongBitPosition = -1
+					log.Error("There was no disruption; the relay is lying about disruption (outside of threat model).")
 				} else {
-					// Get the l bit
+					// Get the l-th bit
 					found := false
 					for index, b := range msg.Data {
-						if b != p.clientState.LastMsg[index] {
+						if b != p.clientState.LastMessage[index] {
 							//Get the bit
 							for j := 0; j < 8; j++ {
 								mask := byte(1 << uint(j))
-								if (b & mask) != (p.clientState.LastMsg[index] & mask) {
+								if (b & mask) != (p.clientState.LastMessage[index] & mask) {
 									// Found bit
-									bit_pos := index*8 + (7 - j) //TODO: check this
-									p.clientState.WrongBitPosition = bit_pos
-									p.clientState.B_echo_last = 2
-									log.Lvl1("Disruptive bit position:", p.clientState.WrongBitPosition)
+									bitPos := index*8 + (7 - j)
+									p.clientState.DisruptionWrongBitPosition = bitPos
+									p.clientState.B_echo_last = 2  //LB->CV: what is the use of this when =2 ?
+									log.Lvl1("Disruptive bit position:", p.clientState.DisruptionWrongBitPosition)
 									found = true
 									break
 								}
@@ -240,18 +243,17 @@ func (p *PriFiLibClientInstance) ProcessDownStreamData(msg net.REL_CLI_DOWNSTREA
 					}
 				}
 			} else if p.clientState.B_echo_last == 2 {
+				// LB->CV: see my comment above; why is this used ? you do the same in the else before. Clarify the if/elseif flow with comments please
 				p.clientState.B_echo_last = 0
-				p.clientState.WrongBitPosition = -1
+				p.clientState.DisruptionWrongBitPosition = -1
 			} else {
 				p.clientState.B_echo_last = 0
-				p.clientState.WrongBitPosition = -1
+				p.clientState.DisruptionWrongBitPosition = -1
 				if len(msg.Data) < 32 {
-					// The realy did not send the hash or at least all of it
-					// TODO: How should I treat this
-					log.Error("The realy did not send the hash back.")
+					log.Error("The relay did not send the hash back.")
 					p.clientState.B_echo_last = 1
 				} else {
-					// Getting hash sent by realy
+					// Getting hash sent by relay
 					var data []byte
 					data = msg.Data
 					hash := data[:32]
@@ -515,10 +517,10 @@ func (p *PriFiLibClientInstance) SendUpstreamData(ownerSlotID int) error {
 
 	if p.clientState.DisruptionProtectionEnabled && slotOwner {
 		// If we are in blame part and checking the previous message
-		if p.clientState.WrongBitPosition != -1 {
-			numberOfFigures := len(strconv.Itoa(p.clientState.WrongBitPosition))
+		if p.clientState.DisruptionWrongBitPosition != -1 {
+			numberOfFigures := len(strconv.Itoa(p.clientState.DisruptionWrongBitPosition))
 
-			msg_send := "BLAME" + strconv.Itoa(numberOfFigures) + strconv.Itoa(p.clientState.WrongBitPosition)
+			msg_send := "BLAME" + strconv.Itoa(numberOfFigures) + strconv.Itoa(p.clientState.DisruptionWrongBitPosition)
 			upstreamCellContent = []byte(msg_send)
 			log.Lvl1("Disruption: Starting blame protocol.")
 
@@ -531,7 +533,7 @@ func (p *PriFiLibClientInstance) SendUpstreamData(ownerSlotID int) error {
 				payload_to_hash := make([]byte, p.clientState.DCNet.DCNetPayloadSize-1)
 
 				// Saving data for possible disruption
-				p.clientState.LastMsg = payload_to_hash
+				p.clientState.LastMessage = payload_to_hash
 
 				// Creating hash
 				hash = sha256.Sum256(payload_to_hash)
@@ -539,7 +541,7 @@ func (p *PriFiLibClientInstance) SendUpstreamData(ownerSlotID int) error {
 
 				upstreamCellContent[3] = byte(p.clientState.ID)
 				// Saving data for possible disruption
-				p.clientState.LastMsg = upstreamCellContent
+				p.clientState.LastMessage = upstreamCellContent
 				// Creating hash
 				hash = sha256.Sum256([]byte(upstreamCellContent))
 			}
@@ -562,7 +564,7 @@ func (p *PriFiLibClientInstance) SendUpstreamData(ownerSlotID int) error {
 	if !slotOwner && p.clientState.RoundNo == 100 {
 		// TESTING DISRUPTION
 		// upstreamCell[15] += 2
-		p.clientState.Cheater = true
+		p.clientState.ForceDisruption = true
 	}
 	//send the data to the relay
 	toSend := &net.CLI_REL_UPSTREAM_DATA{
@@ -677,7 +679,7 @@ func (p *PriFiLibClientInstance) Received_REL_CLI_TELL_EPH_PKS_AND_TRUSTEES_SIG(
 		data2 := make([]byte, p.clientState.PayloadSize-1)
 
 		// Saving data for possible disruption
-		p.clientState.LastMsg = data2
+		p.clientState.LastMessage = data2
 
 		// Creating and storing hash
 		var hash [32]byte

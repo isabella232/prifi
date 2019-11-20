@@ -129,9 +129,9 @@ func (p *PriFiLibTrusteeInstance) ReceivedMessage(msg interface{}) error {
 		if p.stateMachine.AssertState("READY") {
 			err = p.Received_REL_ALL_DISRUPTION_REVEAL(typedMsg)
 		}
-	case net.REL_ALL_DISRUPTION_SECRET:
+	case net.REL_ALL_REVEAL_SHARED_SECRETS:
 		if p.stateMachine.AssertState("READY") {
-			err = p.Received_REL_ALL_DISRUPTION_SECRET(typedMsg)
+			err = p.Received_REL_ALL_REVEAL_SHARED_SECRETS(typedMsg)
 		}
 	default:
 		err = errors.New("Unrecognized message, type" + reflect.TypeOf(msg).String())
