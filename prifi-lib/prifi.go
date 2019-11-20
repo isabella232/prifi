@@ -43,7 +43,7 @@ func NewPriFiClient(doLatencyTest bool, dataOutputEnabled bool, dataForDCNet cha
 	msw := newMessageSenderWrapper(msgSender)
 	c := client.NewClient(doLatencyTest, dataOutputEnabled, dataForDCNet, dataFromDCNet, doReplayPcap, pcapFolder, msw)
 	p := &PriFiLibInstance{
-		role:                   PRIFI_ROLE_CLIENT,
+		role: PRIFI_ROLE_CLIENT,
 		specializedLibInstance: c,
 		messageSender:          msgSender,
 	}
@@ -55,7 +55,7 @@ func NewPriFiRelay(dataOutputEnabled bool, dataForClients chan []byte, dataFromD
 	msw := newMessageSenderWrapper(msgSender)
 	r := relay.NewRelay(dataOutputEnabled, dataForClients, dataFromDCNet, experimentResultChan, timeoutHandler, msw)
 	p := &PriFiLibInstance{
-		role:                   PRIFI_ROLE_RELAY,
+		role: PRIFI_ROLE_RELAY,
 		specializedLibInstance: r,
 		messageSender:          msgSender,
 	}
@@ -77,7 +77,7 @@ func NewPriFiTrustee(neverSlowDown bool, alwaysSlowDown bool, baseSleepTime int,
 
 	t := trustee.NewTrustee(neverSlowDown, alwaysSlowDown, baseSleepTime, msw)
 	p := &PriFiLibInstance{
-		role:                   PRIFI_ROLE_TRUSTEE,
+		role: PRIFI_ROLE_TRUSTEE,
 		specializedLibInstance: t,
 		messageSender:          msgSender,
 	}

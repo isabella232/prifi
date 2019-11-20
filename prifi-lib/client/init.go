@@ -38,29 +38,29 @@ import (
 // ClientState contains the mutable state of the client.
 type ClientState struct {
 	DCNet                         *dcnet.DCNetEntity
-	currentState               int16
-	DataForDCNet               chan []byte //Data to the relay : VPN / SOCKS should put data there !
-	NextDataForDCNet           *[]byte     //if not nil, send this before polling DataForDCNet
-	DataFromDCNet              chan []byte //Data from the relay : VPN / SOCKS should read data from there !
-	DataOutputEnabled          bool        //if FALSE, nothing will be written to DataFromDCNet
-	HashFromPreviousMessage    [32]byte
-	MyLastRound                int32
-	LastMessage                []byte
-	B_echo_last                byte
-	DisruptionWrongBitPosition int
-	ephemeralPrivateKey        kyber.Scalar
-	EphemeralPublicKey         kyber.Point
-	ID                         int
-	LatencyTest                *prifilog.LatencyTests
-	MySlot                     int
-	Name                       string
-	nClients                   int
-	nTrustees                  int
-	PayloadSize                int
-	privateKey                 kyber.Scalar
-	PublicKey                  kyber.Point
-	sharedSecrets              []kyber.Point
-	TrusteePublicKey           []kyber.Point
+	currentState                  int16
+	DataForDCNet                  chan []byte //Data to the relay : VPN / SOCKS should put data there !
+	NextDataForDCNet              *[]byte     //if not nil, send this before polling DataForDCNet
+	DataFromDCNet                 chan []byte //Data from the relay : VPN / SOCKS should read data from there !
+	DataOutputEnabled             bool        //if FALSE, nothing will be written to DataFromDCNet
+	HashFromPreviousMessage       [32]byte
+	MyLastRound                   int32
+	LastMessage                   []byte
+	B_echo_last                   byte
+	DisruptionWrongBitPosition    int
+	ephemeralPrivateKey           kyber.Scalar
+	EphemeralPublicKey            kyber.Point
+	ID                            int
+	LatencyTest                   *prifilog.LatencyTests
+	MySlot                        int
+	Name                          string
+	nClients                      int
+	nTrustees                     int
+	PayloadSize                   int
+	privateKey                    kyber.Scalar
+	PublicKey                     kyber.Point
+	sharedSecrets                 []kyber.Point
+	TrusteePublicKey              []kyber.Point
 	UseSocksProxy                 bool
 	UseUDP                        bool
 	MessageHistory                kyber.XOF

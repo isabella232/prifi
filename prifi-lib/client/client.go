@@ -230,7 +230,7 @@ func (p *PriFiLibClientInstance) ProcessDownStreamData(msg net.REL_CLI_DOWNSTREA
 									// Found bit
 									bitPos := index*8 + (7 - j)
 									p.clientState.DisruptionWrongBitPosition = bitPos
-									p.clientState.B_echo_last = 2  //LB->CV: what is the use of this when =2 ?
+									p.clientState.B_echo_last = 2 //LB->CV: what is the use of this when =2 ?
 									log.Lvl1("Disruptive bit position:", p.clientState.DisruptionWrongBitPosition)
 									found = true
 									break

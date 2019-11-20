@@ -57,8 +57,8 @@ func ParsePCAP(path string, maxPayloadLength int, clientID uint16) ([]Packet, er
 		//maybe this packet is bigger than the payload size. Then, generate many packets
 		for remainingLen > maxPayloadLength {
 			p2 := Packet{
-				ID:                        uint32(id),
-				Header:                    metaBytes(maxPayloadLength, clientID, uint32(id), t, false),
+				ID:     uint32(id),
+				Header: metaBytes(maxPayloadLength, clientID, uint32(id), t, false),
 				MsSinceBeginningOfCapture: t,
 				RealLength:                maxPayloadLength,
 			}
@@ -71,8 +71,8 @@ func ParsePCAP(path string, maxPayloadLength int, clientID uint16) ([]Packet, er
 			remainingLen = metaMessageLength
 		}
 		p := Packet{
-			ID:                        uint32(id),
-			Header:                    metaBytes(remainingLen, clientID, uint32(id), t, true),
+			ID:     uint32(id),
+			Header: metaBytes(remainingLen, clientID, uint32(id), t, true),
 			MsSinceBeginningOfCapture: t,
 			RealLength:                remainingLen,
 		}
@@ -127,8 +127,8 @@ func ParsePKTS(path string, maxPayloadLength int, clientID uint16) ([]Packet, er
 		//maybe this packet is bigger than the payload size. Then, generate many packets
 		for remainingLen > maxPayloadLength {
 			p2 := Packet{
-				ID:                        uint32(packetID),
-				Header:                    metaBytes(maxPayloadLength, clientID, uint32(packetID), packet_time_ms, false),
+				ID:     uint32(packetID),
+				Header: metaBytes(maxPayloadLength, clientID, uint32(packetID), packet_time_ms, false),
 				MsSinceBeginningOfCapture: packet_time_ms,
 				RealLength:                maxPayloadLength,
 			}
@@ -141,8 +141,8 @@ func ParsePKTS(path string, maxPayloadLength int, clientID uint16) ([]Packet, er
 			remainingLen = metaMessageLength
 		}
 		p := Packet{
-			ID:                        uint32(packetID),
-			Header:                    metaBytes(remainingLen, clientID, uint32(packetID), packet_time_ms, true),
+			ID:     uint32(packetID),
+			Header: metaBytes(remainingLen, clientID, uint32(packetID), packet_time_ms, true),
 			MsSinceBeginningOfCapture: packet_time_ms,
 			RealLength:                remainingLen,
 		}
