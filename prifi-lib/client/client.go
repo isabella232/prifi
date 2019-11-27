@@ -209,6 +209,8 @@ func (p *PriFiLibClientInstance) ProcessDownStreamData(msg net.REL_CLI_DOWNSTREA
 	if len(msg.Data) > 1 {
 
 		//LB->CV: -N no ? why -1 ?
+		//CV->LB: Because this is to check if in the previous round the client was the one sending data to the relay.
+		//		  Ex: The client sends data in round 5, when the raley downstream the answer the value of p.clientState.RoundNo is 6.
 		if p.clientState.DisruptionProtectionEnabled && (p.clientState.RoundNo-1 == p.clientState.MyLastRound) {
 			// Disruption protection checks
 
@@ -231,6 +233,11 @@ func (p *PriFiLibClientInstance) ProcessDownStreamData(msg net.REL_CLI_DOWNSTREA
 									bitPos := index*8 + (7 - j)
 									p.clientState.DisruptionWrongBitPosition = bitPos
 									p.clientState.B_echo_last = 2 //LB->CV: what is the use of this when =2 ?
+																  //CV->LB: The first byte informs the relay the state of the comunications
+																  //        0: Means no disrruption in last round (everything ok)
+																  // 		1: Means disrruption found in last round
+																  // 		2: Means disrruption 2 rounds ago. In this message the possition of the disrruption is sent to the relay
+																  //		Could we do this in a cleaner way with different types of messages?
 									log.Lvl1("Disruptive bit position:", p.clientState.DisruptionWrongBitPosition)
 									found = true
 									break
@@ -244,6 +251,8 @@ func (p *PriFiLibClientInstance) ProcessDownStreamData(msg net.REL_CLI_DOWNSTREA
 				}
 			} else if p.clientState.B_echo_last == 2 {
 				// LB->CV: see my comment above; why is this used ? you do the same in the else before. Clarify the if/elseif flow with comments please
+				// CV->LB: Here I reset the values for future disruption. This is because disruption is already detected and informed to the realy, so blame protocol will start.
+				//		   This 2 variables are for the detection of the disrruption so are reseted to the values of when there is no disruption.
 				p.clientState.B_echo_last = 0
 				p.clientState.DisruptionWrongBitPosition = -1
 			} else {

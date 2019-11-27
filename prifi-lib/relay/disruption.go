@@ -110,6 +110,7 @@ func (p *PriFiLibRelayInstance) compareBitsClient(id int, bits map[int]int) bool
 func (p *PriFiLibRelayInstance) compareBitsTrustee(id int, bits map[int]int) bool {
 
 	//LB->CV: This function seems to be identical with the one above. Can you factor out the common part and pass the correct map p.relayState.CiphertextsHistoryTrustees or p.relayState.CiphertextsHistoryClients
+	//CV->LB: It will be done in next commit. This commit was just for answering the comments.
 
 	round := p.relayState.blamingData[0]
 	bitPosition := p.relayState.blamingData[1]
