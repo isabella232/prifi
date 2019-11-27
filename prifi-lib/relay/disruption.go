@@ -49,7 +49,7 @@ func (p *PriFiLibRelayInstance) Received_CLI_REL_BLAME(msg net.CLI_REL_DISRUPTIO
  */
 func (p *PriFiLibRelayInstance) Received_CLI_REL_DISRUPTION_REVEAL(msg net.CLI_REL_DISRUPTION_REVEAL) error {
 	p.relayState.clientBitMap[msg.ClientID] = msg.Bits
-	result := p.compareBitsClient(msg.ClientID, msg.Bits)
+	result := p.compareBits(msg.ClientID, msg.Bits, p.relayState.CiphertextsHistoryClients)
 	if result {
 		log.Fatal("DISRUPTOR IS CLIENT", msg.ClientID, ". Detected in first phase of the blame protocol.")
 	} else if (len(p.relayState.clientBitMap) == p.relayState.nClients) && (len(p.relayState.trusteeBitMap) == p.relayState.nTrustees) {
@@ -69,7 +69,7 @@ func (p *PriFiLibRelayInstance) Received_CLI_REL_DISRUPTION_REVEAL(msg net.CLI_R
  */
 func (p *PriFiLibRelayInstance) Received_TRU_REL_DISRUPTION_REVEAL(msg net.TRU_REL_DISRUPTION_REVEAL) error {
 	p.relayState.trusteeBitMap[msg.TrusteeID] = msg.Bits
-	result := p.compareBitsTrustee(msg.TrusteeID, msg.Bits)
+	result := p.compareBits(msg.TrusteeID, msg.Bits, p.relayState.CiphertextsHistoryTrustees)
 	if result {
 		log.Fatal("DISRUPTOR IS TRUSTEE", msg.TrusteeID, ". Detected in first phase of the blame protocol.")
 	} else if (len(p.relayState.clientBitMap) == p.relayState.nClients) && (len(p.relayState.trusteeBitMap) == p.relayState.nTrustees) {
@@ -81,42 +81,13 @@ func (p *PriFiLibRelayInstance) Received_TRU_REL_DISRUPTION_REVEAL(msg net.TRU_R
 
 /*
 * Auxiliary function that does the check of the bits revealed with the bit in the disruptive position.
-* For clients.
  */
-func (p *PriFiLibRelayInstance) compareBitsClient(id int, bits map[int]int) bool {
+func (p *PriFiLibRelayInstance) compareBits(id int, bits map[int]int, CiphertextsHistory map[int32][][]byte) bool {
 	round := p.relayState.blamingData[0]
 	bitPosition := p.relayState.blamingData[1]
 
 	bytePosition := int(bitPosition/8) + 9
-	byte_toGet := p.relayState.CiphertextsHistoryClients[int32(id)][int32(round)][bytePosition]
-	bitInBytePosition := (8-bitPosition%8)%8 - 1
-	mask := byte(1 << uint(bitInBytePosition))
-	result := 0
-	for _, bit := range bits {
-		result ^= bit
-	}
-	bytePreviousResult := mask & byte_toGet
-	bitPreviousResult := 0
-	if bytePreviousResult != 0 {
-		bitPreviousResult = 1
-	}
-	return !(result == bitPreviousResult)
-}
-
-/*
-* Auxiliary function that does the check of the bits revealed with the bit in the disruptive position.
-* For trustees.
- */
-func (p *PriFiLibRelayInstance) compareBitsTrustee(id int, bits map[int]int) bool {
-
-	//LB->CV: This function seems to be identical with the one above. Can you factor out the common part and pass the correct map p.relayState.CiphertextsHistoryTrustees or p.relayState.CiphertextsHistoryClients
-	//CV->LB: It will be done in next commit. This commit was just for answering the comments.
-
-	round := p.relayState.blamingData[0]
-	bitPosition := p.relayState.blamingData[1]
-
-	bytePosition := int(bitPosition/8) + 9
-	byte_toGet := p.relayState.CiphertextsHistoryTrustees[int32(id)][int32(round)][bytePosition]
+	byte_toGet := CiphertextsHistory[int32(id)][int32(round)][bytePosition]
 	bitInBytePosition := (8-bitPosition%8)%8 - 1
 	mask := byte(1 << uint(bitInBytePosition))
 	result := 0
