@@ -26,7 +26,7 @@ MPORT="10002"
 TEMPLATE_FILE="sda/simulation/prifi_simul_template.toml"
 CONFIG_FILE="sda/simulation/prifi_simul.toml"
 
-SIMULATION_TIMEOUT="60"                   # note: in simul-vary-xxx, this is the timeout of *one* tick, no the whole loop
+SIMULATION_TIMEOUT="400"                   # note: in simul-vary-xxx, this is the timeout of *one* tick, no the whole loop
 
 # default file names :
 
@@ -300,19 +300,19 @@ case $1 in
 
         "$THIS_SCRIPT" simul-cl
 
-        for repeat in {1..3}
+        for repeat in {1..5}
         do
-            for i in 10 20 30 40 50 60 70 80 90 100
+            for i in 10 25 50 75 100
             do
                 hosts=$(($NTRUSTEES + $NRELAY + $i))
-                for window in {1..7}
+                for window in 1 2 3 4 5
                 do
                     echo "Simulating for HOSTS=$hosts, WINDOW=$window..."
 
                     #fix the config
                     rm -f "$CONFIG_FILE"
-                    sed "s/RelayWindowSize = x/RelayWindowSize = $window/g" "$TEMPLATE_FILE" > "$CONFIG_FILE"
-                    sed "s/Hosts = x/Hosts = $hosts/g" "$CONFIG_FILE" > "$CONFIG_FILE"
+                    sed "s/RelayWindowSize = x/RelayWindowSize = $window/g" "$TEMPLATE_FILE" > "$CONFIG_FILE".2
+                    sed "s/Hosts = x/Hosts = $hosts/g" "$CONFIG_FILE".2 > "$CONFIG_FILE"
 
                     timeout "$SIMULATION_TIMEOUT" "$THIS_SCRIPT" simul | tee experiment_${i}_${window}_${repeat}.txt
                 done
