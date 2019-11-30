@@ -120,23 +120,23 @@ type NodeRepresentation struct {
 
 // RelayState contains the mutable state of the relay.
 type RelayState struct {
-	DCNet                                  *dcnet.DCNetEntity
-	clients                                []NodeRepresentation
-	roundManager                           *BufferableRoundManager
-	neffShuffle                            *scheduler.NeffShuffleRelay
-	currentState                           int16
-	DataForClients                         chan []byte // VPN / SOCKS should put data there !
-	HASHForClients                         [32]byte
-	PriorityDataForClients                 chan []byte
-	DataFromDCNet                          chan []byte // VPN / SOCKS should read data from there !
-	DataOutputEnabled                      bool        // If FALSE, nothing will be written to DataFromDCNet
-	DownstreamCellSize                     int
-	MessageHistory                         kyber.XOF
-	Name                                   string
-	nClients                               int
-	nClientsPkCollected                    int
-	nTrustees                              int
-	nTrusteesPkCollected                   int
+	DCNet                     *dcnet.DCNetEntity
+	clients                   []NodeRepresentation
+	roundManager              *BufferableRoundManager
+	neffShuffle               *scheduler.NeffShuffleRelay
+	currentState              int16
+	DataForClients            chan []byte // VPN / SOCKS should put data there !
+	HashOfLastUpstreamMessage [32]byte
+	PriorityDataForClients    chan []byte
+	DataFromDCNet             chan []byte // VPN / SOCKS should read data from there !
+	DataOutputEnabled         bool        // If FALSE, nothing will be written to DataFromDCNet
+	DownstreamCellSize        int
+	MessageHistory            kyber.XOF
+	Name                      string
+	nClients                  int
+	nClientsPkCollected       int
+	nTrustees                 int
+	nTrusteesPkCollected      int
 	privateKey                             kyber.Scalar
 	PublicKey                              kyber.Point
 	ExperimentRoundLimit                   int

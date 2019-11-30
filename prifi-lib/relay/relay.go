@@ -430,8 +430,7 @@ func (p *PriFiLibRelayInstance) upstreamPhase2b_extractPayload() error {
 		}
 
 		// Generating and storing the hash from the payload
-		hash := sha256.Sum256([]byte(upstreamPlaintext))
-		p.relayState.HASHForClients = hash
+		p.relayState.HashOfLastUpstreamMessage = sha256.Sum256([]byte(upstreamPlaintext))
 	}
 	log.Lvl4("Decoded cell is", upstreamPlaintext)
 
@@ -593,20 +592,12 @@ func (p *PriFiLibRelayInstance) downstreamPhase1_openRoundAndSendData() error {
 	}
 
 	if p.relayState.DisruptionProtectionEnabled {
-		// Chack if the b_echo_last flag from the client was set.
+		// Check if the b_echo_last flag from the client was set.
 		// If so, send the previous round message
 		if p.relayState.BEchoFlags[p.relayState.roundManager.lastRoundClosed] == 1 {
 			previousRound := p.relayState.roundManager.lastRoundClosed - int32(p.relayState.nClients)
 			downstreamCellContent = p.relayState.LastMessageOfClients[previousRound]
-		} else {
-			// Add the hash for the client
-			hash := p.relayState.HASHForClients
-			data := make([]byte, len(hash)+len(downstreamCellContent))
-			copy(data[0:len(hash)], hash[:])
-			copy(data[len(hash):], downstreamCellContent)
-			downstreamCellContent = data
 		}
-
 	}
 
 	// if we want to use dummy data down, pad to the correct size
@@ -668,9 +659,11 @@ func (p *PriFiLibRelayInstance) downstreamPhase1_openRoundAndSendData() error {
 		}
 
 	} else {
+
 		toSend := &net.REL_CLI_DOWNSTREAM_DATA{
 			RoundID:               nextDownstreamRoundID,
 			OwnershipID:           nextOwner,
+			HashOfPreviousUpstreamData: p.relayState.HashOfLastUpstreamMessage[:],
 			Data:                  downstreamCellContent,
 			FlagResync:            flagResync,
 			FlagOpenClosedRequest: flagOpenClosedRequest}

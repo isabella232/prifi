@@ -194,7 +194,7 @@ func (p *PriFiLibClientInstance) Received_REL_CLI_UDP_DOWNSTREAM_DATA(msg net.RE
 }
 
 /*
-ProcessDownStreamData handles the downstream data. After determining if the data is for us (this is not done yet), we test if it's a
+ProcessDownStreamData handles the downstream data. After determining if the data is for us, we test if it's a
 latency-test message, test if the resync flag is on (which triggers a re-setup).
 When this function ends, it calls SendUpstreamData() which continues the communication loop.
 */
@@ -210,7 +210,7 @@ func (p *PriFiLibClientInstance) ProcessDownStreamData(msg net.REL_CLI_DOWNSTREA
 
 		//LB->CV: -N no ? why -1 ?
 		//CV->LB: Because this is to check if in the previous round the client was the one sending data to the relay.
-		//		  Ex: The client sends data in round 5, when the raley downstream the answer the value of p.clientState.RoundNo is 6.
+		//		  Ex: The client sends data in round 5, when the relay downstream the answer the value of p.clientState.RoundNo is 6.
 		if p.clientState.DisruptionProtectionEnabled && (p.clientState.RoundNo-1 == p.clientState.MyLastRound) {
 			// Disruption protection checks
 
@@ -272,16 +272,15 @@ func (p *PriFiLibClientInstance) ProcessDownStreamData(msg net.REL_CLI_DOWNSTREA
 
 					// Comparing both hashes
 					if !bytes.Equal(hash, previousHash) {
-						log.Error("Disruption protection hash comparision failed.")
+						log.Error("Disruption protection hash comparison failed.")
 						p.clientState.B_echo_last = 1
 					} else {
+						log.Error("Disruption protection hash comparison succeeded.")
 						p.clientState.B_echo_last = 0
 					}
 					p.clientState.DataFromDCNet <- data[32:]
 				}
-
 			}
-
 		}
 		//pass the data to the VPN/SOCKS5 proxy, if enabled
 		if p.clientState.DataOutputEnabled {
