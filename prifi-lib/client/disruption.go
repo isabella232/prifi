@@ -17,6 +17,12 @@ func (p *PriFiLibClientInstance) Received_REL_ALL_DISRUPTION_REVEAL(msg net.REL_
 		ClientID: p.clientState.ID,
 		Bits:     upstreamCell,
 	}
+
+	//LB->CV: if ForceDisruptionOnRound, continue lying here!
+	if true {
+		upstreamCell[15] = 1
+	}
+
 	p.messageSender.SendToRelayWithLog(toSend, "")
 	log.Lvl1("Disruption: Sending previous round to relay (Round: ", msg.RoundID, ", bit position:", msg.BitPos, ")")
 	return nil

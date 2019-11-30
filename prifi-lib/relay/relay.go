@@ -378,50 +378,46 @@ func (p *PriFiLibRelayInstance) upstreamPhase2b_extractPayload() error {
 
 	p.relayState.bitrateStatistics.AddUpstreamCell(int64(len(upstreamPlaintext)))
 
-	//disruption-protection
+
 	if p.relayState.DisruptionProtectionEnabled {
-		// IF last flag is active
-		previous_round := p.relayState.roundManager.CurrentRound() - int32(p.relayState.nClients)
 
-		// Getting and checking the b_echo_last flag
-
-		log.Lvl3("Looking at b_echo_flag for disruption protection")
 		var b_echo_flag byte
 		b_echo_flag = upstreamPlaintext[0]
-		p.relayState.BEchoFlags[p.relayState.roundManager.CurrentRound()] = b_echo_flag
+		p.relayState.BEchoFlags[roundID] = b_echo_flag
 		p.relayState.DisruptionReveal = false
+		previousRound := roundID - int32(p.relayState.nClients)
+
 		if b_echo_flag == 1 {
-			// Mistake in the hash
-			log.Lvl1("Disruption detected, sending full message to client.")
-		} else if b_echo_flag == 2 {
+			log.Lvl1("b_echo_flag=", b_echo_flag, "(current round:", roundID, ")")
+		} else if b_echo_flag == 2 { // LB->CV: remove this check altogether. Whenever the payload[1:6] is BLAME, do the thing, regardless of b_echo_flag. 1 less state variable!
 			// Client sending bit position
 			if string(upstreamPlaintext[1:6]) == "BLAME" {
-				numberOfFigures, _ := strconv.ParseInt(string(upstreamPlaintext[6]), 10, 64)
-				var pos_string string
-				pos_string = string(upstreamPlaintext[7 : 7+numberOfFigures])
-				pos, err := strconv.ParseInt(pos_string, 10, 64)
-				if err != nil {
-					log.Fatal(err)
-				}
-				log.Error("Disruption: Going into blame phase. Round: ", int(previous_round)-p.relayState.nClients, ", bit position: ", pos)
+				log.Error("Detected a BLAME request!")
+
+				blameRoundID := int32(binary.BigEndian.Uint32(upstreamPlaintext[6:10]))
+				blameBitPosition := int(binary.BigEndian.Uint32(upstreamPlaintext[10:14]))
+
+				_ = blameRoundID // TODO: This should be used insted of "previousRound-p.relayState.nClients"
+				blameRoundID = previousRound-int32(p.relayState.nClients)
+
+				log.Error("Disruption: Going into blame phase. Round: ", blameRoundID, ", bit position: ", blameBitPosition)
+
 				p.relayState.DisruptionReveal = true
 				if len(p.relayState.blamingData) != 0 {
 					p.relayState.blamingData = make([]int, 6)
 				}
-				blaming_round := int(previous_round) - p.relayState.nClients
-				p.relayState.blamingData[0] = blaming_round
-				p.relayState.blamingData[1] = int(pos)
-				//log.Fatal("SEND", p.relayState.blamingData)
+				// LB->CB: avoid [0] [1] as index, have a struct with meaningful names. Also RoundID is an int32 and should be stored as such
+				p.relayState.blamingData[0] = int(blameRoundID)
+				p.relayState.blamingData[1] = blameBitPosition
 			} else {
 				// TODO: Client found nothing
 				log.Error("Disruptive bit not found")
 			}
-		} else {
-			// TODO: Check if it is nt 0, what should the relay do
 		}
 		upstreamPlaintext = upstreamPlaintext[1:]
 		// Saving in history
-		p.relayState.LastMessageOfClients[p.relayState.roundManager.CurrentRound()] = upstreamPlaintext
+		p.relayState.LastMessageOfClients[roundID] = upstreamPlaintext
+
 		// CARLOS TODO: Clean the lastmessageofclients map
 
 		//TEST
@@ -597,6 +593,8 @@ func (p *PriFiLibRelayInstance) downstreamPhase1_openRoundAndSendData() error {
 		if p.relayState.BEchoFlags[p.relayState.roundManager.lastRoundClosed] == 1 {
 			previousRound := p.relayState.roundManager.lastRoundClosed - int32(p.relayState.nClients)
 			downstreamCellContent = p.relayState.LastMessageOfClients[previousRound]
+			log.Lvl1("b_echo_flag=1 on round", p.relayState.roundManager.lastRoundClosed, "retransmitting upstream of round", previousRound)
+			log.Lvl1(downstreamCellContent)
 		}
 	}
 

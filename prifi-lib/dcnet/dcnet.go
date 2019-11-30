@@ -326,7 +326,6 @@ func (e *DCNetEntity) GetBitsOfRound(roundID int32, bitPosition int32) map[int]i
 		p_ij[i] = make([]byte, e.DCNetPayloadSize)
 		e.sharedPRNGs[i].XORKeyStream(p_ij[i], p_ij[i])
 	}
-	log.Lvl1("chipersize", len(p_ij[0]))
 	// DC-net encrypt the Payload
 	for i := range p_ij {
 		bytePosition := int(bitPosition/8) + 1

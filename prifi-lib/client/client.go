@@ -22,6 +22,7 @@ package client
  */
 
 import (
+	"encoding/binary"
 	"errors"
 	"strconv"
 
@@ -205,83 +206,13 @@ func (p *PriFiLibClientInstance) ProcessDownStreamData(msg net.REL_CLI_DOWNSTREA
 	 * HANDLE THE DOWNSTREAM DATA
 	 */
 
+	//if disruption protection is enabled, perform the checks
+	if p.clientState.DisruptionProtectionEnabled {
+		p.handlePossibleDisruption(msg)
+	}
+
 	//if it's just one byte, no data
 	if len(msg.Data) > 1 {
-
-		//LB->CV: -N no ? why -1 ?
-		//CV->LB: Because this is to check if in the previous round the client was the one sending data to the relay.
-		//		  Ex: The client sends data in round 5, when the relay downstream the answer the value of p.clientState.RoundNo is 6.
-		if p.clientState.DisruptionProtectionEnabled && (p.clientState.RoundNo-1 == p.clientState.MyLastRound) {
-			// Disruption protection checks
-
-			if p.clientState.B_echo_last == 1 {
-				// We are in the disruption protection blame protocol
-				if bytes.Equal(msg.Data, p.clientState.LastMessage) {
-					p.clientState.B_echo_last = 0
-					p.clientState.DisruptionWrongBitPosition = -1
-					log.Error("There was no disruption; the relay is lying about disruption (outside of threat model).")
-				} else {
-					// Get the l-th bit
-					found := false
-					for index, b := range msg.Data {
-						if b != p.clientState.LastMessage[index] {
-							//Get the bit
-							for j := 0; j < 8; j++ {
-								mask := byte(1 << uint(j))
-								if (b & mask) != (p.clientState.LastMessage[index] & mask) {
-									// Found bit
-									bitPos := index*8 + (7 - j)
-									p.clientState.DisruptionWrongBitPosition = bitPos
-									p.clientState.B_echo_last = 2 //LB->CV: what is the use of this when =2 ?
-																  //CV->LB: The first byte informs the relay the state of the comunications
-																  //        0: Means no disrruption in last round (everything ok)
-																  // 		1: Means disrruption found in last round
-																  // 		2: Means disrruption 2 rounds ago. In this message the possition of the disrruption is sent to the relay
-																  //		Could we do this in a cleaner way with different types of messages?
-									log.Lvl1("Disruptive bit position:", p.clientState.DisruptionWrongBitPosition)
-									found = true
-									break
-								}
-							}
-							if found {
-								break
-							}
-						}
-					}
-				}
-			} else if p.clientState.B_echo_last == 2 {
-				// LB->CV: see my comment above; why is this used ? you do the same in the else before. Clarify the if/elseif flow with comments please
-				// CV->LB: Here I reset the values for future disruption. This is because disruption is already detected and informed to the realy, so blame protocol will start.
-				//		   This 2 variables are for the detection of the disrruption so are reseted to the values of when there is no disruption.
-				p.clientState.B_echo_last = 0
-				p.clientState.DisruptionWrongBitPosition = -1
-			} else {
-				p.clientState.B_echo_last = 0
-				p.clientState.DisruptionWrongBitPosition = -1
-				if len(msg.Data) < 32 {
-					log.Error("The relay did not send the hash back.")
-					p.clientState.B_echo_last = 1
-				} else {
-					// Getting hash sent by relay
-					var data []byte
-					data = msg.Data
-					hash := data[:32]
-
-					// Getting previously calculated hash
-					previousHash := p.clientState.HashFromPreviousMessage[:]
-
-					// Comparing both hashes
-					if !bytes.Equal(hash, previousHash) {
-						log.Error("Disruption protection hash comparison failed.")
-						p.clientState.B_echo_last = 1
-					} else {
-						log.Error("Disruption protection hash comparison succeeded.")
-						p.clientState.B_echo_last = 0
-					}
-					p.clientState.DataFromDCNet <- data[32:]
-				}
-			}
-		}
 		//pass the data to the VPN/SOCKS5 proxy, if enabled
 		if p.clientState.DataOutputEnabled {
 			p.clientState.DataFromDCNet <- msg.Data
@@ -368,6 +299,88 @@ func (p *PriFiLibClientInstance) ProcessDownStreamData(msg net.REL_CLI_DOWNSTREA
 	//now we will be expecting next message. Except if we already received and buffered it !
 	if msg, hasAMessage := p.clientState.BufferedRoundData[int32(p.clientState.RoundNo)]; hasAMessage {
 		p.Received_REL_CLI_DOWNSTREAM_DATA(msg)
+	}
+
+	return nil
+}
+
+func (p *PriFiLibClientInstance) handlePossibleDisruption(msg net.REL_CLI_DOWNSTREAM_DATA) error {
+	if p.clientState.RoundNo-1 == p.clientState.MyLastRound {
+
+		if p.clientState.B_echo_last == 1 {
+			log.Lvl1("We previously set b_echo_last=1, relay retransmitted message", msg.Data)
+			// We are in the disruption protection blame protocol
+			if bytes.Equal(msg.Data, p.clientState.LastMessage) {
+				p.clientState.B_echo_last = 0
+				p.clientState.DisruptionWrongBitPosition = -1
+				log.Error("There was no disruption; the relay is lying about disruption (outside of threat model).")
+			} else {
+				log.Lvl1("We previously set b_echo_last=1, comparing messages: (only on log level 3)")
+				log.Lvl3(msg.Data)
+				log.Lvl3(p.clientState.LastMessage)
+
+				// Get the l-th bit
+				found := false
+				for index, b := range msg.Data {
+					if b != p.clientState.LastMessage[index] {
+						//Get the bit
+						for j := 0; j < 8; j++ {
+							mask := byte(1 << uint(j))
+							if (b & mask) != (p.clientState.LastMessage[index] & mask) {
+								bitPos := index*8 + (7 - j)
+
+								if (p.clientState.LastMessage[index] & mask) == 1 {
+									log.Lvl1("Bit at position", bitPos, "was a 1 toggled to 0, ignoring...")
+								} else {
+									// Found bit
+									p.clientState.DisruptionWrongBitPosition = bitPos
+									p.clientState.B_echo_last = 2 //LB->CV: what is the use of this when =2 ?
+									//CV->LB: The first byte informs the relay the state of the communications
+									//        0: Means no disruption in last round (everything ok)
+									// 		1: Means disruption found in last round
+									// 		2: Means disruption 2 rounds ago. In this message the position of the disruption is sent to the relay
+									//		Could we do this in a cleaner way with different types of messages?
+									log.Lvl1("Disruptive bit position:", p.clientState.DisruptionWrongBitPosition)
+									found = true
+									break
+								}
+							}
+						}
+						if found {
+							break
+						}
+					}
+				}
+			}
+		} else if p.clientState.B_echo_last == 2 {
+			// LB->CV: see my comment above; why is this used ? you do the same in the else before. Clarify the if/elseif flow with comments please
+			// CV->LB: Here I reset the values for future disruption. This is because disruption is already detected and informed to the relay, so blame protocol will start.
+			//		   This 2 variables are for the detection of the disruption so are reset to the values of when there is no disruption.
+			//		   This 2 variables are for the detection of the disruption so are reset to the values of when there is no disruption.
+			p.clientState.B_echo_last = 0
+			p.clientState.DisruptionWrongBitPosition = -1
+		} else {
+			p.clientState.B_echo_last = 0
+			p.clientState.DisruptionWrongBitPosition = -1
+			if len(msg.HashOfPreviousUpstreamData) != 32 {
+				log.Error("The relay did not send the hash back. This should never happen.")
+				p.clientState.B_echo_last = 1
+			} else {
+				// Getting hash sent by relay
+				hash := msg.HashOfPreviousUpstreamData
+
+				// Getting previously calculated hash
+				previousHash := p.clientState.HashFromPreviousMessage[:]
+
+				// Comparing both hashes
+				if !bytes.Equal(hash, previousHash) {
+					log.Error("Disruption protection hash comparison failed.")
+					p.clientState.B_echo_last = 1
+				} else {
+					p.clientState.B_echo_last = 0
+				}
+			}
+		}
 	}
 
 	return nil
@@ -526,12 +539,17 @@ func (p *PriFiLibClientInstance) SendUpstreamData(ownerSlotID int) error {
 	if p.clientState.DisruptionProtectionEnabled && slotOwner {
 		// If we are in blame part and checking the previous message
 		if p.clientState.DisruptionWrongBitPosition != -1 {
-			numberOfFigures := len(strconv.Itoa(p.clientState.DisruptionWrongBitPosition))
 
-			msg_send := "BLAME" + strconv.Itoa(numberOfFigures) + strconv.Itoa(p.clientState.DisruptionWrongBitPosition)
-			upstreamCellContent = []byte(msg_send)
-			log.Lvl1("Disruption: Starting blame protocol.")
+			// TODO => there should be a NIZK here proving the ownership of the slot
 
+			blameRoundID := p.clientState.RoundNo - int32(p.clientState.nClients) // TODO: THIS IS WRONG
+			buffer := make([]byte,5+8)
+			binary.BigEndian.PutUint32(buffer[5:9], uint32(blameRoundID))
+			binary.BigEndian.PutUint32(buffer[9:13], uint32(p.clientState.DisruptionWrongBitPosition))
+			copy(buffer[0:5], "BLAME")
+
+			upstreamCellContent = buffer
+			log.Lvl1("Disruption: Attempting to transmit blame for round", blameRoundID, p.clientState.DisruptionWrongBitPosition)
 		} else {
 			// TODO: Should I put this here, or only if is our slot
 			// Making and storing HASH
@@ -563,16 +581,18 @@ func (p *PriFiLibClientInstance) SendUpstreamData(ownerSlotID int) error {
 	if p.clientState.DisruptionProtectionEnabled && slotOwner {
 		slice_b_echo_last = make([]byte, 1)
 		b_echo_last := p.clientState.B_echo_last
-		log.Lvl3("B Echo_flag sent to realy:", b_echo_last)
 		slice_b_echo_last[0] = b_echo_last
 	}
 	payload := append(slice_b_echo_last, upstreamCellContent...)
 
 	upstreamCell := p.clientState.DCNet.EncodeForRound(p.clientState.RoundNo, slotOwner, payload)
+
+	//LB->CV: Have a switch in prifi.toml "ForceDisruptionOnRound = X"
 	if p.clientState.ID == 0 && !slotOwner && p.clientState.RoundNo > 3 {
 		// TESTING DISRUPTION
-		upstreamCell[15] += 2
-		log.Lvl1("Disrupting!", upstreamCell)
+		log.Error("Pre-disruption", upstreamCell)
+		upstreamCell[15] = 1
+		log.Error("Disrupting!", upstreamCell)
 		p.clientState.ForceDisruption = true
 	}
 	//send the data to the relay
