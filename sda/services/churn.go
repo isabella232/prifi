@@ -301,7 +301,7 @@ func (c *churnHandler) handleDisconnection(msg *network.Envelope) {
 func (c *churnHandler) tryStartProtocol() {
 	nClients, nTrustees := c.waitQueue.count()
 
-	if nClients >= 1 && nTrustees >= 1 {
+	if nClients >= 2 && nTrustees >= 1 {
 		if c.isProtocolRunning() {
 			c.stopProtocol()
 		}

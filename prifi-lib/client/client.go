@@ -570,9 +570,10 @@ func (p *PriFiLibClientInstance) SendUpstreamData(ownerSlotID int) error {
 	payload := append(slice_b_echo_last, upstreamCellContent...)
 
 	upstreamCell := p.clientState.DCNet.EncodeForRound(p.clientState.RoundNo, slotOwner, payload)
-	if !slotOwner && p.clientState.RoundNo == 100 {
+	if p.clientState.ID == 0 && !slotOwner && p.clientState.RoundNo > 3 {
 		// TESTING DISRUPTION
-		// upstreamCell[15] += 2
+		upstreamCell[15] += 2
+		log.Lvl1("Disrupting!", upstreamCell)
 		p.clientState.ForceDisruption = true
 	}
 	//send the data to the relay
