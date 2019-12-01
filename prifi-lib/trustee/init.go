@@ -7,8 +7,8 @@ import (
 	"github.com/dedis/prifi/prifi-lib/net"
 	"github.com/dedis/prifi/prifi-lib/scheduler"
 	"github.com/dedis/prifi/prifi-lib/utils"
-	"gopkg.in/dedis/kyber.v2"
-	"gopkg.in/dedis/onet.v2/log"
+	"go.dedis.ch/kyber"
+	"go.dedis.ch/onet/log"
 	"reflect"
 	"strings"
 )

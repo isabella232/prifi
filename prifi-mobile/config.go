@@ -7,8 +7,8 @@ import (
 	"github.com/BurntSushi/toml"
 	prifi_protocol "github.com/dedis/prifi/sda/protocols"
 	"golang.org/x/mobile/asset"
-	"gopkg.in/dedis/onet.v2/app"
-	"gopkg.in/dedis/onet.v2/log"
+	"go.dedis.ch/onet/app"
+	"go.dedis.ch/onet/log"
 	"sync"
 )
 

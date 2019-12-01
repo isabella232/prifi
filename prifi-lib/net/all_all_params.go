@@ -1,7 +1,7 @@
 package net
 
 import (
-	"gopkg.in/dedis/kyber.v2"
+	"go.dedis.ch/kyber"
 )
 
 // ALL_ALL_PARAMETERS message contains all the parameters used by the protocol.

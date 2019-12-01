@@ -3,7 +3,7 @@ package prifi_lib
 import (
 	"errors"
 	"github.com/dedis/prifi/prifi-lib/net"
-	"gopkg.in/dedis/onet.v2/log"
+	"go.dedis.ch/onet/log"
 	"testing"
 )
 

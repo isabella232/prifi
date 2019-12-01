@@ -3,7 +3,7 @@ package protocols
 import (
 	"encoding/binary"
 	"errors"
-	"gopkg.in/dedis/onet.v2/log"
+	"go.dedis.ch/onet/log"
 	"io"
 	"net"
 	"strconv"
