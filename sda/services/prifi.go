@@ -46,16 +46,17 @@ func (s *ServiceState) IsPriFiProtocolRunning() bool {
 }
 
 // Packet send by relay; when we get it, we stop the protocol
-func (s *ServiceState) HandleStop(msg *network.Envelope) {
+func (s *ServiceState) HandleStop(msg *network.Envelope) error {
 	log.Lvl1("Received a Handle Stop (I'm ", s.role, ")")
 	s.StopPriFiCommunicateProtocol()
+	return nil
 }
 
 // Packet send by relay to trustees at start
-func (s *ServiceState) HandleHelloMsg(msg *network.Envelope) {
+func (s *ServiceState) HandleHelloMsg(msg *network.Envelope) error {
 	if s.role != prifi_protocol.Trustee {
 		log.Error("Received a Hello message, but we're not a trustee ! ignoring.")
-		return
+		return nil
 	}
 
 	if !s.receivedHello {
@@ -65,11 +66,11 @@ func (s *ServiceState) HandleHelloMsg(msg *network.Envelope) {
 		go s.connectToRelay(s.relayIdentity, s.connectToRelay2StopChan)
 		s.receivedHello = true
 	}
-
+	return nil
 }
 
 // Packet received by relay when some node connects
-func (s *ServiceState) HandleConnection(msg *network.Envelope) {
+func (s *ServiceState) HandleConnection(msg *network.Envelope) error {
 	if s.churnHandler == nil {
 		log.Fatal("Can't handle a connection without a churnHandler")
 	}
@@ -79,19 +80,22 @@ func (s *ServiceState) HandleConnection(msg *network.Envelope) {
 	}
 
 	s.churnHandler.handleConnection(msg)
+	return nil
 }
 
 // Packet send by relay when some node disconnected
-func (s *ServiceState) HandleDisconnection(msg *network.Envelope) {
+func (s *ServiceState) HandleDisconnection(msg *network.Envelope) error {
 	if s.churnHandler == nil {
 		log.Fatal("Can't handle a disconnection without a churnHandler")
 	}
 	s.churnHandler.handleDisconnection(msg)
+	return nil
 }
 
 // Packet send by relay when some node disconnected
-func (s *ServiceState) HandleStopSOCKS(msg *network.Envelope) {
+func (s *ServiceState) HandleStopSOCKS(msg *network.Envelope) error {
 	s.ShutdownSocks()
+	return nil
 }
 
 // handleTimeout is a callback that should be called on the relay

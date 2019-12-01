@@ -68,7 +68,7 @@ func (s *SimulationManualAssignment) CreateRoster(sc *onet.SimulationConfig, add
 	start := time.Now()
 	nbrAddr := len(addresses)
 	if sc.PrivateKeys == nil {
-		sc.PrivateKeys = make(map[network.Address]kyber.Scalar)
+		sc.PrivateKeys = make(map[network.Address]*onet.SimulationPrivateKey)
 	}
 	hosts := s.Hosts
 	if s.SingleHost {
@@ -148,11 +148,14 @@ func (s *SimulationManualAssignment) CreateRoster(sc *onet.SimulationConfig, add
 		}
 		log.Lvl3("Adding server", address, "to Roster")
 		entities[c] = network.NewServerIdentity(key.Public.Clone(), add)
-		sc.PrivateKeys[entities[c].Address] = key.Private.Clone()
+		sc.PrivateKeys[entities[c].Address] = &onet.SimulationPrivateKey{
+			Private:  key.Private.Clone(),
+			Services: make([]kyber.Scalar, 0),
+		}
 	}
 	if hosts > 1 {
-		if sc.PrivateKeys[entities[0].Address].Equal(
-			sc.PrivateKeys[entities[1].Address]) {
+		if sc.PrivateKeys[entities[0].Address].Private.Equal(
+			sc.PrivateKeys[entities[1].Address].Private) {
 			log.Fatal("Something went terribly wrong.")
 		}
 	}
