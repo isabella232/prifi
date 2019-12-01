@@ -3,6 +3,7 @@ package client
 import (
 	"github.com/dedis/prifi/prifi-lib/net"
 	"gopkg.in/dedis/onet.v2/log"
+	"time"
 )
 
 /*
@@ -22,8 +23,10 @@ func (p *PriFiLibClientInstance) Received_REL_ALL_DISRUPTION_REVEAL(msg net.REL_
 		Bits:     bitMap,
 	}
 
-	//LB->CV: if ForceDisruptionOnRound, continue lying here!
-	if true && p.clientState.ID == 0 {
+	//if ForceDisruptionOnRound, continue lying here!
+	//LB->CV: have this as a param in prifi.toml
+	ForceDisruptionOnRound := 3
+	if ForceDisruptionOnRound > -1 && p.clientState.ID == 0 {
 		log.Lvl1("Disruption: Malicious client cheating again, old value", bitMap, "(new value right below)")
 		trusteeToAccuse := 0
 		// pretend the PRG told me to output a 1, and the trustee is lying with its 0
@@ -49,6 +52,15 @@ func (p *PriFiLibClientInstance) Received_REL_ALL_REVEAL_SHARED_SECRETS(msg net.
 		TrusteeID: msg.EntityID,
 		Secret:    secret,
 		NIZK:      make([]byte, 0)}
+
+	//LB->CV: have this as a param in prifi.toml
+	ForceDisruptionOnRound := 3
+	if ForceDisruptionOnRound > -1 && p.clientState.ID == 0 {
+		//this client is hesitant to answer as he will get caught
+		time.Sleep(1 * time.Second)
+		// this is just to let the honest trustee answer and see what happens
+	}
+
 	p.messageSender.SendToRelayWithLog(toSend, "Sent secret to relay")
 	log.Lvl1("Reveling secret with trustee", msg.EntityID)
 	return nil
