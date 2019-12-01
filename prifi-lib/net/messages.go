@@ -64,12 +64,12 @@ type CLI_REL_OPENCLOSED_DATA struct {
 // REL_CLI_DOWNSTREAM_DATA message contains the downstream data for a client for a given round
 // and is sent by the relay to the clients.
 type REL_CLI_DOWNSTREAM_DATA struct {
-	RoundID               int32
-	OwnershipID           int // ownership may vary with open or closed slots
+	RoundID                    int32
+	OwnershipID                int // ownership may vary with open or closed slots
 	HashOfPreviousUpstreamData []byte
-	Data                  []byte
-	FlagResync            bool
-	FlagOpenClosedRequest bool
+	Data                       []byte
+	FlagResync                 bool
+	FlagOpenClosedRequest      bool
 }
 
 //Converts []ByteArray -> [][]byte and returns it
@@ -237,7 +237,7 @@ func (m *REL_CLI_DOWNSTREAM_DATA_UDP) FromBytes(buffer []byte) (interface{}, err
 	hashLen := int(binary.BigEndian.Uint32(buffer[8:12]))
 	flagResyncInt := int(binary.BigEndian.Uint32(buffer[len(buffer)-8 : len(buffer)-4]))
 	flagOpenClosedInt := int(binary.BigEndian.Uint32(buffer[len(buffer)-4:]))
-	hashOfPreviousUpstreamData := buffer[12:12+hashLen]
+	hashOfPreviousUpstreamData := buffer[12 : 12+hashLen]
 	data := buffer[12+hashLen : len(buffer)-8]
 
 	flagResync := false
@@ -288,17 +288,21 @@ type TRU_REL_DISRUPTION_REVEAL struct {
 
 // REL_ALL_REVEAL_SHARED_SECRETS contains request ro reveal the shared secret with the specified recipient, and is sent by the relay
 type REL_ALL_REVEAL_SHARED_SECRETS struct {
-	UserID int
+	EntityID int
 }
 
 // CLI_REL_SHARED_SECRET contains the shared secret requested by the relay, with a proof we computed it correctly
 type CLI_REL_SHARED_SECRET struct {
-	Secret kyber.Point
-	NIZK   []byte
+	ClientID  int
+	TrusteeID int
+	Secret    kyber.Point
+	NIZK      []byte
 }
 
 // TRU_REL_SHARED_SECRET contains the shared secret requested by the relay, with a proof we computed it correctly
 type TRU_REL_SHARED_SECRET struct {
-	Secret kyber.Point
-	NIZK   []byte
+	TrusteeID int
+	ClientID  int
+	Secret    kyber.Point
+	NIZK      []byte
 }

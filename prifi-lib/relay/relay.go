@@ -378,7 +378,6 @@ func (p *PriFiLibRelayInstance) upstreamPhase2b_extractPayload() error {
 
 	p.relayState.bitrateStatistics.AddUpstreamCell(int64(len(upstreamPlaintext)))
 
-
 	if p.relayState.DisruptionProtectionEnabled {
 
 		var b_echo_flag byte
@@ -398,9 +397,9 @@ func (p *PriFiLibRelayInstance) upstreamPhase2b_extractPayload() error {
 				blameBitPosition := int(binary.BigEndian.Uint32(upstreamPlaintext[10:14]))
 
 				_ = blameRoundID // TODO: This should be used insted of "previousRound-p.relayState.nClients"
-				blameRoundID = previousRound-int32(p.relayState.nClients)
+				blameRoundID = previousRound - int32(p.relayState.nClients)
 
-				log.Error("Disruption: Going into blame phase. Round: ", blameRoundID, ", bit position: ", blameBitPosition)
+				log.Error("Disruption: Going into Blame phase 1. Round:", blameRoundID, ", bit position:", blameBitPosition)
 
 				p.relayState.DisruptionReveal = true
 				if len(p.relayState.blamingData) != 0 {
@@ -409,6 +408,19 @@ func (p *PriFiLibRelayInstance) upstreamPhase2b_extractPayload() error {
 				// LB->CB: avoid [0] [1] as index, have a struct with meaningful names. Also RoundID is an int32 and should be stored as such
 				p.relayState.blamingData[0] = int(blameRoundID)
 				p.relayState.blamingData[1] = blameBitPosition
+
+				// Broadcast Blame phase 1
+				toSend := &net.REL_ALL_DISRUPTION_REVEAL{
+					RoundID: int32(p.relayState.blamingData[0]),
+					BitPos:  p.relayState.blamingData[1],
+				}
+				for j := 0; j < p.relayState.nClients; j++ {
+					p.messageSender.SendToClientWithLog(j, toSend, "")
+				}
+				for j := 0; j < p.relayState.nTrustees; j++ {
+					p.messageSender.SendToTrusteeWithLog(j, toSend, "")
+				}
+
 			} else {
 				// TODO: Client found nothing
 				log.Error("Disruptive bit not found")
@@ -633,61 +645,35 @@ func (p *PriFiLibRelayInstance) downstreamPhase1_openRoundAndSendData() error {
 		log.Lvl2("Relay is gonna broadcast messages for round "+strconv.Itoa(int(nextDownstreamRoundID))+" (OCRequest=false), owner=", nextOwner, ", len", len(downstreamCellContent))
 	}
 
-	if p.relayState.DisruptionReveal {
-		toSend := &net.REL_ALL_DISRUPTION_REVEAL{
-			RoundID: int32(p.relayState.blamingData[0]),
-			BitPos:  p.relayState.blamingData[1],
+	toSend := &net.REL_CLI_DOWNSTREAM_DATA{
+		RoundID:                    nextDownstreamRoundID,
+		OwnershipID:                nextOwner,
+		HashOfPreviousUpstreamData: p.relayState.HashOfLastUpstreamMessage[:],
+		Data:                       downstreamCellContent,
+		FlagResync:                 flagResync,
+		FlagOpenClosedRequest:      flagOpenClosedRequest}
+
+	if roundOpened, _ := p.relayState.roundManager.currentRound(); !roundOpened {
+		//prepare for the next round (this empties the dc-net buffer, making them ready for a new round)
+		p.relayState.DCNet.DecodeStart(nextDownstreamRoundID)
+	}
+
+	p.relayState.roundManager.OpenNextRound()
+	p.relayState.roundManager.SetDataAlreadySent(nextDownstreamRoundID, toSend)
+
+	if !p.relayState.UseUDP {
+		// broadcast to all clients
+		for i := 0; i < p.relayState.nClients; i++ {
+			//send to the i-th client
+			p.messageSender.SendToClientWithLog(i, toSend, "(client "+strconv.Itoa(i)+", round "+strconv.Itoa(int(nextDownstreamRoundID))+")")
 		}
 
-		if roundOpened, _ := p.relayState.roundManager.currentRound(); !roundOpened {
-			//prepare for the next round (this empties the dc-net buffer, making them ready for a new round)
-			p.relayState.DCNet.DecodeStart(nextDownstreamRoundID)
-		}
-
-		p.relayState.roundManager.OpenNextRound()
-
-		// Send this shutdown to all clients
-		for j := 0; j < p.relayState.nClients; j++ {
-			p.messageSender.SendToClientWithLog(j, toSend, "")
-		}
-
-		// Send this shutdown to all trustees
-		for j := 0; j < p.relayState.nTrustees; j++ {
-			p.messageSender.SendToTrusteeWithLog(j, toSend, "")
-		}
-
+		p.relayState.bitrateStatistics.AddDownstreamCell(int64(len(downstreamCellContent)))
 	} else {
+		toSend2 := &net.REL_CLI_DOWNSTREAM_DATA_UDP{REL_CLI_DOWNSTREAM_DATA: *toSend}
+		p.messageSender.BroadcastToAllClientsWithLog(toSend2, "(UDP broadcast, round "+strconv.Itoa(int(nextDownstreamRoundID))+")")
 
-		toSend := &net.REL_CLI_DOWNSTREAM_DATA{
-			RoundID:               nextDownstreamRoundID,
-			OwnershipID:           nextOwner,
-			HashOfPreviousUpstreamData: p.relayState.HashOfLastUpstreamMessage[:],
-			Data:                  downstreamCellContent,
-			FlagResync:            flagResync,
-			FlagOpenClosedRequest: flagOpenClosedRequest}
-
-		if roundOpened, _ := p.relayState.roundManager.currentRound(); !roundOpened {
-			//prepare for the next round (this empties the dc-net buffer, making them ready for a new round)
-			p.relayState.DCNet.DecodeStart(nextDownstreamRoundID)
-		}
-
-		p.relayState.roundManager.OpenNextRound()
-		p.relayState.roundManager.SetDataAlreadySent(nextDownstreamRoundID, toSend)
-
-		if !p.relayState.UseUDP {
-			// broadcast to all clients
-			for i := 0; i < p.relayState.nClients; i++ {
-				//send to the i-th client
-				p.messageSender.SendToClientWithLog(i, toSend, "(client "+strconv.Itoa(i)+", round "+strconv.Itoa(int(nextDownstreamRoundID))+")")
-			}
-
-			p.relayState.bitrateStatistics.AddDownstreamCell(int64(len(downstreamCellContent)))
-		} else {
-			toSend2 := &net.REL_CLI_DOWNSTREAM_DATA_UDP{REL_CLI_DOWNSTREAM_DATA: *toSend}
-			p.messageSender.BroadcastToAllClientsWithLog(toSend2, "(UDP broadcast, round "+strconv.Itoa(int(nextDownstreamRoundID))+")")
-
-			p.relayState.bitrateStatistics.AddDownstreamUDPCell(int64(len(downstreamCellContent)), p.relayState.nClients)
-		}
+		p.relayState.bitrateStatistics.AddDownstreamUDPCell(int64(len(downstreamCellContent)), p.relayState.nClients)
 	}
 
 	timeMs := timing.StopMeasure("sending-data").Nanoseconds() / 1e6

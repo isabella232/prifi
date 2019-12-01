@@ -543,7 +543,7 @@ func (p *PriFiLibClientInstance) SendUpstreamData(ownerSlotID int) error {
 			// TODO => there should be a NIZK here proving the ownership of the slot
 
 			blameRoundID := p.clientState.RoundNo - int32(p.clientState.nClients) // TODO: THIS IS WRONG
-			buffer := make([]byte,5+8)
+			buffer := make([]byte, 5+8)
 			binary.BigEndian.PutUint32(buffer[5:9], uint32(blameRoundID))
 			binary.BigEndian.PutUint32(buffer[9:13], uint32(p.clientState.DisruptionWrongBitPosition))
 			copy(buffer[0:5], "BLAME")
@@ -588,10 +588,11 @@ func (p *PriFiLibClientInstance) SendUpstreamData(ownerSlotID int) error {
 	upstreamCell := p.clientState.DCNet.EncodeForRound(p.clientState.RoundNo, slotOwner, payload)
 
 	//LB->CV: Have a switch in prifi.toml "ForceDisruptionOnRound = X"
-	if p.clientState.ID == 0 && !slotOwner && p.clientState.RoundNo > 3 {
+	//LB->CV: on the other hand, it's OK to hardcode Client0 as the sole disruptor
+	if p.clientState.ID == 0 && p.clientState.RoundNo > 3 {
 		// TESTING DISRUPTION
 		log.Error("Pre-disruption", upstreamCell)
-		upstreamCell[15] = 1
+		upstreamCell[len(upstreamCell)-1] |= 1 // only disrupt a 0->1. if there was already a 1, no disruption (this simplifies things)
 		log.Error("Disrupting!", upstreamCell)
 		p.clientState.ForceDisruption = true
 	}
