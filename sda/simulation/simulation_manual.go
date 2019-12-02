@@ -4,12 +4,12 @@ import (
 	"errors"
 	"fmt"
 	"github.com/BurntSushi/toml"
-	"gopkg.in/dedis/kyber.v2"
-	"gopkg.in/dedis/kyber.v2/suites"
-	"gopkg.in/dedis/kyber.v2/util/key"
-	"gopkg.in/dedis/onet.v2"
-	"gopkg.in/dedis/onet.v2/log"
-	"gopkg.in/dedis/onet.v2/network"
+	"go.dedis.ch/kyber"
+	"go.dedis.ch/kyber/suites"
+	"go.dedis.ch/kyber/util/key"
+	"go.dedis.ch/onet"
+	"go.dedis.ch/onet/log"
+	"go.dedis.ch/onet/network"
 	"net"
 	"os"
 	"strconv"
@@ -68,7 +68,7 @@ func (s *SimulationManualAssignment) CreateRoster(sc *onet.SimulationConfig, add
 	start := time.Now()
 	nbrAddr := len(addresses)
 	if sc.PrivateKeys == nil {
-		sc.PrivateKeys = make(map[network.Address]kyber.Scalar)
+		sc.PrivateKeys = make(map[network.Address]*onet.SimulationPrivateKey)
 	}
 	hosts := s.Hosts
 	if s.SingleHost {
@@ -148,11 +148,14 @@ func (s *SimulationManualAssignment) CreateRoster(sc *onet.SimulationConfig, add
 		}
 		log.Lvl3("Adding server", address, "to Roster")
 		entities[c] = network.NewServerIdentity(key.Public.Clone(), add)
-		sc.PrivateKeys[entities[c].Address] = key.Private.Clone()
+		sc.PrivateKeys[entities[c].Address] = &onet.SimulationPrivateKey{
+			Private:  key.Private.Clone(),
+			Services: make([]kyber.Scalar, 0),
+		}
 	}
 	if hosts > 1 {
-		if sc.PrivateKeys[entities[0].Address].Equal(
-			sc.PrivateKeys[entities[1].Address]) {
+		if sc.PrivateKeys[entities[0].Address].Private.Equal(
+			sc.PrivateKeys[entities[1].Address].Private) {
 			log.Fatal("Something went terribly wrong.")
 		}
 	}
@@ -187,13 +190,5 @@ func (s *SimulationManualAssignment) CreateTree(sc *onet.SimulationConfig) error
 	}
 	sc.Tree = sc.Roster.GenerateBigNaryTree(s.BF, s.Hosts)
 	log.Lvl3("Creating tree took: " + time.Now().Sub(start).String())
-	return nil
-}
-
-// Node - standard registers the entityList and the Tree with that Overlay,
-// so we don't have to pass that around for the experiments.
-func (s *SimulationManualAssignment) Node(sc *onet.SimulationConfig) error {
-	sc.Overlay.RegisterRoster(sc.Roster)
-	sc.Overlay.RegisterTree(sc.Tree)
 	return nil
 }

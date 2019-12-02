@@ -1,7 +1,7 @@
 package main
 
 import (
-	"gopkg.in/dedis/onet.v2/simul"
+	"go.dedis.ch/onet/simul"
 )
 
 func main() {

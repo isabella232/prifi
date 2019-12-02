@@ -5,7 +5,7 @@ import (
 	"github.com/dedis/prifi/prifi-lib/config"
 	"github.com/dedis/prifi/prifi-lib/crypto"
 	"github.com/dedis/prifi/prifi-lib/net"
-	"gopkg.in/dedis/kyber.v2"
+	"go.dedis.ch/kyber"
 	"strconv"
 	"testing"
 )

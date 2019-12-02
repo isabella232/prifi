@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/dedis/prifi/prifi-lib/config"
-	"gopkg.in/dedis/kyber.v2"
+	"go.dedis.ch/kyber"
 	"testing"
 )
 
