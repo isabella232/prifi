@@ -109,8 +109,8 @@ func (e *EquivocationProtection) ClientEncryptPayload(slotOwner bool, x []byte, 
 	return x, kappa_i_bytes
 }
 
+// LB->CV todo
 func (e *EquivocationProtection) ClientProve() []byte {
-
 
 	return nil
 }
@@ -139,8 +139,8 @@ func (e *EquivocationProtection) TrusteeGetContribution(s_i [][]byte) []byte {
 	return kappa_j_bytes
 }
 
+// LB->CV todo
 func (e *EquivocationProtection) TrusteeProve() []byte {
-
 
 	return nil
 }
