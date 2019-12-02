@@ -192,11 +192,3 @@ func (s *SimulationManualAssignment) CreateTree(sc *onet.SimulationConfig) error
 	log.Lvl3("Creating tree took: " + time.Now().Sub(start).String())
 	return nil
 }
-
-// Node - standard registers the entityList and the Tree with that Overlay,
-// so we don't have to pass that around for the experiments.
-func (s *SimulationManualAssignment) Node(sc *onet.SimulationConfig) error {
-	sc.Overlay.RegisterRoster(sc.Roster)
-	sc.Overlay.RegisterTree(sc.Tree)
-	return nil
-}

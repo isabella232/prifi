@@ -107,9 +107,10 @@ func (s *SimulationService) Node(config *onet.SimulationConfig) error {
 	if index < 0 {
 		log.Fatal("Didn't find this node in roster")
 	}
-	if err := s.SimulationManualAssignment.Node(config); err != nil {
-		log.Fatal("Could not register node in SDA Tree", err)
-	}
+
+	// Onet Black Magic
+	config.Overlay.RegisterRoster(config.Roster)
+	config.Overlay.RegisterTree(config.Tree)
 
 	s.SocksServerPort = 8080 + index
 
