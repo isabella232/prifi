@@ -90,27 +90,32 @@ case $1 in
 		echo -e "$okMsg"
 
 		echo -n "Getting all go packages... "
-		cd sda/app; go get -u ./... 1>/dev/null 2>&1
+		cd sda/app; go get -u -v  ./...
 		cd ../..
-		cd socks; go get -u ./... 1>/dev/null 2>&1
+		cd socks; go get -u -v  ./...
 		cd ..
-		cd prifi-mobile; go get -u ./...
+		cd prifi-lib; go get -u -v  ./...
+		cd ..
+		cd prifi-mobile; go get -u -v ./...
 		cd ..
 		echo -e "$okMsg"
 
-		echo -en "Switching ONet branch to ${highlightOn}$cothorityBranchRequired${highlightOff}... "
-		cd "$GOPATH/src/gopkg.in/dedis/onet.v2"; git checkout "$cothorityBranchRequired" 1>/dev/null 2>&1
-		echo -e "$okMsg"
+		# this package somehow fails to install itself
+		go get -u -v github.com/montanaflynn/stats
+
+		#echo -en "Switching ONet branch to ${highlightOn}$cothorityBranchRequired${highlightOff}... "
+		#cd "$GOPATH/src/gopkg.in/dedis/onet.v2"; git checkout "$cothorityBranchRequired" 1>/dev/null 2>&1
+		#echo -e "$okMsg"
 
 		echo -n "Re-getting all go packages (since we switched branch)... "
-		cd "$GOPATH/src/github.com/dedis/prifi/sda/app"; go get ./... 1>/dev/null 2>&1
+		cd "$GOPATH/src/github.com/dedis/prifi/sda/app"; go get ./...
 		cd ../..
-		cd "$GOPATH/src/gopkg.in/dedis/onet.v2"; go get -u ./... 1>/dev/null 2>&1
+		cd "$GOPATH/src/go.dedis.ch/onet"; go get -u ./...
 		echo -e "$okMsg"
 
-		echo -n "Testing ONet branch... "
-		test_cothority
-		echo -e "$okMsg"
+		#echo -n "Testing ONet branch... "
+		#test_cothority
+		#echo -e "$okMsg"
 
 		;;
 

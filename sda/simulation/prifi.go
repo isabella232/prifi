@@ -108,10 +108,6 @@ func (s *SimulationService) Node(config *onet.SimulationConfig) error {
 		log.Fatal("Didn't find this node in roster")
 	}
 
-	// Onet Black Magic
-	//config.Overlay.RegisterRoster(config.Roster)
-	//config.Overlay.RegisterTree(config.Tree)
-
 	s.SocksServerPort = 8080 + index
 
 	//assign the roles
