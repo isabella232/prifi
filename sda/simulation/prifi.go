@@ -7,10 +7,10 @@ import (
 	"github.com/BurntSushi/toml"
 	prifi_protocol "github.com/dedis/prifi/sda/protocols"
 	prifi_service "github.com/dedis/prifi/sda/services"
-	"gopkg.in/dedis/onet.v2"
-	"gopkg.in/dedis/onet.v2/app"
-	"gopkg.in/dedis/onet.v2/log"
-	"gopkg.in/dedis/onet.v2/network"
+	"go.dedis.ch/onet"
+	"go.dedis.ch/onet/app"
+	"go.dedis.ch/onet/log"
+	"go.dedis.ch/onet/network"
 	"io/ioutil"
 	"os"
 	"path"
@@ -106,9 +106,6 @@ func (s *SimulationService) Node(config *onet.SimulationConfig) error {
 	index, _ := config.Roster.Search(config.Server.ServerIdentity.ID)
 	if index < 0 {
 		log.Fatal("Didn't find this node in roster")
-	}
-	if err := s.SimulationManualAssignment.Node(config); err != nil {
-		log.Fatal("Could not register node in SDA Tree", err)
 	}
 
 	s.SocksServerPort = 8080 + index

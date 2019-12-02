@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/dedis/prifi/prifi-lib/net"
-	"gopkg.in/dedis/onet.v2/log"
+	"go.dedis.ch/onet/log"
 	"runtime/debug"
 	"sort"
 	"strconv"

@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"github.com/dedis/prifi/prifi-lib/config"
 	"github.com/dedis/prifi/prifi-lib/crypto"
-	"gopkg.in/dedis/kyber.v2"
-	"gopkg.in/dedis/onet.v2/log"
+	"go.dedis.ch/kyber"
+	"go.dedis.ch/onet/log"
 	"testing"
 )
 

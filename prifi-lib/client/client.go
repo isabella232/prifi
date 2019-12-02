@@ -29,8 +29,8 @@ import (
 	"github.com/dedis/prifi/prifi-lib/crypto"
 	prifilog "github.com/dedis/prifi/prifi-lib/log"
 	"github.com/dedis/prifi/prifi-lib/net"
-	"gopkg.in/dedis/kyber.v2"
-	"gopkg.in/dedis/onet.v2/log"
+	"go.dedis.ch/kyber"
+	"go.dedis.ch/onet/log"
 
 	"crypto/hmac"
 	"crypto/sha256"
