@@ -16,9 +16,9 @@ import (
 	"github.com/dedis/prifi/prifi-lib/config"
 	"github.com/dedis/prifi/prifi-lib/crypto"
 	"github.com/dedis/prifi/prifi-lib/net"
-	"gopkg.in/dedis/kyber.v2"
-	"gopkg.in/dedis/kyber.v2/sign/schnorr"
-	"gopkg.in/dedis/onet.v2/log"
+	"go.dedis.ch/kyber"
+	"go.dedis.ch/kyber/sign/schnorr"
+	"go.dedis.ch/onet/log"
 	"strconv"
 )
 

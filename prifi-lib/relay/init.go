@@ -39,8 +39,8 @@ import (
 	"github.com/dedis/prifi/prifi-lib/net"
 	"github.com/dedis/prifi/prifi-lib/scheduler"
 	"github.com/dedis/prifi/prifi-lib/utils"
-	"gopkg.in/dedis/kyber.v2"
-	"gopkg.in/dedis/onet.v2/log"
+	"go.dedis.ch/kyber"
+	"go.dedis.ch/onet/log"
 
 	"github.com/dedis/prifi/prifi-lib/crypto"
 	"reflect"
@@ -126,7 +126,7 @@ type RelayState struct {
 	neffShuffle                            *scheduler.NeffShuffleRelay
 	currentState                           int16
 	DataForClients                         chan []byte // VPN / SOCKS should put data there !
-	HASHForClients                         [32]byte
+	HashOfLastUpstreamMessage              [32]byte
 	PriorityDataForClients                 chan []byte
 	DataFromDCNet                          chan []byte // VPN / SOCKS should read data from there !
 	DataOutputEnabled                      bool        // If FALSE, nothing will be written to DataFromDCNet

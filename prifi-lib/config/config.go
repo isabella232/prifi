@@ -4,7 +4,7 @@ Package config contains the cryptographic primitives that are used by the PriFi 
 package config
 
 import (
-	"gopkg.in/dedis/kyber.v2/suites"
+	"go.dedis.ch/kyber/suites"
 )
 
 // the suite used in the prifi-lib

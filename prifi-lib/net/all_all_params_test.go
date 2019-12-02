@@ -1,7 +1,7 @@
 package net
 
 import (
-	"github.com/dedis/protobuf"
+	"go.dedis.ch/protobuf"
 	"testing"
 )
 

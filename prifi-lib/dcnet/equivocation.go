@@ -4,9 +4,9 @@ import (
 	"crypto/rand"
 	"crypto/sha256"
 	"github.com/dedis/prifi/prifi-lib/config"
-	"gopkg.in/dedis/kyber.v2"
-	"gopkg.in/dedis/kyber.v2/suites"
-	"gopkg.in/dedis/onet.v2/log"
+	"go.dedis.ch/kyber"
+	"go.dedis.ch/kyber/suites"
+	"go.dedis.ch/onet/log"
 )
 
 // Clients compute:
@@ -35,7 +35,7 @@ func NewEquivocation() *EquivocationProtection {
 	e.suite = config.CryptoSuite
 	e.history = e.suite.Scalar().One()
 
-	randomKey := make([]byte, 100)
+	randomKey := make([]byte, 32)
 	rand.Read(randomKey)
 	e.randomness = e.suite.XOF(randomKey)
 
@@ -95,6 +95,7 @@ func (e *EquivocationProtection) ClientEncryptPayload(slotOwner bool, x []byte, 
 	}
 
 	// encrypt payload
+	// LB->CV: Replace by traditional encryption (AES-GCM or what not) instead of XOR
 	for i := range x {
 		x[i] ^= k_i_bytes[i%len(k_i_bytes)]
 	}
@@ -106,6 +107,12 @@ func (e *EquivocationProtection) ClientEncryptPayload(slotOwner bool, x []byte, 
 		log.Fatal("Couldn't marshall", err)
 	}
 	return x, kappa_i_bytes
+}
+
+func (e *EquivocationProtection) ClientProve() []byte {
+
+
+	return nil
 }
 
 // a function that takes returns the byte[] version of sigma_j
@@ -130,6 +137,12 @@ func (e *EquivocationProtection) TrusteeGetContribution(s_i [][]byte) []byte {
 		log.Fatal("Couldn't marshall", err)
 	}
 	return kappa_j_bytes
+}
+
+func (e *EquivocationProtection) TrusteeProve() []byte {
+
+
+	return nil
 }
 
 // given all contributions, decodes the payload

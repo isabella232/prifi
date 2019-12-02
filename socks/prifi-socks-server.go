@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 	"github.com/ginuerzh/gost"
-	"gopkg.in/dedis/onet.v2/log"
+	"go.dedis.ch/onet/log"
 	"strconv"
 )
 

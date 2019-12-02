@@ -1,7 +1,7 @@
 package relay
 
 import (
-	"gopkg.in/dedis/onet.v2/log"
+	"go.dedis.ch/onet/log"
 	"time"
 )
 

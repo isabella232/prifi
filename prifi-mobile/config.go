@@ -6,9 +6,9 @@ import (
 	"bytes"
 	"github.com/BurntSushi/toml"
 	prifi_protocol "github.com/dedis/prifi/sda/protocols"
+	"go.dedis.ch/onet/app"
+	"go.dedis.ch/onet/log"
 	"golang.org/x/mobile/asset"
-	"gopkg.in/dedis/onet.v2/app"
-	"gopkg.in/dedis/onet.v2/log"
 	"sync"
 )
 

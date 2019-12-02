@@ -5,12 +5,12 @@ package prifimobile
 import (
 	prifi_protocol "github.com/dedis/prifi/sda/protocols"
 	prifi_service "github.com/dedis/prifi/sda/services"
-	"gopkg.in/dedis/kyber.v2/suites"
-	"gopkg.in/dedis/kyber.v2/util/encoding"
-	"gopkg.in/dedis/onet.v2"
-	"gopkg.in/dedis/onet.v2/app"
-	"gopkg.in/dedis/onet.v2/log"
-	"gopkg.in/dedis/onet.v2/network"
+	"go.dedis.ch/kyber/suites"
+	"go.dedis.ch/kyber/util/encoding"
+	"go.dedis.ch/onet"
+	"go.dedis.ch/onet/app"
+	"go.dedis.ch/onet/log"
+	"go.dedis.ch/onet/network"
 )
 
 func startCothorityNode() (*onet.Server, *app.Group, *prifi_service.ServiceState, error) {
