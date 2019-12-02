@@ -109,8 +109,8 @@ func (s *SimulationService) Node(config *onet.SimulationConfig) error {
 	}
 
 	// Onet Black Magic
-	config.Overlay.RegisterRoster(config.Roster)
-	config.Overlay.RegisterTree(config.Tree)
+	//config.Overlay.RegisterRoster(config.Roster)
+	//config.Overlay.RegisterTree(config.Tree)
 
 	s.SocksServerPort = 8080 + index
 
