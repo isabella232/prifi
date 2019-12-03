@@ -235,7 +235,7 @@ case $1 in
             echo -e "$okMsg"
 
             echo -n "Deleting all remote logs... "
-            ssh $DETERLAB_USER@users.deterlab.net 'cd remote; rm -rf output_*;'
+            ssh $DETERLAB_USER@users.deterlab.net 'cd remote; rm -rf output_*; rm -rf *.db'
             echo -e "$okMsg"
 
         else
@@ -281,13 +281,16 @@ case $1 in
             for i in 10 20 30 40 50 60 70 80 90 100
             do
                 hosts=$(($NTRUSTEES + $NRELAY + $i))
-                echo "Simulating for HOSTS=$hosts..."
+                echo "Simulating for HOSTS=$hosts... (repeat ${repeat})"
 
                 #fix the config
                 rm -f "$CONFIG_FILE"
                 sed "s/Hosts = x/Hosts = $hosts/g" "$TEMPLATE_FILE" > "$CONFIG_FILE"
 
                 timeout "$SIMULATION_TIMEOUT" "$THIS_SCRIPT" simul | tee experiment_${i}_${repeat}.txt
+
+                pkill prifi_simul
+                pkill ./prifi_simul
             done
         done
 
