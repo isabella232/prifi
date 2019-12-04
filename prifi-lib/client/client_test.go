@@ -12,8 +12,8 @@ import (
 	//"github.com/dedis/prifi/prifi-lib/relay"
 	"crypto/sha256"
 	"github.com/dedis/prifi/prifi-lib/scheduler"
-	"gopkg.in/dedis/kyber.v2"
-	"gopkg.in/dedis/onet.v2/log"
+	"go.dedis.ch/kyber"
+	"go.dedis.ch/onet/log"
 	"testing"
 	"time"
 )
@@ -711,14 +711,12 @@ func TestDisruptionClient(t *testing.T) {
 	// Receive some data down which is the CORRECT HASH of the previous message + [1, 2, 3]
 	hash := sha256.Sum256(dcNetDecoded[1:])
 	data := []byte{1, 2, 3}
-	dataDown := make([]byte, len(hash)+len(data))
-	copy(dataDown[0:len(hash)], hash[:])
-	copy(dataDown[len(hash):], data)
 
 	msg7 := net.REL_CLI_DOWNSTREAM_DATA{
-		RoundID:    1,
-		Data:       dataDown,
-		FlagResync: false,
+		RoundID:                    1,
+		Data:                       data,
+		FlagResync:                 false,
+		HashOfPreviousUpstreamData: hash[:],
 	}
 	err := client.ReceivedMessage(msg7)
 	if err != nil {
@@ -747,12 +745,13 @@ func TestDisruptionClient(t *testing.T) {
 
 	// now with disruption
 	//Receive some data down. Now the same data, but without the hash
-	dataDown = []byte{1, 2, 3}
+	data = []byte{1, 2, 3}
 
 	msg9 := net.REL_CLI_DOWNSTREAM_DATA{
-		RoundID:    2,
-		Data:       dataDown,
-		FlagResync: false,
+		RoundID:                    2,
+		Data:                       data,
+		FlagResync:                 false,
+		HashOfPreviousUpstreamData: make([]byte, 0),
 	}
 	err = client.ReceivedMessage(msg9)
 	if err != nil {

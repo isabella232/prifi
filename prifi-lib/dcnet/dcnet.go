@@ -3,9 +3,9 @@ package dcnet
 import (
 	"fmt"
 	"github.com/dedis/prifi/prifi-lib/config"
-	"gopkg.in/dedis/kyber.v2"
-	"gopkg.in/dedis/kyber.v2/suites"
-	"gopkg.in/dedis/onet.v2/log"
+	"go.dedis.ch/kyber"
+	"go.dedis.ch/kyber/suites"
+	"go.dedis.ch/onet/log"
 	"strconv"
 )
 
@@ -326,11 +326,11 @@ func (e *DCNetEntity) GetBitsOfRound(roundID int32, bitPosition int32) map[int]i
 		p_ij[i] = make([]byte, e.DCNetPayloadSize)
 		e.sharedPRNGs[i].XORKeyStream(p_ij[i], p_ij[i])
 	}
-	log.Lvl1("chipersize", len(p_ij[0]))
 	// DC-net encrypt the Payload
 	for i := range p_ij {
 		bytePosition := int(bitPosition/8) + 1
 		byte_toGet := p_ij[i][bytePosition]
+		log.Lvl1("CARLOS: BYTE TO GET", byte_toGet)
 		bitInByte := (8-bitPosition%8)%8 - 1
 		mask := byte(1 << uint(bitInByte))
 		if (byte_toGet & mask) == 0 {

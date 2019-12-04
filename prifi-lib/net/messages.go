@@ -4,8 +4,8 @@ import (
 	"encoding/binary"
 	"errors"
 
-	"gopkg.in/dedis/kyber.v2"
-	"gopkg.in/dedis/onet.v2/log"
+	"go.dedis.ch/kyber"
+	"go.dedis.ch/onet/log"
 )
 
 /*
@@ -64,11 +64,12 @@ type CLI_REL_OPENCLOSED_DATA struct {
 // REL_CLI_DOWNSTREAM_DATA message contains the downstream data for a client for a given round
 // and is sent by the relay to the clients.
 type REL_CLI_DOWNSTREAM_DATA struct {
-	RoundID               int32
-	OwnershipID           int // ownership may vary with open or closed slots
-	Data                  []byte
-	FlagResync            bool
-	FlagOpenClosedRequest bool
+	RoundID                    int32
+	OwnershipID                int // ownership may vary with open or closed slots
+	HashOfPreviousUpstreamData []byte
+	Data                       []byte
+	FlagResync                 bool
+	FlagOpenClosedRequest      bool
 }
 
 //Converts []ByteArray -> [][]byte and returns it
@@ -191,7 +192,9 @@ func (m *REL_CLI_DOWNSTREAM_DATA_UDP) SetContent(data REL_CLI_DOWNSTREAM_DATA) {
 func (m *REL_CLI_DOWNSTREAM_DATA_UDP) ToBytes() ([]byte, error) {
 
 	//convert the message to bytes
-	buf := make([]byte, 4+4+len(m.REL_CLI_DOWNSTREAM_DATA.Data)+4+4)
+	hashLen := len(m.REL_CLI_DOWNSTREAM_DATA.HashOfPreviousUpstreamData)
+	buf := make([]byte, 4+4+4+hashLen+len(m.REL_CLI_DOWNSTREAM_DATA.Data)+4+4)
+
 	resyncInt := 0
 	if m.REL_CLI_DOWNSTREAM_DATA.FlagResync {
 		resyncInt = 1
@@ -201,12 +204,19 @@ func (m *REL_CLI_DOWNSTREAM_DATA_UDP) ToBytes() ([]byte, error) {
 		openclosedInt = 1
 	}
 
-	// [0:4 roundID] [4:8 roundID] [8:end-8 data] [end-8:end-4 resyncFlag] [end-4:end openClosedFlag]
+	// [0:4 roundID] [4:8 OwnershipID] [8:12 Length of Hash] [Variable: Hash] [8:end-8 data] [end-8:end-4 resyncFlag] [end-4:end openClosedFlag]
 	binary.BigEndian.PutUint32(buf[0:4], uint32(m.REL_CLI_DOWNSTREAM_DATA.RoundID))
 	binary.BigEndian.PutUint32(buf[4:8], uint32(m.REL_CLI_DOWNSTREAM_DATA.OwnershipID))
+	binary.BigEndian.PutUint32(buf[8:12], uint32(hashLen))
+	startIndex := 12
+	if hashLen > 0 {
+		copy(buf[12:12+hashLen], m.REL_CLI_DOWNSTREAM_DATA.HashOfPreviousUpstreamData)
+		startIndex += hashLen
+	}
+
 	binary.BigEndian.PutUint32(buf[len(buf)-8:len(buf)-4], uint32(resyncInt)) //todo : to be coded on one byte
 	binary.BigEndian.PutUint32(buf[len(buf)-4:], uint32(openclosedInt))       //todo : to be coded on one byte
-	copy(buf[8:len(buf)-8], m.REL_CLI_DOWNSTREAM_DATA.Data)
+	copy(buf[startIndex:len(buf)-8], m.REL_CLI_DOWNSTREAM_DATA.Data)
 
 	return buf, nil
 
@@ -221,12 +231,14 @@ func (m *REL_CLI_DOWNSTREAM_DATA_UDP) FromBytes(buffer []byte) (interface{}, err
 		return REL_CLI_DOWNSTREAM_DATA_UDP{}, errors.New(e)
 	}
 
-	// [0:4 roundID] [4:end-8 data] [end-8:end-4 resyncFlag] [end-4:end openClosedFlag]
+	// [0:4 roundID] [4:8 OwnershipID] [8:12 Length of Hash] [Variable: Hash] [8:end-8 data] [end-8:end-4 resyncFlag] [end-4:end openClosedFlag]
 	roundID := int32(binary.BigEndian.Uint32(buffer[0:4]))
 	ownerShipID := int(binary.BigEndian.Uint32(buffer[4:8]))
+	hashLen := int(binary.BigEndian.Uint32(buffer[8:12]))
 	flagResyncInt := int(binary.BigEndian.Uint32(buffer[len(buffer)-8 : len(buffer)-4]))
 	flagOpenClosedInt := int(binary.BigEndian.Uint32(buffer[len(buffer)-4:]))
-	data := buffer[8 : len(buffer)-8]
+	hashOfPreviousUpstreamData := buffer[12 : 12+hashLen]
+	data := buffer[12+hashLen : len(buffer)-8]
 
 	flagResync := false
 	if flagResyncInt == 1 {
@@ -237,7 +249,7 @@ func (m *REL_CLI_DOWNSTREAM_DATA_UDP) FromBytes(buffer []byte) (interface{}, err
 		flagOpenClosed = true
 	}
 
-	innerMessage := REL_CLI_DOWNSTREAM_DATA{roundID, ownerShipID, data, flagResync, flagOpenClosed}
+	innerMessage := REL_CLI_DOWNSTREAM_DATA{roundID, ownerShipID, hashOfPreviousUpstreamData, data, flagResync, flagOpenClosed}
 	resultMessage := REL_CLI_DOWNSTREAM_DATA_UDP{innerMessage}
 
 	return resultMessage, nil
@@ -276,17 +288,21 @@ type TRU_REL_DISRUPTION_REVEAL struct {
 
 // REL_ALL_REVEAL_SHARED_SECRETS contains request ro reveal the shared secret with the specified recipient, and is sent by the relay
 type REL_ALL_REVEAL_SHARED_SECRETS struct {
-	UserID int
+	EntityID int
 }
 
 // CLI_REL_SHARED_SECRET contains the shared secret requested by the relay, with a proof we computed it correctly
 type CLI_REL_SHARED_SECRET struct {
-	Secret kyber.Point
-	NIZK   []byte
+	ClientID  int
+	TrusteeID int
+	Secret    kyber.Point
+	NIZK      []byte
 }
 
 // TRU_REL_SHARED_SECRET contains the shared secret requested by the relay, with a proof we computed it correctly
 type TRU_REL_SHARED_SECRET struct {
-	Secret kyber.Point
-	NIZK   []byte
+	TrusteeID int
+	ClientID  int
+	Secret    kyber.Point
+	NIZK      []byte
 }

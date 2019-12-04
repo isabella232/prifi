@@ -27,9 +27,9 @@ import (
 
 	prifi_lib "github.com/dedis/prifi/prifi-lib"
 	"github.com/dedis/prifi/prifi-lib/net"
-	"gopkg.in/dedis/onet.v2"
-	"gopkg.in/dedis/onet.v2/log"
-	"gopkg.in/dedis/onet.v2/network"
+	"go.dedis.ch/onet"
+	"go.dedis.ch/onet/log"
+	"go.dedis.ch/onet/network"
 )
 
 // ProtocolName is the name used to register the SDA wrapper protocol with SDA.
@@ -82,6 +82,7 @@ func (p *PriFiSDAProtocol) Start() error {
 	msg.Add("RelayTrusteeCacheLowBound", p.config.Toml.RelayTrusteeCacheLowBound)
 	msg.Add("RelayTrusteeCacheHighBound", p.config.Toml.RelayTrusteeCacheHighBound)
 	msg.Add("EquivocationProtectionEnabled", p.config.Toml.EquivocationProtectionEnabled)
+	msg.Add("ForceDisruptionSinceRound3", p.config.Toml.ForceDisruptionSinceRound3)
 	msg.ForceParams = true
 
 	p.SendTo(p.TreeNode(), msg)

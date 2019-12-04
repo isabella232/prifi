@@ -28,8 +28,8 @@ import (
 	prifilog "github.com/dedis/prifi/prifi-lib/log"
 	"github.com/dedis/prifi/prifi-lib/net"
 	"github.com/dedis/prifi/prifi-lib/utils"
-	"gopkg.in/dedis/kyber.v2"
-	"gopkg.in/dedis/onet.v2/log"
+	"go.dedis.ch/kyber"
+	"go.dedis.ch/onet/log"
 	"reflect"
 	"strings"
 	"time"
@@ -72,7 +72,7 @@ type ClientState struct {
 	EquivocationProtectionEnabled bool
 
 	// TEST DISRUPTION
-	ForceDisruption bool
+	ForceDisruptionSinceRound3	  bool
 
 	//concurrent stuff
 	RoundNo           int32

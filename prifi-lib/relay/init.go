@@ -39,8 +39,8 @@ import (
 	"github.com/dedis/prifi/prifi-lib/net"
 	"github.com/dedis/prifi/prifi-lib/scheduler"
 	"github.com/dedis/prifi/prifi-lib/utils"
-	"gopkg.in/dedis/kyber.v2"
-	"gopkg.in/dedis/onet.v2/log"
+	"go.dedis.ch/kyber"
+	"go.dedis.ch/onet/log"
 
 	"github.com/dedis/prifi/prifi-lib/crypto"
 	"reflect"
@@ -126,7 +126,7 @@ type RelayState struct {
 	neffShuffle                            *scheduler.NeffShuffleRelay
 	currentState                           int16
 	DataForClients                         chan []byte // VPN / SOCKS should put data there !
-	HASHForClients                         [32]byte
+	HashOfLastUpstreamMessage              [32]byte
 	PriorityDataForClients                 chan []byte
 	DataFromDCNet                          chan []byte // VPN / SOCKS should read data from there !
 	DataOutputEnabled                      bool        // If FALSE, nothing will be written to DataFromDCNet
@@ -172,14 +172,17 @@ type RelayState struct {
 	processingLock sync.Mutex // either we treat a message, or a timeout, never both
 
 	//disruption protection
-	LastMessageOfClients       map[int32][]byte
-	BEchoFlags                 map[int32]byte
-	CiphertextsHistoryTrustees map[int32][][]byte
-	CiphertextsHistoryClients  map[int32][][]byte
-	DisruptionReveal           bool
-	clientBitMap               map[int]map[int]int
-	trusteeBitMap              map[int]map[int]int
-	blamingData                []int //[round#, bitPos, clientID, bitRevealed, trusteeID, bitRevealed]
+	LastMessageOfClients       			   map[int32][]byte
+	BEchoFlags                 			   map[int32]byte
+	CiphertextsHistoryTrustees 			   map[int32][][]byte
+	CiphertextsHistoryClients              map[int32][][]byte
+	DisruptionReveal           	     	   bool
+	clientBitMap               			   map[int]map[int]int
+	trusteeBitMap              			   map[int]map[int]int
+	blamingData                			   []int //[round#, bitPos, clientID, bitRevealed, trusteeID, bitRevealed]
+
+	//disruption testing
+	ForceDisruptionSinceRound3			   bool
 
 	//Used for verifiable DC-net, part of the dcnet.old/owned.go
 	VerifiableDCNetKeys [][]byte

@@ -15,7 +15,7 @@ import (
 	"time"
 
 	"encoding/binary"
-	"gopkg.in/dedis/onet.v2/log"
+	"go.dedis.ch/onet/log"
 )
 
 // MULTICAST_ADDR is the address used for multicasting

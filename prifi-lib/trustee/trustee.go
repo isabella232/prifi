@@ -18,8 +18,8 @@ import (
 	"github.com/dedis/prifi/prifi-lib/config"
 	"github.com/dedis/prifi/prifi-lib/dcnet"
 	"github.com/dedis/prifi/prifi-lib/net"
-	"gopkg.in/dedis/kyber.v2"
-	"gopkg.in/dedis/onet.v2/log"
+	"go.dedis.ch/kyber"
+	"go.dedis.ch/onet/log"
 	"strconv"
 	"time"
 )
@@ -194,7 +194,9 @@ It returns the new round number (previous + 1).
 */
 func sendData(p *PriFiLibTrusteeInstance, roundID int32) (int32, error) {
 	data := p.trusteeState.DCNet.TrusteeEncodeForRound(roundID)
-
+	if roundID < 10 {
+		log.Lvl1("CARLOS: Sending in round", roundID, "data",  data)
+	}
 	//send the data
 	toSend := &net.TRU_REL_DC_CIPHER{
 		RoundID:   roundID,

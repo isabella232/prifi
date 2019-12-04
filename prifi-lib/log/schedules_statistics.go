@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"gopkg.in/dedis/onet.v2/log"
+	"go.dedis.ch/onet/log"
 	"sort"
 	"strconv"
 )
