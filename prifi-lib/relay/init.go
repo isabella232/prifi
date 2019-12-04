@@ -118,6 +118,17 @@ type NodeRepresentation struct {
 	EphemeralPublicKey kyber.Point
 }
 
+// BlamingData is a struct used in the blame phase of the disruption protection.
+// [round#, bitPos, clientID, bitRevealed, trusteeID, bitRevealed]
+type BlamingData struct {
+	RoundID 			int32
+	BitPos 				int
+	ClientID 			int
+	ClientBitRevealed 	int
+	TrusteeID			int
+	TrusteeBitRevealed  int
+}
+
 // RelayState contains the mutable state of the relay.
 type RelayState struct {
 	DCNet                                  *dcnet.DCNetEntity
@@ -179,8 +190,9 @@ type RelayState struct {
 	DisruptionReveal           	     	   bool
 	clientBitMap               			   map[int]map[int]int
 	trusteeBitMap              			   map[int]map[int]int
-	blamingData                			   []int //[round#, bitPos, clientID, bitRevealed, trusteeID, bitRevealed]
-
+	//blamingData                			   []int //[round#, bitPos, clientID, bitRevealed, trusteeID, bitRevealed]
+	// CARLOS: CLEAN
+	blamingData							   BlamingData
 	//disruption testing
 	ForceDisruptionSinceRound3			   bool
 

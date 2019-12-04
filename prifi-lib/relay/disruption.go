@@ -19,8 +19,8 @@ func (p *PriFiLibRelayInstance) Received_CLI_REL_BLAME(msg net.CLI_REL_DISRUPTIO
 		RoundID: msg.RoundID,
 		BitPos:  msg.BitPos}
 
-	p.relayState.blamingData[0] = int(msg.RoundID)
-	p.relayState.blamingData[1] = msg.BitPos
+	p.relayState.blamingData.RoundID = msg.RoundID
+	p.relayState.blamingData.BitPos = msg.BitPos
 
 	// broadcast to all trustees
 	for j := 0; j < p.relayState.nTrustees; j++ {
@@ -62,13 +62,13 @@ func (p *PriFiLibRelayInstance) Received_CLI_REL_DISRUPTION_REVEAL(msg net.CLI_R
 		mismatch := p.checkMismatchingPairs()
 		if mismatch {
 			toClient := &net.REL_ALL_REVEAL_SHARED_SECRETS{
-				EntityID: p.relayState.blamingData[4],
+				EntityID: p.relayState.blamingData.TrusteeID,
 			}
 			toTrustee := &net.REL_ALL_REVEAL_SHARED_SECRETS{
-				EntityID: p.relayState.blamingData[2],
+				EntityID: p.relayState.blamingData.ClientID,
 			}
-			p.messageSender.SendToTrusteeWithLog(p.relayState.blamingData[2], toClient, "")
-			p.messageSender.SendToClientWithLog(p.relayState.blamingData[4], toTrustee, "")
+			p.messageSender.SendToTrusteeWithLog(p.relayState.blamingData.ClientID, toTrustee, "")
+			p.messageSender.SendToClientWithLog(p.relayState.blamingData.TrusteeID, toClient, "")
 		}else{
 			log.Fatal("Disruption Phase 2: No mismatching pairs ? this should never occur.")
 		}
@@ -99,13 +99,13 @@ func (p *PriFiLibRelayInstance) Received_TRU_REL_DISRUPTION_REVEAL(msg net.TRU_R
 		mismatch := p.checkMismatchingPairs()
 		if mismatch {
 			toClient := &net.REL_ALL_REVEAL_SHARED_SECRETS{
-				EntityID: p.relayState.blamingData[4],
+				EntityID: p.relayState.blamingData.TrusteeID,
 			}
 			toTrustee := &net.REL_ALL_REVEAL_SHARED_SECRETS{
-				EntityID: p.relayState.blamingData[2],
+				EntityID: p.relayState.blamingData.ClientID,
 			}
-			p.messageSender.SendToTrusteeWithLog(p.relayState.blamingData[2], toClient, "")
-			p.messageSender.SendToClientWithLog(p.relayState.blamingData[4], toTrustee, "")
+			p.messageSender.SendToTrusteeWithLog(p.relayState.blamingData.ClientID, toTrustee, "")
+			p.messageSender.SendToClientWithLog(p.relayState.blamingData.TrusteeID, toClient, "")
 		}else{
 			log.Fatal("Disruption Phase 2: No mismatching pairs ? this should never occur.")
 		}
@@ -118,8 +118,8 @@ func (p *PriFiLibRelayInstance) Received_TRU_REL_DISRUPTION_REVEAL(msg net.TRU_R
 * Auxiliary function that does the check of the bits revealed with the bit in the disruptive position.
  */
 func (p *PriFiLibRelayInstance) compareBits(id int, bits map[int]int, CiphertextsHistory map[int32]map[int32][]byte) bool {
-	round := p.relayState.blamingData[0]
-	bitPosition := p.relayState.blamingData[1]
+	round := p.relayState.blamingData.RoundID
+	bitPosition := p.relayState.blamingData.BitPos
 	bytePosition := bitPosition/8 + 9 // LB->CV: why + 9 ? avoid magic numbers :)
 
 	log.Lvl1("Disruption: comparing", bits, "with", CiphertextsHistory[int32(id)][int32(round)])//CARLOS: change back to lvl2
@@ -152,10 +152,10 @@ func (p *PriFiLibRelayInstance) checkMismatchingPairs() bool{
 			trusteeBit := p.relayState.trusteeBitMap[trusteeID][clientID]
 			if clientBit != trusteeBit {
 				log.Error("Disruption Phase 2: mismatch between trustee", trusteeID, "and client", clientID)
-				p.relayState.blamingData[2] = clientID
-				p.relayState.blamingData[3] = clientBit
-				p.relayState.blamingData[4] = trusteeID
-				p.relayState.blamingData[5] = trusteeBit
+				p.relayState.blamingData.ClientID = clientID
+				p.relayState.blamingData.ClientBitRevealed = clientBit
+				p.relayState.blamingData.TrusteeID = trusteeID
+				p.relayState.blamingData.TrusteeBitRevealed = trusteeBit
 				return true
 			}
 		}
@@ -172,7 +172,7 @@ func (p *PriFiLibRelayInstance) Received_TRU_REL_SHARED_SECRETS(msg net.TRU_REL_
 
 	// CARLOS TODO: Check ntzk
 	val := p.replayRounds(msg.Secret)
-	if val != p.relayState.blamingData[5] {
+	if val != p.relayState.blamingData.TrusteeBitRevealed {
 		log.Fatal("Disruption Phase 2: Disruptor is Trustee", msg.TrusteeID, ".")
 	} else {
 		log.Lvl1("Disruption Phase 2: Trustee", msg.TrusteeID, "didn't lie, so it should be Client", msg.ClientID, ".")
@@ -189,7 +189,7 @@ func (p *PriFiLibRelayInstance) Received_CLI_REL_SHARED_SECRET(msg net.CLI_REL_S
 
 	// CARLOS TODO: Check NIZK
 	val := p.replayRounds(msg.Secret)
-	if val != p.relayState.blamingData[3] {
+	if val != p.relayState.blamingData.ClientBitRevealed {
 		log.Fatal("Disruption Phase 2: Disruptor is Client", msg.ClientID, ".")
 	} else {
 		log.Lvl1("Disruption Phase 2: Client", msg.ClientID, "didn't lie, so it should be Client", msg.TrusteeID, ".")
@@ -207,8 +207,8 @@ func (p *PriFiLibRelayInstance) replayRounds(secret kyber.Point) int {
 	}
 	sharedPRNG := config.CryptoSuite.XOF(seed)
 
-	round := 0
-	disruptive_round := p.relayState.blamingData[0]
+	round := int32(0)
+	disruptive_round := p.relayState.blamingData.RoundID
 	for round < disruptive_round {
 
 		dummy := make([]byte, p.relayState.DCNet.DCNetPayloadSize)
@@ -222,7 +222,7 @@ func (p *PriFiLibRelayInstance) replayRounds(secret kyber.Point) int {
 
 	var rtn int
 
-	bitPosition := p.relayState.blamingData[1]
+	bitPosition := p.relayState.blamingData.BitPos
 	bytePosition := int(bitPosition/8) + 1
 	byte_toGet := p_ij[bytePosition]
 	bitInByte := (8-bitPosition%8)%8 - 1

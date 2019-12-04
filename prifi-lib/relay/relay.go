@@ -145,7 +145,6 @@ func (p *PriFiLibRelayInstance) Received_ALL_ALL_PARAMETERS(msg net.ALL_ALL_PARA
 	p.relayState.DisruptionProtectionEnabled = disruptionProtection
 	p.relayState.clientBitMap = make(map[int]map[int]int)
 	p.relayState.trusteeBitMap = make(map[int]map[int]int)
-	p.relayState.blamingData = make([]int, 6)
 	p.relayState.OpenClosedSlotsRequestsRoundID = make(map[int32]bool)
 	p.relayState.LastMessageOfClients = make(map[int32][]byte)
 	p.relayState.BEchoFlags = make(map[int32]byte)
@@ -410,17 +409,14 @@ func (p *PriFiLibRelayInstance) upstreamPhase2b_extractPayload() error {
 				log.Error("Disruption: Going into Blame phase 1. Round:", blameRoundID, ", bit position:", blameBitPosition)
 
 				p.relayState.DisruptionReveal = true
-				if len(p.relayState.blamingData) != 0 {
-					p.relayState.blamingData = make([]int, 6)
-				}
-				// LB->CB: avoid [0] [1] as index, have a struct with meaningful names. Also RoundID is an int32 and should be stored as such
-				p.relayState.blamingData[0] = int(blameRoundID)
-				p.relayState.blamingData[1] = blameBitPosition
+
+				p.relayState.blamingData.RoundID = blameRoundID
+				p.relayState.blamingData.BitPos = blameBitPosition
 
 				// Broadcast Blame phase 1
 				toSend := &net.REL_ALL_DISRUPTION_REVEAL{
-					RoundID: int32(p.relayState.blamingData[0]),
-					BitPos:  p.relayState.blamingData[1],
+					RoundID: int32(p.relayState.blamingData.RoundID),
+					BitPos:  p.relayState.blamingData.BitPos,
 				}
 				for j := 0; j < p.relayState.nClients; j++ {
 					p.messageSender.SendToClientWithLog(j, toSend, "")
