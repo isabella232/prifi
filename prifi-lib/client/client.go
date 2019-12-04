@@ -33,7 +33,7 @@ import (
 	"go.dedis.ch/kyber"
 	"go.dedis.ch/onet/log"
 
-	"bytes"
+	
 	"crypto/hmac"
 	"crypto/sha256"
 	"github.com/dedis/prifi/prifi-lib/dcnet"
@@ -304,88 +304,6 @@ func (p *PriFiLibClientInstance) ProcessDownStreamData(msg net.REL_CLI_DOWNSTREA
 	return nil
 }
 
-func (p *PriFiLibClientInstance) handlePossibleDisruption(msg net.REL_CLI_DOWNSTREAM_DATA) error {
-	if p.clientState.RoundNo-1 == p.clientState.MyLastRound {
-
-		if p.clientState.B_echo_last == 1 {
-			log.Lvl1("We previously set b_echo_last=1, relay retransmitted message", msg.Data)
-			// We are in the disruption protection blame protocol
-			if bytes.Equal(msg.Data, p.clientState.LastMessage) {
-				p.clientState.B_echo_last = 0
-				p.clientState.DisruptionWrongBitPosition = -1
-				log.Error("There was no disruption; the relay is lying about disruption (outside of threat model).")
-			} else {
-				log.Lvl1("We previously set b_echo_last=1, comparing messages: (only on log level 3)")
-				log.Lvl3(msg.Data)
-				log.Lvl3(p.clientState.LastMessage)
-
-				// Get the l-th bit
-				found := false
-				for index, b := range msg.Data {
-					if b != p.clientState.LastMessage[index] {
-						//Get the bit
-						for j := 0; j < 8; j++ {
-							mask := byte(1 << uint(j))
-							if (b & mask) != (p.clientState.LastMessage[index] & mask) {
-								bitPos := index*8 + (7 - j)
-
-								if (p.clientState.LastMessage[index] & mask) == 1 {
-									log.Lvl1("Bit at position", bitPos, "was a 1 toggled to 0, ignoring...")
-								} else {
-									// Found bit
-									p.clientState.DisruptionWrongBitPosition = bitPos
-									p.clientState.B_echo_last = 2 //LB->CV: what is the use of this when =2 ?
-									//CV->LB: The first byte informs the relay the state of the communications
-									//        0: Means no disruption in last round (everything ok)
-									// 		1: Means disruption found in last round
-									// 		2: Means disruption 2 rounds ago. In this message the position of the disruption is sent to the relay
-									//		Could we do this in a cleaner way with different types of messages?
-									log.Lvl1("Disruptive bit position:", p.clientState.DisruptionWrongBitPosition)
-									found = true
-									break
-								}
-							}
-						}
-						if found {
-							break
-						}
-					}
-				}
-			}
-		} else if p.clientState.B_echo_last == 2 {
-			// LB->CV: see my comment above; why is this used ? you do the same in the else before. Clarify the if/elseif flow with comments please
-			// CV->LB: Here I reset the values for future disruption. This is because disruption is already detected and informed to the relay, so blame protocol will start.
-			//		   This 2 variables are for the detection of the disruption so are reset to the values of when there is no disruption.
-			//		   This 2 variables are for the detection of the disruption so are reset to the values of when there is no disruption.
-			p.clientState.B_echo_last = 0
-			p.clientState.DisruptionWrongBitPosition = -1
-		} else {
-			p.clientState.B_echo_last = 0
-			p.clientState.DisruptionWrongBitPosition = -1
-			if len(msg.HashOfPreviousUpstreamData) != 32 {
-				log.Error("The relay did not send the hash back. This should never happen.")
-				p.clientState.B_echo_last = 1
-			} else {
-				// Getting hash sent by relay
-				hash := msg.HashOfPreviousUpstreamData
-
-				// Getting previously calculated hash
-				previousHash := p.clientState.HashFromPreviousMessage[:]
-
-				// Comparing both hashes
-				if !bytes.Equal(hash, previousHash) {
-					log.Error("Disruption protection hash comparison failed.")
-					p.clientState.B_echo_last = 1
-				} else {
-					p.clientState.B_echo_last = 0
-				}
-			}
-		}
-	}
-
-	return nil
-}
-
 // WantsToTransmit returns true if [we have a latency message to send] OR [we have data to send]
 func (p *PriFiLibClientInstance) WantsToTransmit() bool {
 
@@ -551,7 +469,6 @@ func (p *PriFiLibClientInstance) SendUpstreamData(ownerSlotID int) error {
 			upstreamCellContent = buffer
 			log.Lvl1("Disruption: Attempting to transmit blame for round", blameRoundID, p.clientState.DisruptionWrongBitPosition)
 		} else {
-			// TODO: Should I put this here, or only if is our slot
 			// Making and storing HASH
 			var hash [32]byte
 			if upstreamCellContent == nil {
@@ -587,9 +504,7 @@ func (p *PriFiLibClientInstance) SendUpstreamData(ownerSlotID int) error {
 
 	upstreamCell := p.clientState.DCNet.EncodeForRound(p.clientState.RoundNo, slotOwner, payload)
 
-	//LB->CV: Have a switch in prifi.toml "ForceDisruptionOnRound = X"
-	//LB->CV: on the other hand, it's OK to hardcode Client0 as the sole disruptor
-	log.Lvl1("CARLOS: Possiblity", p.clientState.ID, p.clientState.ForceDisruptionSinceRound3, p.clientState.RoundNo, slotOwner)
+	log.Lvl1("CARLOS", p.clientState.RoundNo)
 	if p.clientState.ID == 0 && p.clientState.ForceDisruptionSinceRound3 && p.clientState.RoundNo > 3 && !slotOwner{
 		// TESTING DISRUPTION
 		log.Error("Pre-disruption", upstreamCell)
@@ -724,7 +639,6 @@ func (p *PriFiLibClientInstance) Received_REL_CLI_TELL_EPH_PKS_AND_TRUSTEES_SIG(
 		data = append(slice_b_echo_last, data2...)
 	}
 	if p.clientState.ID == 0 {
-		log.Lvl1("CARLOS: ROUND 0?", p.clientState.RoundNo==0)
 		slotOwner = true // we need one guy that takes the responsability for this first slot
 	}
 

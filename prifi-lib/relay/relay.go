@@ -387,17 +387,16 @@ func (p *PriFiLibRelayInstance) upstreamPhase2b_extractPayload() error {
 
 	if p.relayState.DisruptionProtectionEnabled {
 
-		var b_echo_flag byte
-		b_echo_flag = upstreamPlaintext[0]
-		p.relayState.BEchoFlags[roundID] = b_echo_flag
+		var b_echo_last byte
+		b_echo_last = upstreamPlaintext[0]
+		p.relayState.BEchoFlags[roundID] = b_echo_last
 		p.relayState.DisruptionReveal = false
 		previousRound := roundID - int32(p.relayState.nClients)
+		log.Lvl1("HERE1")
+		if b_echo_last == 1 {
+			log.Lvl1("HERE2")
 
-		if b_echo_flag == 1 {
-			log.Lvl1("b_echo_flag=", b_echo_flag, "(current round:", roundID, ")")
-		} else if b_echo_flag == 2 { // LB->CV: remove this check altogether. Whenever the payload[1:6] is BLAME, do the thing, regardless of b_echo_flag. 1 less state variable!
-			// Client sending bit position
-			if string(upstreamPlaintext[1:6]) == "BLAME" {
+			if len(upstreamPlaintext) > 13 && string(upstreamPlaintext[1:6]) == "BLAME" {
 				log.Error("Detected a BLAME request!")
 
 				blameRoundID := int32(binary.BigEndian.Uint32(upstreamPlaintext[6:10]))
@@ -426,8 +425,7 @@ func (p *PriFiLibRelayInstance) upstreamPhase2b_extractPayload() error {
 				}
 
 			} else {
-				// TODO: Client found nothing
-				log.Error("Disruptive bit not found")
+				log.Lvl1("b_echo_last=", b_echo_last, "(current round:", roundID, ")")
 			}
 		}
 		upstreamPlaintext = upstreamPlaintext[1:]
@@ -609,7 +607,7 @@ func (p *PriFiLibRelayInstance) downstreamPhase1_openRoundAndSendData() error {
 		if p.relayState.BEchoFlags[p.relayState.roundManager.lastRoundClosed] == 1 {
 			previousRound := p.relayState.roundManager.lastRoundClosed - int32(p.relayState.nClients)
 			downstreamCellContent = p.relayState.LastMessageOfClients[previousRound]
-			log.Lvl1("b_echo_flag=1 on round", p.relayState.roundManager.lastRoundClosed, "retransmitting upstream of round", previousRound)
+			log.Lvl1("b_echo_last=1 on round", p.relayState.roundManager.lastRoundClosed, "retransmitting upstream of round", previousRound)
 			log.Lvl1(downstreamCellContent)
 		}
 	}

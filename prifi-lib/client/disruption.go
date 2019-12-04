@@ -4,6 +4,7 @@ import (
 	"github.com/dedis/prifi/prifi-lib/net"
 	"gopkg.in/dedis/onet.v2/log"
 	"time"
+	"bytes"
 )
 
 /*
@@ -66,5 +67,74 @@ func (p *PriFiLibClientInstance) Received_REL_ALL_REVEAL_SHARED_SECRETS(msg net.
 
 	p.messageSender.SendToRelayWithLog(toSend, "Sent secret to relay")
 	log.Lvl1("Reveling secret with trustee", msg.EntityID)
+	return nil
+}
+
+func (p *PriFiLibClientInstance) handlePossibleDisruption(msg net.REL_CLI_DOWNSTREAM_DATA) error {
+	if p.clientState.RoundNo-1 == p.clientState.MyLastRound {
+
+		if p.clientState.B_echo_last == 1 {
+			log.Lvl1("We previously set b_echo_last=1, relay retransmitted message", msg.Data)
+			// We are in the disruption protection blame protocol
+			if bytes.Equal(msg.Data, p.clientState.LastMessage) {
+				p.clientState.B_echo_last = 0
+				p.clientState.DisruptionWrongBitPosition = -1
+				log.Error("There was no disruption; the relay is lying about disruption (outside of threat model).")
+			} else {
+				log.Lvl1("We previously set b_echo_last=1, comparing messages: (only on log level 3)")
+				log.Lvl3(msg.Data)
+				log.Lvl3(p.clientState.LastMessage)
+
+				// Get the l-th bit
+				found := false
+				for index, b := range msg.Data {
+					if b != p.clientState.LastMessage[index] {
+						//Get the bit
+						for j := 0; j < 8; j++ {
+							mask := byte(1 << uint(j))
+							if (b & mask) != (p.clientState.LastMessage[index] & mask) {
+								bitPos := index*8 + (7 - j)
+
+								if (p.clientState.LastMessage[index] & mask) == 1 {
+									log.Lvl1("Bit at position", bitPos, "was a 1 toggled to 0, ignoring...")
+								} else {
+									// Found bit
+									p.clientState.DisruptionWrongBitPosition = bitPos
+									log.Lvl1("Disruptive bit position:", p.clientState.DisruptionWrongBitPosition)
+									found = true
+									break
+								}
+							}
+						}
+						if found {
+							break
+						}
+					}
+				}
+			}
+		} else {
+			p.clientState.B_echo_last = 0
+			p.clientState.DisruptionWrongBitPosition = -1
+			if len(msg.HashOfPreviousUpstreamData) != 32 {
+				log.Error("The relay did not send the hash back. This should never happen.")
+				p.clientState.B_echo_last = 1
+			} else {
+				// Getting hash sent by relay
+				hash := msg.HashOfPreviousUpstreamData
+
+				// Getting previously calculated hash
+				previousHash := p.clientState.HashFromPreviousMessage[:]
+
+				// Comparing both hashes
+				if !bytes.Equal(hash, previousHash) {
+					log.Error("Disruption protection hash comparison failed.")
+					p.clientState.B_echo_last = 1
+				} else {
+					p.clientState.B_echo_last = 0
+				}
+			}
+		}
+	}
+
 	return nil
 }
