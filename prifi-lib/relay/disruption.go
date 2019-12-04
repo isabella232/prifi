@@ -52,7 +52,7 @@ func (p *PriFiLibRelayInstance) Received_CLI_REL_DISRUPTION_REVEAL(msg net.CLI_R
 	log.Lvl1("Disruption Phase 1: Received bits from Client", msg.ClientID, "value", msg.Bits)
 
 	p.relayState.clientBitMap[msg.ClientID] = msg.Bits
-	log.Lvl1("CARLOS: Before function", p.relayState.CiphertextsHistoryClients[int32(msg.ClientID)][:10])
+	//log.Lvl1("CARLOS: Before function", p.relayState.CiphertextsHistoryClients[int32(msg.ClientID)][:10])
 
 	result := p.compareBits(msg.ClientID, msg.Bits, p.relayState.CiphertextsHistoryClients)
 	if !result {
@@ -90,7 +90,7 @@ func (p *PriFiLibRelayInstance) Received_TRU_REL_DISRUPTION_REVEAL(msg net.TRU_R
 	log.Lvl1("Disruption Phase 1: Received bits from Trustee", msg.TrusteeID, "value", msg.Bits)
 
 	p.relayState.trusteeBitMap[msg.TrusteeID] = msg.Bits
-	log.Lvl1("CARLOS: Before function", p.relayState.CiphertextsHistoryTrustees[0][:10])
+	//log.Lvl1("CARLOS: Before function", p.relayState.CiphertextsHistoryTrustees[0][:10])
 	result := p.compareBits(msg.TrusteeID, msg.Bits, p.relayState.CiphertextsHistoryTrustees)
 	if !result {
 		log.Fatal("Disruption Phase 1: Disruptor is Trustee", msg.TrusteeID, ".")
@@ -117,7 +117,7 @@ func (p *PriFiLibRelayInstance) Received_TRU_REL_DISRUPTION_REVEAL(msg net.TRU_R
 /*
 * Auxiliary function that does the check of the bits revealed with the bit in the disruptive position.
  */
-func (p *PriFiLibRelayInstance) compareBits(id int, bits map[int]int, CiphertextsHistory map[int32][][]byte) bool {
+func (p *PriFiLibRelayInstance) compareBits(id int, bits map[int]int, CiphertextsHistory map[int32]map[int32][]byte) bool {
 	round := p.relayState.blamingData[0]
 	bitPosition := p.relayState.blamingData[1]
 	bytePosition := bitPosition/8 + 9 // LB->CV: why + 9 ? avoid magic numbers :)

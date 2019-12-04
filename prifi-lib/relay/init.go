@@ -174,8 +174,8 @@ type RelayState struct {
 	//disruption protection
 	LastMessageOfClients       			   map[int32][]byte
 	BEchoFlags                 			   map[int32]byte
-	CiphertextsHistoryTrustees 			   map[int32][][]byte
-	CiphertextsHistoryClients              map[int32][][]byte
+	CiphertextsHistoryTrustees 			   map[int32]map[int32][]byte
+	CiphertextsHistoryClients              map[int32]map[int32][]byte
 	DisruptionReveal           	     	   bool
 	clientBitMap               			   map[int]map[int]int
 	trusteeBitMap              			   map[int]map[int]int

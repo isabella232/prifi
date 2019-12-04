@@ -149,8 +149,15 @@ func (p *PriFiLibRelayInstance) Received_ALL_ALL_PARAMETERS(msg net.ALL_ALL_PARA
 	p.relayState.OpenClosedSlotsRequestsRoundID = make(map[int32]bool)
 	p.relayState.LastMessageOfClients = make(map[int32][]byte)
 	p.relayState.BEchoFlags = make(map[int32]byte)
-	p.relayState.CiphertextsHistoryTrustees = make(map[int32][][]byte)
-	p.relayState.CiphertextsHistoryClients = make(map[int32][][]byte)
+	p.relayState.CiphertextsHistoryTrustees = make(map[int32]map[int32][]byte)
+	p.relayState.CiphertextsHistoryClients = make(map[int32]map[int32][]byte)
+	//CV->LB: Is this the proper way to initialize this?
+	for i := int32(0); i < int32(nClients); i++{
+		p.relayState.CiphertextsHistoryClients[i] = make(map[int32][]byte)
+	}
+	for j := int32(0); j < int32(nTrustees); j++{
+		p.relayState.CiphertextsHistoryTrustees[j] = make(map[int32][]byte)
+	}
 	switch dcNetType {
 	case "Verifiable":
 		panic("Verifiable DCNet not implemented yet")
@@ -223,7 +230,7 @@ If we finished a round (we had collected all data, and called DecodeCell()), we 
 Either we send something from the SOCKS/VPN buffer, or we answer the latency-test message if we received any, or we send 1 bit.
 */
 func (p *PriFiLibRelayInstance) Received_CLI_REL_UPSTREAM_DATA(msg net.CLI_REL_UPSTREAM_DATA) error {
-	p.relayState.CiphertextsHistoryClients[int32(msg.ClientID)] = append(p.relayState.CiphertextsHistoryClients[int32(msg.ClientID)], msg.Data)
+	p.relayState.CiphertextsHistoryClients[int32(msg.ClientID)][msg.RoundID] = msg.Data
 	//CARLOS TODO: CLEAN HISTORY
 	p.relayState.roundManager.AddClientCipher(msg.RoundID, msg.ClientID, msg.Data)
 	if p.relayState.roundManager.HasAllCiphersForCurrentRound() {
@@ -239,7 +246,7 @@ If it's for this round, we call decode on it, and remember we received it.
 If for a future round we need to Buffer it.
 */
 func (p *PriFiLibRelayInstance) Received_TRU_REL_DC_CIPHER(msg net.TRU_REL_DC_CIPHER) error {
-	p.relayState.CiphertextsHistoryTrustees[int32(msg.TrusteeID)] = append(p.relayState.CiphertextsHistoryTrustees[int32(msg.TrusteeID)], msg.Data)
+	p.relayState.CiphertextsHistoryTrustees[int32(msg.TrusteeID)][msg.RoundID] = msg.Data
 	//CARLOS TODO: CLEAN HISTORY
 	p.relayState.roundManager.AddTrusteeCipher(msg.RoundID, msg.TrusteeID, msg.Data)
 	if p.relayState.roundManager.HasAllCiphersForCurrentRound() {
