@@ -28,8 +28,6 @@ func (p *PriFiLibClientInstance) Received_REL_ALL_DISRUPTION_REVEAL(msg net.REL_
 	if p.clientState.ForceDisruptionSinceRound3 && p.clientState.ID == 0 {
 		log.Lvl1("Disruption: Malicious client cheating again, old value", bitMap, "(new value right below)")
 		trusteeToAccuse := 0
-		// pretend the PRG told me to output a 1, and the trustee is lying with its 0
-		// CV->LB: This operation is the apropiate? Whatever the value is it will change?
 		if bitMap[trusteeToAccuse] == 0 {
 			bitMap[trusteeToAccuse] = 1
 		}else{

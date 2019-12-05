@@ -190,9 +190,8 @@ type RelayState struct {
 	DisruptionReveal           	     	   bool
 	clientBitMap               			   map[int]map[int]int
 	trusteeBitMap              			   map[int]map[int]int
-	//blamingData                			   []int //[round#, bitPos, clientID, bitRevealed, trusteeID, bitRevealed]
-	// CARLOS: CLEAN
 	blamingData							   BlamingData
+	
 	//disruption testing
 	ForceDisruptionSinceRound3			   bool
 

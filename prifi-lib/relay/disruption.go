@@ -52,7 +52,6 @@ func (p *PriFiLibRelayInstance) Received_CLI_REL_DISRUPTION_REVEAL(msg net.CLI_R
 	log.Lvl1("Disruption Phase 1: Received bits from Client", msg.ClientID, "value", msg.Bits)
 
 	p.relayState.clientBitMap[msg.ClientID] = msg.Bits
-	//log.Lvl1("CARLOS: Before function", p.relayState.CiphertextsHistoryClients[int32(msg.ClientID)][:10])
 
 	result := p.compareBits(msg.ClientID, msg.Bits, p.relayState.CiphertextsHistoryClients)
 	if !result {
@@ -90,7 +89,6 @@ func (p *PriFiLibRelayInstance) Received_TRU_REL_DISRUPTION_REVEAL(msg net.TRU_R
 	log.Lvl1("Disruption Phase 1: Received bits from Trustee", msg.TrusteeID, "value", msg.Bits)
 
 	p.relayState.trusteeBitMap[msg.TrusteeID] = msg.Bits
-	//log.Lvl1("CARLOS: Before function", p.relayState.CiphertextsHistoryTrustees[0][:10])
 	result := p.compareBits(msg.TrusteeID, msg.Bits, p.relayState.CiphertextsHistoryTrustees)
 	if !result {
 		log.Fatal("Disruption Phase 1: Disruptor is Trustee", msg.TrusteeID, ".")
@@ -122,10 +120,9 @@ func (p *PriFiLibRelayInstance) compareBits(id int, bits map[int]int, Ciphertext
 	bitPosition := p.relayState.blamingData.BitPos
 	bytePosition := bitPosition/8 + 9 // LB->CV: why + 9 ? avoid magic numbers :)
 
-	log.Lvl1("Disruption: comparing", bits, "with", CiphertextsHistory[int32(id)][int32(round)])//CARLOS: change back to lvl2
+	log.Lvl2("Disruption: comparing", bits, "with", CiphertextsHistory[int32(id)][int32(round)])
 
 	byteToGet := CiphertextsHistory[int32(id)][int32(round)][bytePosition]
-	log.Lvl1("CARLOS: Byte to get", byteToGet)
 	bitInBytePosition := (8-bitPosition%8)%8 - 1
 	mask := byte(1 << uint(bitInBytePosition))
 	result := 0

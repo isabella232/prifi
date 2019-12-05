@@ -504,7 +504,6 @@ func (p *PriFiLibClientInstance) SendUpstreamData(ownerSlotID int) error {
 
 	upstreamCell := p.clientState.DCNet.EncodeForRound(p.clientState.RoundNo, slotOwner, payload)
 
-	log.Lvl1("CARLOS", p.clientState.RoundNo)
 	if p.clientState.ID == 0 && p.clientState.ForceDisruptionSinceRound3 && p.clientState.RoundNo > 3 && !slotOwner{
 		// TESTING DISRUPTION
 		log.Error("Pre-disruption", upstreamCell)

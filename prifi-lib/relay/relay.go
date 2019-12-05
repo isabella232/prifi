@@ -392,10 +392,8 @@ func (p *PriFiLibRelayInstance) upstreamPhase2b_extractPayload() error {
 		p.relayState.BEchoFlags[roundID] = b_echo_last
 		p.relayState.DisruptionReveal = false
 		previousRound := roundID - int32(p.relayState.nClients)
-		log.Lvl1("HERE1")
-		if b_echo_last == 1 {
-			log.Lvl1("HERE2")
 
+		if b_echo_last == 1 {
 			if len(upstreamPlaintext) > 13 && string(upstreamPlaintext[1:6]) == "BLAME" {
 				log.Error("Detected a BLAME request!")
 

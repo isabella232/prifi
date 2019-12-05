@@ -194,9 +194,6 @@ It returns the new round number (previous + 1).
 */
 func sendData(p *PriFiLibTrusteeInstance, roundID int32) (int32, error) {
 	data := p.trusteeState.DCNet.TrusteeEncodeForRound(roundID)
-	if roundID < 10 {
-		log.Lvl1("CARLOS: Sending in round", roundID, "data",  data)
-	}
 	//send the data
 	toSend := &net.TRU_REL_DC_CIPHER{
 		RoundID:   roundID,
