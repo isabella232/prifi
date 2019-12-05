@@ -68,7 +68,7 @@ func (p *PriFiLibRelayInstance) Received_CLI_REL_DISRUPTION_REVEAL(msg net.CLI_R
 			}
 			p.messageSender.SendToTrusteeWithLog(p.relayState.blamingData.ClientID, toTrustee, "")
 			p.messageSender.SendToClientWithLog(p.relayState.blamingData.TrusteeID, toClient, "")
-		}else{
+		} else {
 			log.Fatal("Disruption Phase 2: No mismatching pairs ? this should never occur.")
 		}
 	}
@@ -104,7 +104,7 @@ func (p *PriFiLibRelayInstance) Received_TRU_REL_DISRUPTION_REVEAL(msg net.TRU_R
 			}
 			p.messageSender.SendToTrusteeWithLog(p.relayState.blamingData.ClientID, toTrustee, "")
 			p.messageSender.SendToClientWithLog(p.relayState.blamingData.TrusteeID, toClient, "")
-		}else{
+		} else {
 			log.Fatal("Disruption Phase 2: No mismatching pairs ? this should never occur.")
 		}
 	}
@@ -143,7 +143,7 @@ func (p *PriFiLibRelayInstance) compareBits(id int, bits map[int]int, Ciphertext
 * the relay checks the bits between pairsof trustees and clients.
 * When a mismatch is found, the Reveal secret message is called to the client and trustee.
  */
-func (p *PriFiLibRelayInstance) checkMismatchingPairs() bool{
+func (p *PriFiLibRelayInstance) checkMismatchingPairs() bool {
 	for clientID, clientBits := range p.relayState.clientBitMap {
 		for trusteeID, clientBit := range clientBits {
 			trusteeBit := p.relayState.trusteeBitMap[trusteeID][clientID]

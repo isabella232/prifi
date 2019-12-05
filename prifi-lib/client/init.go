@@ -72,7 +72,7 @@ type ClientState struct {
 	EquivocationProtectionEnabled bool
 
 	// TEST DISRUPTION
-	ForceDisruptionSinceRound3	  bool
+	ForceDisruptionSinceRound3 bool
 
 	//concurrent stuff
 	RoundNo           int32

@@ -33,7 +33,6 @@ import (
 	"go.dedis.ch/kyber"
 	"go.dedis.ch/onet/log"
 
-	
 	"crypto/hmac"
 	"crypto/sha256"
 	"github.com/dedis/prifi/prifi-lib/dcnet"
@@ -504,7 +503,7 @@ func (p *PriFiLibClientInstance) SendUpstreamData(ownerSlotID int) error {
 
 	upstreamCell := p.clientState.DCNet.EncodeForRound(p.clientState.RoundNo, slotOwner, payload)
 
-	if p.clientState.ID == 0 && p.clientState.ForceDisruptionSinceRound3 && p.clientState.RoundNo > 3 && !slotOwner{
+	if p.clientState.ID == 0 && p.clientState.ForceDisruptionSinceRound3 && p.clientState.RoundNo > 3 && !slotOwner {
 		// TESTING DISRUPTION
 		log.Error("Pre-disruption", upstreamCell)
 		upstreamCell[len(upstreamCell)-1]++ // only disrupt a 0->1. if there was already a 1, no disruption (this simplifies things)

@@ -121,12 +121,12 @@ type NodeRepresentation struct {
 // BlamingData is a struct used in the blame phase of the disruption protection.
 // [round#, bitPos, clientID, bitRevealed, trusteeID, bitRevealed]
 type BlamingData struct {
-	RoundID 			int32
-	BitPos 				int
-	ClientID 			int
-	ClientBitRevealed 	int
-	TrusteeID			int
-	TrusteeBitRevealed  int
+	RoundID            int32
+	BitPos             int
+	ClientID           int
+	ClientBitRevealed  int
+	TrusteeID          int
+	TrusteeBitRevealed int
 }
 
 // RelayState contains the mutable state of the relay.
@@ -183,17 +183,17 @@ type RelayState struct {
 	processingLock sync.Mutex // either we treat a message, or a timeout, never both
 
 	//disruption protection
-	LastMessageOfClients       			   map[int32][]byte
-	BEchoFlags                 			   map[int32]byte
-	CiphertextsHistoryTrustees 			   map[int32]map[int32][]byte
-	CiphertextsHistoryClients              map[int32]map[int32][]byte
-	DisruptionReveal           	     	   bool
-	clientBitMap               			   map[int]map[int]int
-	trusteeBitMap              			   map[int]map[int]int
-	blamingData							   BlamingData
-	
+	LastMessageOfClients       map[int32][]byte
+	BEchoFlags                 map[int32]byte
+	CiphertextsHistoryTrustees map[int32]map[int32][]byte
+	CiphertextsHistoryClients  map[int32]map[int32][]byte
+	DisruptionReveal           bool
+	clientBitMap               map[int]map[int]int
+	trusteeBitMap              map[int]map[int]int
+	blamingData                BlamingData
+
 	//disruption testing
-	ForceDisruptionSinceRound3			   bool
+	ForceDisruptionSinceRound3 bool
 
 	//Used for verifiable DC-net, part of the dcnet.old/owned.go
 	VerifiableDCNetKeys [][]byte

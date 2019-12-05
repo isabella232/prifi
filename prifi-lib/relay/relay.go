@@ -151,10 +151,10 @@ func (p *PriFiLibRelayInstance) Received_ALL_ALL_PARAMETERS(msg net.ALL_ALL_PARA
 	p.relayState.CiphertextsHistoryTrustees = make(map[int32]map[int32][]byte)
 	p.relayState.CiphertextsHistoryClients = make(map[int32]map[int32][]byte)
 	//CV->LB: Is this the proper way to initialize this?
-	for i := int32(0); i < int32(nClients); i++{
+	for i := int32(0); i < int32(nClients); i++ {
 		p.relayState.CiphertextsHistoryClients[i] = make(map[int32][]byte)
 	}
-	for j := int32(0); j < int32(nTrustees); j++{
+	for j := int32(0); j < int32(nTrustees); j++ {
 		p.relayState.CiphertextsHistoryTrustees[j] = make(map[int32][]byte)
 	}
 	switch dcNetType {

@@ -1,10 +1,10 @@
 package client
 
 import (
+	"bytes"
 	"github.com/dedis/prifi/prifi-lib/net"
 	"gopkg.in/dedis/onet.v2/log"
 	"time"
-	"bytes"
 )
 
 /*
@@ -24,13 +24,12 @@ func (p *PriFiLibClientInstance) Received_REL_ALL_DISRUPTION_REVEAL(msg net.REL_
 		Bits:     bitMap,
 	}
 
-
 	if p.clientState.ForceDisruptionSinceRound3 && p.clientState.ID == 0 {
 		log.Lvl1("Disruption: Malicious client cheating again, old value", bitMap, "(new value right below)")
 		trusteeToAccuse := 0
 		if bitMap[trusteeToAccuse] == 0 {
 			bitMap[trusteeToAccuse] = 1
-		}else{
+		} else {
 			bitMap[trusteeToAccuse] = 0
 		}
 	}
@@ -55,7 +54,6 @@ func (p *PriFiLibClientInstance) Received_REL_ALL_REVEAL_SHARED_SECRETS(msg net.
 		Secret:    secret,
 		NIZK:      make([]byte, 0)}
 
-	
 	if p.clientState.ForceDisruptionSinceRound3 && p.clientState.ID == 0 {
 		//this client is hesitant to answer as he will get caught
 		//CV->LB: How do we handle this in the relay?
