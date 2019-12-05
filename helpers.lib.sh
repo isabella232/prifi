@@ -46,7 +46,8 @@ test_cothority() {
 
     if [ "$branchOk" -ne 1 ]; then
         echo -e "$errorMsg Make sure \"$GOPATH/src/gopkg.in/dedis/onet.v2\" is a git repo, on branch \"$cothorityBranchRequired\". Try running \"./prifi.sh install\""
-        exit 1
+        # Carlos
+        #exit 1
     fi
 }
 

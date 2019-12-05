@@ -229,6 +229,10 @@ If we finished a round (we had collected all data, and called DecodeCell()), we 
 Either we send something from the SOCKS/VPN buffer, or we answer the latency-test message if we received any, or we send 1 bit.
 */
 func (p *PriFiLibRelayInstance) Received_CLI_REL_UPSTREAM_DATA(msg net.CLI_REL_UPSTREAM_DATA) error {
+	// CV-LB: I am not sure if this is a good programing practice...
+	if p.relayState.CiphertextsHistoryClients[int32(msg.ClientID)] == nil {
+		p.relayState.CiphertextsHistoryClients[int32(msg.ClientID)] = make(map[int32][]byte)
+	}
 	p.relayState.CiphertextsHistoryClients[int32(msg.ClientID)][msg.RoundID] = msg.Data
 	//CARLOS TODO: CLEAN HISTORY
 	p.relayState.roundManager.AddClientCipher(msg.RoundID, msg.ClientID, msg.Data)
@@ -245,6 +249,9 @@ If it's for this round, we call decode on it, and remember we received it.
 If for a future round we need to Buffer it.
 */
 func (p *PriFiLibRelayInstance) Received_TRU_REL_DC_CIPHER(msg net.TRU_REL_DC_CIPHER) error {
+	if p.relayState.CiphertextsHistoryTrustees[int32(msg.TrusteeID)] == nil {
+		p.relayState.CiphertextsHistoryTrustees[int32(msg.TrusteeID)] = make(map[int32][]byte)
+	}
 	p.relayState.CiphertextsHistoryTrustees[int32(msg.TrusteeID)][msg.RoundID] = msg.Data
 	//CARLOS TODO: CLEAN HISTORY
 	p.relayState.roundManager.AddTrusteeCipher(msg.RoundID, msg.TrusteeID, msg.Data)
