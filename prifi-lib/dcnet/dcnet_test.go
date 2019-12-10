@@ -124,7 +124,11 @@ func SimulateRounds(t *testing.T, tg *TestGroup, maxRounds int32) {
 		clientMessages := make([][]byte, 0)
 		trusteesMessages := make([][]byte, 0)
 		first := true
-		message := randomBytes(d.DCNetPayloadSize)
+		dcNetPayloadSize := d.DCNetPayloadSize
+		if d.EquivocationProtectionEnabled {
+			dcNetPayloadSize -= 16
+		}
+		message := randomBytes(dcNetPayloadSize)
 
 		downstreamMessage := randomBytes(d.DCNetPayloadSize) //used only to update the history
 		for i := range tg.Clients {

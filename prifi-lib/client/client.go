@@ -358,6 +358,13 @@ func (p *PriFiLibClientInstance) SendUpstreamData(ownerSlotID int) error {
 
 	var upstreamCellContent []byte
 
+	//if we can send data
+	slotOwner := false
+	if ownerSlotID == p.clientState.MySlot {
+		slotOwner = true
+		p.clientState.MyLastRound = p.clientState.RoundNo
+	}
+
 	//how much data we can send
 	actualPayloadSize := p.clientState.PayloadSize
 	if p.clientState.DisruptionProtectionEnabled {
@@ -367,13 +374,14 @@ func (p *PriFiLibClientInstance) SendUpstreamData(ownerSlotID int) error {
 			log.Fatal("Client", p.clientState.ID, "Cannot have disruption protection with less than 1 bytes payload")
 		}
 	}
-
-	//if we can send data
-	slotOwner := false
-	if ownerSlotID == p.clientState.MySlot {
-		slotOwner = true
-		p.clientState.MyLastRound = p.clientState.RoundNo
+	if p.clientState.EquivocationProtectionEnabled && slotOwner {
+		// Making room for the
+		actualPayloadSize -= 16
+		if actualPayloadSize <= 0 {
+			log.Fatal("Client", p.clientState.ID, "Cannot have equivocation protection with less than 16 bytes payload")
+		}
 	}
+
 	if slotOwner {
 
 		//this data has already been polled out of the DataForDCNet chan, so send it first
@@ -480,7 +488,7 @@ func (p *PriFiLibClientInstance) SendUpstreamData(ownerSlotID int) error {
 				// Creating hash
 				hash = sha256.Sum256(payload_to_hash)
 			} else {
-
+				// CARLOS TODO: CHECK IT FITS
 				upstreamCellContent[3] = byte(p.clientState.ID)
 				// Saving data for possible disruption
 				p.clientState.LastMessage = upstreamCellContent
@@ -615,11 +623,19 @@ func (p *PriFiLibClientInstance) Received_REL_CLI_TELL_EPH_PKS_AND_TRUSTEES_SIG(
 	log.Lvl3("Client", p.clientState.ID, "ready to communicate.")
 
 	//produce a blank cell (we could embed data, but let's keep the code simple, one wasted message is not much)
-	data := make([]byte, p.clientState.PayloadSize)
 	slotOwner := false
+	if p.clientState.ID == 0 {
+		slotOwner = true // we need one guy that takes the responsability for this first slot
+	}
+	payloadSize := p.clientState.PayloadSize
+
+	if p.clientState.EquivocationProtectionEnabled && slotOwner {
+		payloadSize -= 16
+	}
+	data := make([]byte, payloadSize)
 	if p.clientState.DisruptionProtectionEnabled {
 		// Making space for the b_echo_last
-		data2 := make([]byte, p.clientState.PayloadSize-1)
+		data2 := make([]byte, payloadSize-1)
 
 		// Saving data for possible disruption
 		p.clientState.LastMessage = data2
@@ -636,12 +652,8 @@ func (p *PriFiLibClientInstance) Received_REL_CLI_TELL_EPH_PKS_AND_TRUSTEES_SIG(
 		slice_b_echo_last[0] = b_echo_last
 		data = append(slice_b_echo_last, data2...)
 	}
-	if p.clientState.ID == 0 {
-		slotOwner = true // we need one guy that takes the responsability for this first slot
-	}
 
 	upstreamCell := p.clientState.DCNet.EncodeForRound(0, slotOwner, data)
-
 	//send the data to the relay
 	toSend := &net.CLI_REL_UPSTREAM_DATA{
 		ClientID: p.clientState.ID,

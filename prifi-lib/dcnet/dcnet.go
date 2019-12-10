@@ -223,7 +223,11 @@ func (e *DCNetEntity) clientEncode(slotOwner bool, payload []byte) *DCNetCipher 
 		payload = make([]byte, e.DCNetPayloadSize)
 	} else {
 		// deep clone and pad
-		payload2 := make([]byte, e.DCNetPayloadSize)
+		dcnetPayloadSize := e.DCNetPayloadSize
+		if e.EquivocationProtectionEnabled && slotOwner {
+			dcnetPayloadSize -= 16
+		}
+		payload2 := make([]byte, dcnetPayloadSize)
 		copy(payload2[0:len(payload)], payload)
 		payload = payload2
 	}
