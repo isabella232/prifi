@@ -10,7 +10,7 @@
 #           <github.com/dedis/prifi>
 # ************************************
 
-# variables that you might change often
+# variables that you might change often 
 
 dbg_lvl=3                       # 1=less verbose, 3=more verbose. goes up to 5, but then prints the SDA's message (network framework)
 colors="true"                   # if  "false", the output of PriFi (and this script) will be in black-n-white
