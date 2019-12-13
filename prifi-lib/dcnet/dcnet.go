@@ -395,12 +395,12 @@ func (e *DCNetEntity) DecodeTrustee(roundID int32, slice []byte) {
 }
 
 // Called on the relay to decode the cell, after having stored the cryptographic materials
-func (e *DCNetEntity) DecodeCell() []byte {
+func (e *DCNetEntity) DecodeCell(isOpenClosedSlot bool) []byte {
 	//No Equivocation -> just XOR
 	d := e.DCNetRoundDecoder
 
 	decoded := d.xorBuffer
-	if e.EquivocationProtectionEnabled {
+	if e.EquivocationProtectionEnabled && !isOpenClosedSlot {
 		decoded = e.equivocationProtection.RelayDecode(d.xorBuffer, d.equivTrusteeContribs, d.equivClientContribs)
 	}
 

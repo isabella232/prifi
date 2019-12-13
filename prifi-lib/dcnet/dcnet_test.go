@@ -164,7 +164,7 @@ func SimulateRounds(t *testing.T, tg *TestGroup, maxRounds int32) {
 			tg.Relay.DCNetEntity.DecodeTrustee(roundID, m)
 		}
 
-		output := tg.Relay.DCNetEntity.DecodeCell()
+		output := tg.Relay.DCNetEntity.DecodeCell(false)
 
 		//fmt.Println("-----------------")
 		//fmt.Println(output)

@@ -7,7 +7,7 @@ import (
 	"strconv"
 )
 
-const defaultBugLevel = 3
+const defaultBugLevel = 1
 const defaultPort = 8090
 
 var onetDebugLevels = []int{1, 2, 3, 4, 5}

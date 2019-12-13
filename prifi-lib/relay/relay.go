@@ -343,7 +343,7 @@ func (p *PriFiLibRelayInstance) upstreamPhase2a_extractOCMap(roundID int32) erro
 	}
 
 	//here we have the plaintext map
-	openClosedData := p.relayState.DCNet.DecodeCell()
+	openClosedData := p.relayState.DCNet.DecodeCell(true)
 
 	//compute the map
 	newSchedule := p.relayState.slotScheduler.Relay_ComputeFinalSchedule(openClosedData, p.relayState.nClients)
@@ -388,7 +388,7 @@ func (p *PriFiLibRelayInstance) upstreamPhase2b_extractPayload() error {
 	for _, s := range trusteesSlices {
 		p.relayState.DCNet.DecodeTrustee(roundID, s)
 	}
-	upstreamPlaintext := p.relayState.DCNet.DecodeCell()
+	upstreamPlaintext := p.relayState.DCNet.DecodeCell(false)
 
 	p.relayState.bitrateStatistics.AddUpstreamCell(int64(len(upstreamPlaintext)))
 
