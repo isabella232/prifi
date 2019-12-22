@@ -191,6 +191,7 @@ type RelayState struct {
 	clientBitMap               map[int]map[int]int
 	trusteeBitMap              map[int]map[int]int
 	blamingData                BlamingData
+	EphemeralPublicKeys        []kyber.Point
 
 	//disruption testing
 	ForceDisruptionSinceRound3 bool
@@ -208,7 +209,6 @@ func (p *PriFiLibRelayInstance) ReceivedMessage(msg interface{}) error {
 	defer p.relayState.processingLock.Unlock()
 
 	var err error
-
 	switch typedMsg := msg.(type) {
 	case net.ALL_ALL_PARAMETERS:
 		if typedMsg.ForceParams || p.stateMachine.AssertState("BEFORE_INIT") {
@@ -259,6 +259,10 @@ func (p *PriFiLibRelayInstance) ReceivedMessage(msg interface{}) error {
 	case net.TRU_REL_SHUFFLE_SIG:
 		if p.stateMachine.AssertState("COLLECTING_SHUFFLE_SIGNATURES") {
 			err = p.Received_TRU_REL_SHUFFLE_SIG(typedMsg)
+		}
+	case net.CLI_REL_DISRUPTION_BLAME:
+		if p.stateMachine.AssertState("COMMUNICATING") {
+			err = p.Received_CLI_REL_DISRUPTION_BLAME(typedMsg)
 		}
 	default:
 		err = errors.New("Unrecognized message, type" + reflect.TypeOf(msg).String())

@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"github.com/dedis/prifi/prifi-lib/net"
 	"gopkg.in/dedis/onet.v2/log"
+	"go.dedis.ch/kyber/proof"
+	"github.com/dedis/prifi/prifi-lib/config"
 	"time"
 )
 
@@ -16,6 +18,26 @@ func (p *PriFiLibClientInstance) Received_REL_ALL_DISRUPTION_REVEAL(msg net.REL_
 	log.Lvl1("Disruption Phase 1: Received de-anonymization query for round", msg.RoundID, "bit pos", msg.BitPos)
 
 	// TODO: check the NIZK
+	//CALROS
+	pred := proof.Rep("X", "x", "B")
+	suite := config.CryptoSuite
+	//B := suite.Point().Base()
+	/*for _, key := range(p.relayState.EphemeralPublicKeys) {
+		pval := map[string]kyber.Point{"B": B, "X": key}
+		verifier := pred.Verifier(suite, pval)
+		err := proof.HashVerify(suite, "DISRUPTION", verifier, msg.NIZK)
+		if err != nil {
+			log.Lvl1("Proof failed to verify: ", key)
+			continue
+		}
+		log.Lvl1("Proof verified.", key)
+	}*/
+	verifier := pred.Verifier(suite, msg.Pval)
+	err := proof.HashVerify(suite, "DISRUPTION", verifier, msg.NIZK)
+	if err != nil {
+		log.Lvl1("Proof failed to verify: ")
+	}
+	log.Lvl1("Proof verified.")
 
 	bitMap := p.clientState.DCNet.GetBitsOfRound(int32(msg.RoundID), int32(msg.BitPos))
 	//send the data to the relay

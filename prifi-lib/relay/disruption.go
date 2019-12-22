@@ -5,19 +5,43 @@ import (
 	"github.com/dedis/prifi/prifi-lib/net"
 	"go.dedis.ch/kyber"
 	"go.dedis.ch/onet/log"
+
+	"go.dedis.ch/kyber/proof"
 	"strconv"
 )
 
 // Received_CLI_REL_BLAME
 // CARLOS NEEDS TO IMPLMENT THIS
-func (p *PriFiLibRelayInstance) Received_CLI_REL_BLAME(msg net.CLI_REL_DISRUPTION_BLAME) error {
-
+func (p *PriFiLibRelayInstance) Received_CLI_REL_DISRUPTION_BLAME(msg net.CLI_REL_DISRUPTION_BLAME) error {
 	// TODO: Check NIZK
-	p.stateMachine.ChangeState("BLAMING")
+	pred := proof.Rep("X", "x", "B")
+	suite := config.CryptoSuite
+	//B := suite.Point().Base()
+	/*for _, key := range(p.relayState.EphemeralPublicKeys) {
+		pval := map[string]kyber.Point{"B": B, "X": key}
+		verifier := pred.Verifier(suite, pval)
+		err := proof.HashVerify(suite, "DISRUPTION", verifier, msg.NIZK)
+		if err != nil {
+			log.Lvl1("Proof failed to verify: ", key)
+			continue
+		}
+		log.Lvl1("Proof verified.", key)
+	}*/
+	verifier := pred.Verifier(suite, msg.Pval)
+	err := proof.HashVerify(suite, "DISRUPTION", verifier, msg.NIZK)
+	if err != nil {
+		log.Lvl1("Proof failed to verify: ")
+	}
+	log.Lvl1("Proof verified.")
+	
+	// CARLOS TODO: p.stateMachine.ChangeState("BLAMING")
 
 	toSend := &net.REL_ALL_DISRUPTION_REVEAL{
 		RoundID: msg.RoundID,
-		BitPos:  msg.BitPos}
+		BitPos:  msg.BitPos,
+		Pval: 	 msg.Pval,
+		NIZK: 	 msg.NIZK,
+	}
 
 	p.relayState.blamingData.RoundID = msg.RoundID
 	p.relayState.blamingData.BitPos = msg.BitPos

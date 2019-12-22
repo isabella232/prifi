@@ -266,12 +266,15 @@ type CLI_REL_DISRUPTION_BLAME struct {
 	RoundID int32
 	NIZK    []byte
 	BitPos  int
+	Pval    map[string]kyber.Point
 }
 
 // REL_ALL_DISRUPTION_REVEAL contains a disrupted roundID and the position where a bit was flipped, and is sent by the relay
 type REL_ALL_DISRUPTION_REVEAL struct {
 	RoundID int32
 	BitPos  int
+	NIZK    []byte
+	Pval    map[string]kyber.Point
 }
 
 // CLI_REL_DISRUPTION_REVEAL contains a map with individual bits to find a disruptor, and is sent to the relay

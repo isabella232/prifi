@@ -22,7 +22,6 @@ package client
  */
 
 import (
-	"encoding/binary"
 	"errors"
 	"strconv"
 
@@ -39,6 +38,7 @@ import (
 	"github.com/dedis/prifi/prifi-lib/scheduler"
 	"github.com/dedis/prifi/prifi-lib/utils"
 	"github.com/dedis/prifi/utils"
+	"go.dedis.ch/kyber/proof"
 	"math/rand"
 	"time"
 )
@@ -464,17 +464,32 @@ func (p *PriFiLibClientInstance) SendUpstreamData(ownerSlotID int) error {
 	if p.clientState.DisruptionProtectionEnabled && slotOwner {
 		// If we are in blame part and checking the previous message
 		if p.clientState.DisruptionWrongBitPosition != -1 {
-
 			// TODO => there should be a NIZK here proving the ownership of the slot
 
-			blameRoundID := p.clientState.RoundNo - int32(p.clientState.nClients) // TODO: THIS IS WRONG
-			buffer := make([]byte, 5+8)
-			binary.BigEndian.PutUint32(buffer[5:9], uint32(blameRoundID))
-			binary.BigEndian.PutUint32(buffer[9:13], uint32(p.clientState.DisruptionWrongBitPosition))
-			copy(buffer[0:5], "BLAME")
+			blameRoundID := p.clientState.RoundNo - int32(p.clientState.nClients) 
 
-			upstreamCellContent = buffer
+			pred := proof.Rep("X", "x", "B")
+			suite := config.CryptoSuite
+			B := suite.Point().Base()
+			sval := map[string]kyber.Scalar{"x": p.clientState.ephemeralPrivateKey}
+			pval := map[string]kyber.Point{"B": B, "X": p.clientState.EphemeralPublicKey}
+			prover := pred.Prover(suite, sval, pval, nil)
+			NIZK, _ := proof.HashProve(suite, "DISRUPTION", prover)
+			
+			//send the data to the relay
+			toSend := &net.CLI_REL_DISRUPTION_BLAME{
+				BitPos: p.clientState.DisruptionWrongBitPosition,
+				RoundID: blameRoundID,
+				NIZK: NIZK,
+				Pval: pval,
+			}
+			
 			log.Lvl1("Disruption: Attempting to transmit blame for round", blameRoundID, p.clientState.DisruptionWrongBitPosition)
+
+			p.messageSender.SendToRelayWithLog(toSend, "(round "+strconv.Itoa(int(p.clientState.RoundNo))+")")
+
+
+			return nil
 		} else {
 			// Making and storing HASH
 			var hash [32]byte
@@ -592,11 +607,10 @@ As the client should send the first data, we do so; to keep this function simple
 "round function", that is Received_REL_CLI_DOWNSTREAM_DATA().
 */
 func (p *PriFiLibClientInstance) Received_REL_CLI_TELL_EPH_PKS_AND_TRUSTEES_SIG(msg net.REL_CLI_TELL_EPH_PKS_AND_TRUSTEES_SIG) error {
-
 	//verify the signature
 	neff := new(scheduler.NeffShuffle)
 	mySlot, err := neff.ClientVerifySigAndRecognizeSlot(p.clientState.ephemeralPrivateKey, p.clientState.TrusteePublicKey, msg.Base, msg.EphPks, msg.GetSignatures())
-
+	p.clientState.EphemeralPublicKeys = msg.EphPks
 	if err != nil {
 		e := "Client " + strconv.Itoa(p.clientState.ID) + "; Can't recognize our slot ! err is " + err.Error()
 		log.Error(e)

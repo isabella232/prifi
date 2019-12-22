@@ -806,7 +806,7 @@ func (p *PriFiLibRelayInstance) Received_TRU_REL_TELL_NEW_BASE_AND_EPH_PKS(msg n
 
 	p.relayState.VerifiableDCNetKeys[p.relayState.nVkeysCollected] = msg.VerifiableDCNetKey
 	p.relayState.nVkeysCollected++
-
+	p.relayState.EphemeralPublicKeys = msg.NewEphPks
 	done, err := p.relayState.neffShuffle.ReceivedShuffleFromTrustee(msg.NewBase, msg.NewEphPks, msg.Proof)
 	if err != nil {
 		e := "Relay : error in p.relayState.neffShuffle.ReceivedShuffleFromTrustee " + err.Error()
@@ -883,7 +883,6 @@ func (p *PriFiLibRelayInstance) Received_TRU_REL_SHUFFLE_SIG(msg net.TRU_REL_SHU
 		log.Error(e)
 		return errors.New(e)
 	}
-
 	// if we have all the signatures
 	if done {
 		trusteesPks := make([]kyber.Point, p.relayState.nTrustees)
