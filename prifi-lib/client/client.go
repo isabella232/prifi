@@ -466,7 +466,7 @@ func (p *PriFiLibClientInstance) SendUpstreamData(ownerSlotID int) error {
 		if p.clientState.DisruptionWrongBitPosition != -1 {
 			// TODO => there should be a NIZK here proving the ownership of the slot
 
-			blameRoundID := p.clientState.RoundNo - int32(p.clientState.nClients) 
+			blameRoundID := p.clientState.RoundNo - int32(p.clientState.nClients)
 
 			pred := proof.Rep("X", "x", "B")
 			suite := config.CryptoSuite
@@ -475,19 +475,18 @@ func (p *PriFiLibClientInstance) SendUpstreamData(ownerSlotID int) error {
 			pval := map[string]kyber.Point{"B": B, "X": p.clientState.EphemeralPublicKey}
 			prover := pred.Prover(suite, sval, pval, nil)
 			NIZK, _ := proof.HashProve(suite, "DISRUPTION", prover)
-			
+
 			//send the data to the relay
 			toSend := &net.CLI_REL_DISRUPTION_BLAME{
-				BitPos: p.clientState.DisruptionWrongBitPosition,
+				BitPos:  p.clientState.DisruptionWrongBitPosition,
 				RoundID: blameRoundID,
-				NIZK: NIZK,
-				Pval: pval,
+				NIZK:    NIZK,
+				Pval:    pval,
 			}
-			
+
 			log.Lvl1("Disruption: Attempting to transmit blame for round", blameRoundID, p.clientState.DisruptionWrongBitPosition)
 
 			p.messageSender.SendToRelayWithLog(toSend, "(round "+strconv.Itoa(int(p.clientState.RoundNo))+")")
-
 
 			return nil
 		} else {

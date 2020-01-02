@@ -2,10 +2,10 @@ package client
 
 import (
 	"bytes"
-	"github.com/dedis/prifi/prifi-lib/net"
-	"gopkg.in/dedis/onet.v2/log"
-	"go.dedis.ch/kyber/proof"
 	"github.com/dedis/prifi/prifi-lib/config"
+	"github.com/dedis/prifi/prifi-lib/net"
+	"go.dedis.ch/kyber/proof"
+	"gopkg.in/dedis/onet.v2/log"
 	"time"
 )
 

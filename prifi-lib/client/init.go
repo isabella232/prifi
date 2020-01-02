@@ -70,7 +70,7 @@ type ClientState struct {
 	DisruptionProtectionEnabled   bool
 	LastWantToSend                time.Time
 	EquivocationProtectionEnabled bool
-	EphemeralPublicKeys			  []kyber.Point
+	EphemeralPublicKeys           []kyber.Point
 	// TEST DISRUPTION
 	ForceDisruptionSinceRound3 bool
 
