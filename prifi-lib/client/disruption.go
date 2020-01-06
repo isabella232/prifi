@@ -2,10 +2,10 @@ package client
 
 import (
 	"bytes"
-	"github.com/dedis/prifi/prifi-lib/net"
-	"gopkg.in/dedis/onet.v2/log"
-	"go.dedis.ch/kyber/proof"
 	"github.com/dedis/prifi/prifi-lib/config"
+	"github.com/dedis/prifi/prifi-lib/net"
+	"go.dedis.ch/kyber/proof"
+	"gopkg.in/dedis/onet.v2/log"
 	"time"
 )
 
@@ -17,7 +17,7 @@ import (
 func (p *PriFiLibClientInstance) Received_REL_ALL_DISRUPTION_REVEAL(msg net.REL_ALL_DISRUPTION_REVEAL) error {
 	log.Lvl1("Disruption Phase 1: Received de-anonymization query for round", msg.RoundID, "bit pos", msg.BitPos)
 
-	// TODO: check the NIZK
+	// TODO: check the proper NIZK
 	//CALROS
 	pred := proof.Rep("X", "x", "B")
 	suite := config.CryptoSuite
@@ -35,7 +35,7 @@ func (p *PriFiLibClientInstance) Received_REL_ALL_DISRUPTION_REVEAL(msg net.REL_
 	verifier := pred.Verifier(suite, msg.Pval)
 	err := proof.HashVerify(suite, "DISRUPTION", verifier, msg.NIZK)
 	if err != nil {
-		log.Lvl1("Proof failed to verify: ")
+		log.Fatal("Proof failed to verify: ")
 	}
 	log.Lvl1("Proof verified.")
 

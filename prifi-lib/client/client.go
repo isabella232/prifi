@@ -464,9 +464,7 @@ func (p *PriFiLibClientInstance) SendUpstreamData(ownerSlotID int) error {
 	if p.clientState.DisruptionProtectionEnabled && slotOwner {
 		// If we are in blame part and checking the previous message
 		if p.clientState.DisruptionWrongBitPosition != -1 {
-			// TODO => there should be a NIZK here proving the ownership of the slot
-
-			blameRoundID := p.clientState.RoundNo - int32(p.clientState.nClients) 
+			blameRoundID := p.clientState.RoundNo - int32(p.clientState.nClients)
 
 			pred := proof.Rep("X", "x", "B")
 			suite := config.CryptoSuite
@@ -475,44 +473,43 @@ func (p *PriFiLibClientInstance) SendUpstreamData(ownerSlotID int) error {
 			pval := map[string]kyber.Point{"B": B, "X": p.clientState.EphemeralPublicKey}
 			prover := pred.Prover(suite, sval, pval, nil)
 			NIZK, _ := proof.HashProve(suite, "DISRUPTION", prover)
-			
+
 			//send the data to the relay
 			toSend := &net.CLI_REL_DISRUPTION_BLAME{
-				BitPos: p.clientState.DisruptionWrongBitPosition,
+				BitPos:  p.clientState.DisruptionWrongBitPosition,
 				RoundID: blameRoundID,
-				NIZK: NIZK,
-				Pval: pval,
+				NIZK:    NIZK,
+				Pval:    pval,
 			}
-			
+
 			log.Lvl1("Disruption: Attempting to transmit blame for round", blameRoundID, p.clientState.DisruptionWrongBitPosition)
 
 			p.messageSender.SendToRelayWithLog(toSend, "(round "+strconv.Itoa(int(p.clientState.RoundNo))+")")
 
-
 			return nil
-		} else {
-			// Making and storing HASH
-			var hash [32]byte
-			if upstreamCellContent == nil {
-				// If the content is nil, some code will later change it into an empty slice. So the Hash must be from that
-				payload_to_hash := make([]byte, p.clientState.DCNet.DCNetPayloadSize-1)
-
-				// Saving data for possible disruption
-				p.clientState.LastMessage = payload_to_hash
-
-				// Creating hash
-				hash = sha256.Sum256(payload_to_hash)
-			} else {
-				// CARLOS TODO: CHECK IT FITS
-				upstreamCellContent[3] = byte(p.clientState.ID)
-				// Saving data for possible disruption
-				p.clientState.LastMessage = upstreamCellContent
-				// Creating hash
-				hash = sha256.Sum256([]byte(upstreamCellContent))
-			}
-
-			p.clientState.HashFromPreviousMessage = hash
 		}
+		// Making and storing HASH
+		var hash [32]byte
+		if upstreamCellContent == nil {
+			// If the content is nil, some code will later change it into an empty slice. So the Hash must be from that
+			payload_to_hash := make([]byte, p.clientState.DCNet.DCNetPayloadSize-1)
+
+			// Saving data for possible disruption
+			p.clientState.LastMessage = payload_to_hash
+
+			// Creating hash
+			hash = sha256.Sum256(payload_to_hash)
+		} else {
+			// CARLOS TODO: CHECK IT FITS
+			upstreamCellContent[3] = byte(p.clientState.ID)
+			// Saving data for possible disruption
+			p.clientState.LastMessage = upstreamCellContent
+			// Creating hash
+			hash = sha256.Sum256([]byte(upstreamCellContent))
+		}
+
+		p.clientState.HashFromPreviousMessage = hash
+
 	}
 
 	// Adding the b_echo_last if the disruption protection is enabled

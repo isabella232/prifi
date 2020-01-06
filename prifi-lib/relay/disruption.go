@@ -30,17 +30,17 @@ func (p *PriFiLibRelayInstance) Received_CLI_REL_DISRUPTION_BLAME(msg net.CLI_RE
 	verifier := pred.Verifier(suite, msg.Pval)
 	err := proof.HashVerify(suite, "DISRUPTION", verifier, msg.NIZK)
 	if err != nil {
-		log.Lvl1("Proof failed to verify: ")
+		log.Fatal("Proof failed to verify: ")
 	}
 	log.Lvl1("Proof verified.")
-	
+
 	// CARLOS TODO: p.stateMachine.ChangeState("BLAMING")
 
 	toSend := &net.REL_ALL_DISRUPTION_REVEAL{
 		RoundID: msg.RoundID,
 		BitPos:  msg.BitPos,
-		Pval: 	 msg.Pval,
-		NIZK: 	 msg.NIZK,
+		Pval:    msg.Pval,
+		NIZK:    msg.NIZK,
 	}
 
 	p.relayState.blamingData.RoundID = msg.RoundID
