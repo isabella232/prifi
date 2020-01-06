@@ -489,29 +489,29 @@ func (p *PriFiLibClientInstance) SendUpstreamData(ownerSlotID int) error {
 			p.messageSender.SendToRelayWithLog(toSend, "(round "+strconv.Itoa(int(p.clientState.RoundNo))+")")
 
 			return nil
-		} else {
-			// Making and storing HASH
-			var hash [32]byte
-			if upstreamCellContent == nil {
-				// If the content is nil, some code will later change it into an empty slice. So the Hash must be from that
-				payload_to_hash := make([]byte, p.clientState.DCNet.DCNetPayloadSize-1)
-
-				// Saving data for possible disruption
-				p.clientState.LastMessage = payload_to_hash
-
-				// Creating hash
-				hash = sha256.Sum256(payload_to_hash)
-			} else {
-				// CARLOS TODO: CHECK IT FITS
-				upstreamCellContent[3] = byte(p.clientState.ID)
-				// Saving data for possible disruption
-				p.clientState.LastMessage = upstreamCellContent
-				// Creating hash
-				hash = sha256.Sum256([]byte(upstreamCellContent))
-			}
-
-			p.clientState.HashFromPreviousMessage = hash
 		}
+
+		// Making and storing hash
+		var hash [32]byte
+		if upstreamCellContent == nil {
+			// If the content is nil, some code will later change it into an empty slice. So the Hash must be from that
+			payload_to_hash := make([]byte, p.clientState.DCNet.DCNetPayloadSize-1)
+
+			// Saving data for possible disruption
+			p.clientState.LastMessage = payload_to_hash
+
+			// Creating hash
+			hash = sha256.Sum256(payload_to_hash)
+		} else {
+			// CARLOS TODO: CHECK IT FITS
+			upstreamCellContent[3] = byte(p.clientState.ID)
+			// Saving data for possible disruption
+			p.clientState.LastMessage = upstreamCellContent
+			// Creating hash
+			hash = sha256.Sum256([]byte(upstreamCellContent))
+		}
+
+		p.clientState.HashFromPreviousMessage = hash
 	}
 
 	// Adding the b_echo_last if the disruption protection is enabled
