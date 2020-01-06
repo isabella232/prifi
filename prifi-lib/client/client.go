@@ -464,6 +464,8 @@ func (p *PriFiLibClientInstance) SendUpstreamData(ownerSlotID int) error {
 	if p.clientState.DisruptionProtectionEnabled && slotOwner {
 		// If we are in blame part and checking the previous message
 		if p.clientState.DisruptionWrongBitPosition != -1 {
+			// TODO => there should be a NIZK here proving the ownership of the slot
+
 			blameRoundID := p.clientState.RoundNo - int32(p.clientState.nClients)
 
 			pred := proof.Rep("X", "x", "B")
@@ -488,7 +490,8 @@ func (p *PriFiLibClientInstance) SendUpstreamData(ownerSlotID int) error {
 
 			return nil
 		}
-		// Making and storing HASH
+
+		// Making and storing hash
 		var hash [32]byte
 		if upstreamCellContent == nil {
 			// If the content is nil, some code will later change it into an empty slice. So the Hash must be from that
@@ -509,7 +512,6 @@ func (p *PriFiLibClientInstance) SendUpstreamData(ownerSlotID int) error {
 		}
 
 		p.clientState.HashFromPreviousMessage = hash
-
 	}
 
 	// Adding the b_echo_last if the disruption protection is enabled
