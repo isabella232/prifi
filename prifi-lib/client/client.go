@@ -103,6 +103,9 @@ func (p *PriFiLibClientInstance) Received_ALL_ALL_PARAMETERS(msg net.ALL_ALL_PAR
 	p.clientState.DisruptionProtectionEnabled = disruptionProtection
 	p.clientState.EquivocationProtectionEnabled = equivProtection
 	p.clientState.ForceDisruptionSinceRound3 = ForceDisruptionSinceRound3
+	p.clientState.MyLastRound = -10
+	p.clientState.DisruptionWrongBitPosition = -1
+	p.clientState.AllreadyDisrupted = false
 
 	//we know our client number, if needed, parse the pcap for replay
 	if p.clientState.pcapReplay.Enabled {
@@ -268,7 +271,7 @@ func (p *PriFiLibClientInstance) ProcessDownStreamData(msg net.REL_CLI_DOWNSTREA
 
 		//produce the next upstream cell
 
-		upstreamCell := p.clientState.DCNet.EncodeForRound(p.clientState.RoundNo, false, contribution)
+		upstreamCell, _ := p.clientState.DCNet.EncodeForRound(p.clientState.RoundNo, false, contribution)
 
 		//send the data to the relay
 		toSend := &net.CLI_REL_OPENCLOSED_DATA{
@@ -362,6 +365,7 @@ func (p *PriFiLibClientInstance) SendUpstreamData(ownerSlotID int) error {
 	slotOwner := false
 	if ownerSlotID == p.clientState.MySlot {
 		slotOwner = true
+		log.Lvl1("SLOT OWNER", p.clientState.RoundNo)
 		p.clientState.MyLastRound = p.clientState.RoundNo
 	}
 
@@ -490,28 +494,30 @@ func (p *PriFiLibClientInstance) SendUpstreamData(ownerSlotID int) error {
 
 			return nil
 		}
+		if !p.clientState.EquivocationProtectionEnabled {
+			// Making and storing hash
+			var hash [32]byte
+			if upstreamCellContent == nil {
+				// If the content is nil, some code will later change it into an empty slice. So the Hash must be from that
+				payload_to_hash := make([]byte, p.clientState.DCNet.DCNetPayloadSize-1)
 
-		// Making and storing hash
-		var hash [32]byte
-		if upstreamCellContent == nil {
-			// If the content is nil, some code will later change it into an empty slice. So the Hash must be from that
-			payload_to_hash := make([]byte, p.clientState.DCNet.DCNetPayloadSize-1)
+				// Saving data for possible disruption
+				p.clientState.LastMessage = payload_to_hash
 
-			// Saving data for possible disruption
-			p.clientState.LastMessage = payload_to_hash
+				// Creating hash
+				hash = sha256.Sum256(payload_to_hash)
+			} else {
+				// CARLOS TODO: CHECK IT FITS
+				upstreamCellContent[3] = byte(p.clientState.ID)
+				// Saving data for possible disruption
+				p.clientState.LastMessage = upstreamCellContent
+				// Creating hash
+				hash = sha256.Sum256([]byte(upstreamCellContent))
+			}
 
-			// Creating hash
-			hash = sha256.Sum256(payload_to_hash)
-		} else {
-			// CARLOS TODO: CHECK IT FITS
-			upstreamCellContent[3] = byte(p.clientState.ID)
-			// Saving data for possible disruption
-			p.clientState.LastMessage = upstreamCellContent
-			// Creating hash
-			hash = sha256.Sum256([]byte(upstreamCellContent))
+			p.clientState.HashFromPreviousMessage = hash
 		}
 
-		p.clientState.HashFromPreviousMessage = hash
 	}
 
 	// Adding the b_echo_last if the disruption protection is enabled
@@ -523,13 +529,27 @@ func (p *PriFiLibClientInstance) SendUpstreamData(ownerSlotID int) error {
 	}
 	payload := append(slice_b_echo_last, upstreamCellContent...)
 
-	upstreamCell := p.clientState.DCNet.EncodeForRound(p.clientState.RoundNo, slotOwner, payload)
+	upstreamCell, plainPayload := p.clientState.DCNet.EncodeForRound(p.clientState.RoundNo, slotOwner, payload)
+
+	if p.clientState.EquivocationProtectionEnabled && p.clientState.DisruptionProtectionEnabled && slotOwner && p.clientState.B_echo_last != 1 {
+		// Saving data for possible disruption
+		p.clientState.LastMessage = plainPayload
+		hash := sha256.Sum256(plainPayload)
+		p.clientState.HashFromPreviousMessage = hash
+		log.Lvl1("CARLOS: HASING", plainPayload[:10], "HASH", hash)
+	}
 
 	if p.clientState.ID == 0 && p.clientState.ForceDisruptionSinceRound3 && p.clientState.RoundNo > 3 && !slotOwner {
-		// TESTING DISRUPTION
-		log.Error("Pre-disruption", upstreamCell)
-		upstreamCell[len(upstreamCell)-1]++ // only disrupt a 0->1. if there was already a 1, no disruption (this simplifies things)
-		log.Error("Disrupting!   ", upstreamCell)
+		if p.clientState.AllreadyDisrupted {
+			p.clientState.AllreadyDisrupted = false
+		} else {
+			// TESTING DISRUPTION
+			log.Error("Pre-disruption", upstreamCell)
+			upstreamCell[len(upstreamCell)-1]++ // only disrupt a 0->1. if there was already a 1, no disruption (this simplifies things)
+			log.Error("Disrupting!   ", upstreamCell)
+			p.clientState.AllreadyDisrupted = true
+		}
+
 	}
 	//send the data to the relay
 	toSend := &net.CLI_REL_UPSTREAM_DATA{
@@ -666,7 +686,16 @@ func (p *PriFiLibClientInstance) Received_REL_CLI_TELL_EPH_PKS_AND_TRUSTEES_SIG(
 		data = append(slice_b_echo_last, data2...)
 	}
 
-	upstreamCell := p.clientState.DCNet.EncodeForRound(0, slotOwner, data)
+	upstreamCell, plainPayload := p.clientState.DCNet.EncodeForRound(0, slotOwner, data)
+	if p.clientState.EquivocationProtectionEnabled && p.clientState.DisruptionProtectionEnabled {
+		// Saving data for possible disruption
+		p.clientState.LastMessage = plainPayload
+		hash := sha256.Sum256(plainPayload)
+		p.clientState.HashFromPreviousMessage = hash
+		log.Lvl1("CARLOS: HASING", plainPayload[:10], "HASH", hash)
+		log.Lvl1("CARLOS: UPSTREAM: ", upstreamCell)
+	}
+
 	//send the data to the relay
 	toSend := &net.CLI_REL_UPSTREAM_DATA{
 		ClientID: p.clientState.ID,

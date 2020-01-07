@@ -141,12 +141,13 @@ func (e *DCNetEntity) verbosePrint(info ...interface{}) {
 // Encodes "Payload" in the correct round. Will skip PRNG material if the round is in the future,
 // and crash if the round is in the past or the Payload is too long
 func (e *DCNetEntity) TrusteeEncodeForRound(roundID int32) []byte {
-	return e.EncodeForRound(roundID, false, nil)
+	upstreamCell, _ := e.EncodeForRound(roundID, false, nil)
+	return upstreamCell
 }
 
 // Encodes "Payload" in the correct round. Will skip PRNG material if the round is in the future,
 // and crash if the round is in the past or the Payload is too long
-func (e *DCNetEntity) EncodeForRound(roundID int32, slotOwner bool, payload []byte) []byte {
+func (e *DCNetEntity) EncodeForRound(roundID int32, slotOwner bool, payload []byte) ([]byte, []byte) {
 	if len(payload) > e.DCNetPayloadSize {
 		panic("DCNet: cannot encode Payload of length " + strconv.Itoa(int(len(payload))) + " max length is " + strconv.Itoa(len(payload)))
 	}
@@ -193,10 +194,10 @@ func (e *DCNetEntity) EncodeForRound(roundID int32, slotOwner bool, payload []by
 
 		e.currentRound++
 	}
-
+	var plainPayload []byte
 	var c *DCNetCipher
 	if e.Entity == DCNET_CLIENT {
-		c = e.clientEncode(slotOwner, payload)
+		c, plainPayload = e.clientEncode(slotOwner, payload)
 	} else {
 		c = e.trusteeEncode()
 	}
@@ -204,7 +205,7 @@ func (e *DCNetEntity) EncodeForRound(roundID int32, slotOwner bool, payload []by
 
 	e.verbosePrint("r[", roundID, "]:\n", c.Payload)
 	e.verbosePrint("r[", roundID, "]: equiv\n", c.EquivocationProtectionTag)
-	return c.ToBytes()
+	return c.ToBytes(), plainPayload
 }
 
 // Adds `newdata` into the sponge representing the received downstream data
@@ -215,7 +216,7 @@ func (e *DCNetEntity) UpdateReceivedMessageHistory(newData []byte) {
 }
 
 // Encode for clients
-func (e *DCNetEntity) clientEncode(slotOwner bool, payload []byte) *DCNetCipher {
+func (e *DCNetEntity) clientEncode(slotOwner bool, payload []byte) (*DCNetCipher, []byte) {
 
 	c := new(DCNetCipher)
 
@@ -239,10 +240,14 @@ func (e *DCNetEntity) clientEncode(slotOwner bool, payload []byte) *DCNetCipher 
 		p_ij[i] = make([]byte, e.DCNetPayloadSize)
 		e.sharedPRNGs[i].XORKeyStream(p_ij[i], p_ij[i])
 	}
+	plainPayload := make([]byte, e.DCNetPayloadSize)
 
 	// if the equivocation protection is enabled, encrypt the Payload, and add the tag
 	if e.EquivocationProtectionEnabled {
 		payload, sigma_j := e.equivocationProtection.ClientEncryptPayload(slotOwner, payload, p_ij)
+		log.Lvl1("COPING PAYLOAD", payload)
+		copy(plainPayload[:], payload)
+		log.Lvl1("COPIED", plainPayload)
 		e.verbosePrint("payload\n", payload)
 		e.verbosePrint("sigma_j\n", sigma_j)
 		c.Payload = payload // replace the Payload with the encrypted version
@@ -255,7 +260,8 @@ func (e *DCNetEntity) clientEncode(slotOwner bool, payload []byte) *DCNetCipher 
 			c.Payload[k] ^= p_ij[i][k] // XORs in the pads
 		}
 	}
-	return c
+	log.Lvl1("COPIED", plainPayload)
+	return c, plainPayload[:]
 }
 
 // Encode for trustees
@@ -395,14 +401,17 @@ func (e *DCNetEntity) DecodeTrustee(roundID int32, slice []byte) {
 }
 
 // Called on the relay to decode the cell, after having stored the cryptographic materials
-func (e *DCNetEntity) DecodeCell(isOpenClosedSlot bool) []byte {
+func (e *DCNetEntity) DecodeCell(isOpenClosedSlot bool) ([]byte, []byte) {
 	//No Equivocation -> just XOR
 	d := e.DCNetRoundDecoder
 
-	decoded := d.xorBuffer
+	cipherText := d.xorBuffer
+	var decoded []byte
 	if e.EquivocationProtectionEnabled && !isOpenClosedSlot {
 		decoded = e.equivocationProtection.RelayDecode(d.xorBuffer, d.equivTrusteeContribs, d.equivClientContribs)
+	} else {
+		decoded = cipherText
 	}
 
-	return decoded
+	return decoded, cipherText
 }

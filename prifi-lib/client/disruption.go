@@ -89,6 +89,7 @@ func (p *PriFiLibClientInstance) Received_REL_ALL_REVEAL_SHARED_SECRETS(msg net.
 }
 
 func (p *PriFiLibClientInstance) handlePossibleDisruption(msg net.REL_CLI_DOWNSTREAM_DATA) error {
+	log.Lvl1("POSSIBLE DISRUPTION!", p.clientState.MyLastRound, p.clientState.RoundNo-1)
 	if p.clientState.RoundNo-1 == p.clientState.MyLastRound {
 
 		if p.clientState.B_echo_last == 1 {
@@ -105,8 +106,11 @@ func (p *PriFiLibClientInstance) handlePossibleDisruption(msg net.REL_CLI_DOWNST
 
 				// Get the l-th bit
 				found := false
+				log.Lvl1("COMPARING", msg.Data, p.clientState.LastMessage)
 				for index, b := range msg.Data {
 					if b != p.clientState.LastMessage[index] {
+						log.Lvl1("MISMATCH", b, p.clientState.LastMessage[index])
+						log.Lvl1(index)
 						//Get the bit
 						for j := 0; j < 8; j++ {
 							mask := byte(1 << uint(j))
@@ -145,7 +149,7 @@ func (p *PriFiLibClientInstance) handlePossibleDisruption(msg net.REL_CLI_DOWNST
 
 				// Comparing both hashes
 				if !bytes.Equal(hash, previousHash) {
-					log.Error("Disruption protection hash comparison failed.")
+					log.Error("Disruption protection hash comparison failed.", p.clientState.RoundNo)
 					p.clientState.B_echo_last = 1
 				} else {
 					p.clientState.B_echo_last = 0

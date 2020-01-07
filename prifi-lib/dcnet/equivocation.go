@@ -113,7 +113,7 @@ func (e *EquivocationProtection) ClientEncryptPayload(slotOwner bool, x []byte, 
 	}
 
 	x = aesgcm.Seal(nil, nonce, x, nil)
-
+	log.Lvl1("THIS IS IT:", x)
 	// compute kappa
 	kappa_i := k_i.Add(k_i, product)
 	kappa_i_bytes, err := kappa_i.MarshalBinary()
@@ -227,7 +227,10 @@ func (e *EquivocationProtection) RelayDecode(encryptedPayload []byte, trusteesCo
 	message, err := aesgcm.Open(nil, nonce, encryptedPayload, nil)
 	if err != nil {
 		//CARLOS TODO: DISRUPTION
+		log.Lvl1("DISRUPTION, CANNOT DECODE")
 		message = make([]byte, len(encryptedPayload)-16)
+	} else {
+		log.Lvl1("CORRECT DECRYPTION:", encryptedPayload, message)
 	}
 
 	return message

@@ -343,7 +343,7 @@ func (p *PriFiLibRelayInstance) upstreamPhase2a_extractOCMap(roundID int32) erro
 	}
 
 	//here we have the plaintext map
-	openClosedData := p.relayState.DCNet.DecodeCell(true)
+	openClosedData, _ := p.relayState.DCNet.DecodeCell(true)
 
 	//compute the map
 	newSchedule := p.relayState.slotScheduler.Relay_ComputeFinalSchedule(openClosedData, p.relayState.nClients)
@@ -388,8 +388,14 @@ func (p *PriFiLibRelayInstance) upstreamPhase2b_extractPayload() error {
 	for _, s := range trusteesSlices {
 		p.relayState.DCNet.DecodeTrustee(roundID, s)
 	}
-	upstreamPlaintext := p.relayState.DCNet.DecodeCell(false)
 
+	upstreamPlaintext, ciphertext := p.relayState.DCNet.DecodeCell(false)
+	if p.relayState.EquivocationProtectionEnabled && p.relayState.DisruptionProtectionEnabled {
+		// Generating and storing the hash from the payload
+		p.relayState.HashOfLastUpstreamMessage = sha256.Sum256([]byte(ciphertext))
+		p.relayState.LastMessageOfClients[roundID] = ciphertext
+		log.Lvl1("CARLOS: HASING", ciphertext, "HASH", p.relayState.HashOfLastUpstreamMessage)
+	}
 	p.relayState.bitrateStatistics.AddUpstreamCell(int64(len(upstreamPlaintext)))
 
 	if p.relayState.DisruptionProtectionEnabled {
@@ -434,8 +440,10 @@ func (p *PriFiLibRelayInstance) upstreamPhase2b_extractPayload() error {
 			}
 		}
 		upstreamPlaintext = upstreamPlaintext[1:]
-		// Saving in history
-		p.relayState.LastMessageOfClients[roundID] = upstreamPlaintext
+		if !p.relayState.EquivocationProtectionEnabled {
+			// Saving in history
+			p.relayState.LastMessageOfClients[roundID] = upstreamPlaintext
+		}
 
 		// CARLOS TODO: Clean the lastmessageofclients map
 
@@ -444,8 +452,11 @@ func (p *PriFiLibRelayInstance) upstreamPhase2b_extractPayload() error {
 			//upstreamPlaintext[3] = 8
 		}
 
-		// Generating and storing the hash from the payload
-		p.relayState.HashOfLastUpstreamMessage = sha256.Sum256([]byte(upstreamPlaintext))
+		if !p.relayState.EquivocationProtectionEnabled {
+			// Generating and storing the hash from the payload
+			p.relayState.HashOfLastUpstreamMessage = sha256.Sum256([]byte(upstreamPlaintext))
+		}
+
 	}
 	log.Lvl4("Decoded cell is", upstreamPlaintext)
 

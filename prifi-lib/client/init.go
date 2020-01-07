@@ -73,6 +73,7 @@ type ClientState struct {
 	EphemeralPublicKeys           []kyber.Point
 	// TEST DISRUPTION
 	ForceDisruptionSinceRound3 bool
+	AllreadyDisrupted          bool
 
 	//concurrent stuff
 	RoundNo           int32

@@ -141,10 +141,10 @@ func SimulateRounds(t *testing.T, tg *TestGroup, maxRounds int32) {
 			var m []byte
 			if first {
 				//fmt.Println("Embedding message:", message)
-				m = tg.Clients[i].DCNetEntity.EncodeForRound(roundID, true, message)
+				m, _ = tg.Clients[i].DCNetEntity.EncodeForRound(roundID, true, message)
 				first = false
 			} else {
-				m = tg.Clients[i].DCNetEntity.EncodeForRound(roundID, false, nil)
+				m, _ = tg.Clients[i].DCNetEntity.EncodeForRound(roundID, false, nil)
 			}
 			clientMessages = append(clientMessages, m)
 		}
@@ -164,7 +164,7 @@ func SimulateRounds(t *testing.T, tg *TestGroup, maxRounds int32) {
 			tg.Relay.DCNetEntity.DecodeTrustee(roundID, m)
 		}
 
-		output := tg.Relay.DCNetEntity.DecodeCell(false)
+		output, _ := tg.Relay.DCNetEntity.DecodeCell(false)
 
 		//fmt.Println("-----------------")
 		//fmt.Println(output)
