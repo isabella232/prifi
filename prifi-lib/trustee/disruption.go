@@ -76,6 +76,7 @@ func (p *PriFiLibTrusteeInstance) Received_REL_ALL_REVEAL_SHARED_SECRETS(msg net
 		ClientID:  msg.EntityID,
 		Secret:    secret,
 		NIZK:      NIZK,
+		Pub: 	   pub,
 	}
 	p.messageSender.SendToRelayWithLog(toSend, "Sent secret to relay")
 	log.Lvl1("Reveling secret with client", msg.EntityID)

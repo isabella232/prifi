@@ -245,9 +245,7 @@ func (e *DCNetEntity) clientEncode(slotOwner bool, payload []byte) (*DCNetCipher
 	// if the equivocation protection is enabled, encrypt the Payload, and add the tag
 	if e.EquivocationProtectionEnabled {
 		payload, sigma_j := e.equivocationProtection.ClientEncryptPayload(slotOwner, payload, p_ij)
-		log.Lvl1("COPING PAYLOAD", payload)
 		copy(plainPayload[:], payload)
-		log.Lvl1("COPIED", plainPayload)
 		e.verbosePrint("payload\n", payload)
 		e.verbosePrint("sigma_j\n", sigma_j)
 		c.Payload = payload // replace the Payload with the encrypted version
@@ -260,7 +258,7 @@ func (e *DCNetEntity) clientEncode(slotOwner bool, payload []byte) (*DCNetCipher
 			c.Payload[k] ^= p_ij[i][k] // XORs in the pads
 		}
 	}
-	log.Lvl1("COPIED", plainPayload)
+	log.Lvl1("CARLOS: post XOR", c.Payload)
 	return c, plainPayload[:]
 }
 
@@ -295,6 +293,7 @@ func (e *DCNetEntity) trusteeEncode() *DCNetCipher {
 
 // Function to get the bits from previous round in an exact position.
 func (e *DCNetEntity) GetBitsOfRound(roundID int32, bitPosition int32) map[int]int {
+	log.Lvl1("CARLOS ROUND:", roundID)
 	if roundID >= e.currentRound {
 		return nil
 	}
@@ -340,6 +339,7 @@ func (e *DCNetEntity) GetBitsOfRound(roundID int32, bitPosition int32) map[int]i
 	for i := range p_ij {
 		bytePosition := int(bitPosition/8) + 1
 		byte_toGet := p_ij[i][bytePosition]
+		log.Lvl1("CARLOS BYTE:", byte_toGet)
 		bitInByte := (8-bitPosition%8)%8 - 1
 		mask := byte(1 << uint(bitInByte))
 		if (byte_toGet & mask) == 0 {

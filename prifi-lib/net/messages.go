@@ -300,6 +300,7 @@ type CLI_REL_SHARED_SECRET struct {
 	TrusteeID int
 	Secret    kyber.Point
 	NIZK      []byte
+	Pub 	  map[string]kyber.Point
 }
 
 // TRU_REL_SHARED_SECRET contains the shared secret requested by the relay, with a proof we computed it correctly
@@ -308,4 +309,5 @@ type TRU_REL_SHARED_SECRET struct {
 	ClientID  int
 	Secret    kyber.Point
 	NIZK      []byte
+	Pub 	  map[string]kyber.Point
 }

@@ -470,7 +470,7 @@ func (p *PriFiLibClientInstance) SendUpstreamData(ownerSlotID int) error {
 		if p.clientState.DisruptionWrongBitPosition != -1 {
 			// TODO => there should be a NIZK here proving the ownership of the slot
 
-			blameRoundID := p.clientState.RoundNo - int32(p.clientState.nClients)
+			blameRoundID := p.clientState.RoundNo - int32(p.clientState.nClients)*2
 
 			pred := proof.Rep("X", "x", "B")
 			suite := config.CryptoSuite

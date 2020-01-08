@@ -8,6 +8,7 @@ import (
 
 	"go.dedis.ch/kyber/proof"
 	"strconv"
+	"fmt"
 )
 
 // Received_CLI_REL_BLAME
@@ -42,7 +43,7 @@ func (p *PriFiLibRelayInstance) Received_CLI_REL_DISRUPTION_BLAME(msg net.CLI_RE
 		Pval:    msg.Pval,
 		NIZK:    msg.NIZK,
 	}
-
+	log.Lvl1("CARLOS: POS", msg.BitPos)
 	p.relayState.blamingData.RoundID = msg.RoundID
 	p.relayState.blamingData.BitPos = msg.BitPos
 
@@ -147,6 +148,7 @@ func (p *PriFiLibRelayInstance) compareBits(id int, bits map[int]int, Ciphertext
 	log.Lvl2("Disruption: comparing", bits, "with", CiphertextsHistory[int32(id)][int32(round)])
 
 	byteToGet := CiphertextsHistory[int32(id)][int32(round)][bytePosition]
+	log.Lvl1("CARLOS: BYTE", byteToGet)
 	bitInBytePosition := (8-bitPosition%8)%8 - 1
 	mask := byte(1 << uint(bitInBytePosition))
 	result := 0
@@ -191,7 +193,28 @@ Check the NIZK, if correct regenerate the cipher up to the disrupted round and c
 func (p *PriFiLibRelayInstance) Received_TRU_REL_SHARED_SECRETS(msg net.TRU_REL_SHARED_SECRET) error {
 	log.Lvl1("Disruption Phase 2: Received shared secret from Trustee", msg.TrusteeID, "for client", msg.ClientID, "value", msg.Secret)
 
-	// CARLOS TODO: Check ntzk
+	M := "SHAREDKEY"
+	X := make([]kyber.Point, 1)
+	X[0] = p.relayState.trustees[msg.TrusteeID].PublicKey
+	preds := make([]proof.Predicate, len(X))
+	for i := range X {
+		name := fmt.Sprintf("X[%d]", i) // "X[0]","X[1]",...
+		msg.Pub[name] = X[i]                // public point value
+
+		// Predicate indicates knowledge of the private key for X[i]
+		// and correspondence of the key with the linkage tag
+		preds[i] = proof.And(proof.Rep(name, "x", "B"), proof.Rep("T", "x", "BT"))
+	}
+	pred := proof.Or(preds...) // make a big Or predicate
+	suite := config.CryptoSuite
+	// Verify the signature
+	verifier := pred.Verifier(suite, msg.Pub)
+	err := proof.HashVerify(suite, M, verifier, msg.NIZK)
+	if err != nil {
+		log.Error("signature failed to verify: ", err)
+	}
+	log.Lvl3("Linkable Ring Signature verified.")
+
 	val := p.replayRounds(msg.Secret)
 	if val != p.relayState.blamingData.TrusteeBitRevealed {
 		log.Fatal("Disruption Phase 2: Disruptor is Trustee", msg.TrusteeID, ".")
@@ -208,7 +231,28 @@ Check the NIZK, if correct regenerate the cipher up to the disrupted round and c
 func (p *PriFiLibRelayInstance) Received_CLI_REL_SHARED_SECRET(msg net.CLI_REL_SHARED_SECRET) error {
 	log.Lvl1("Disruption Phase 2: Received shared secret from Client", msg.ClientID, "for Trustee", msg.TrusteeID, "value", msg.Secret)
 
-	// CARLOS TODO: Check NIZK
+	M := "SHAREDKEY"
+	X := make([]kyber.Point, 1)
+	X[0] = p.relayState.trustees[msg.TrusteeID].PublicKey
+	preds := make([]proof.Predicate, len(X))
+	for i := range X {
+		name := fmt.Sprintf("X[%d]", i) // "X[0]","X[1]",...
+		msg.Pub[name] = X[i]                // public point value
+
+		// Predicate indicates knowledge of the private key for X[i]
+		// and correspondence of the key with the linkage tag
+		preds[i] = proof.And(proof.Rep(name, "x", "B"), proof.Rep("T", "x", "BT"))
+	}
+	pred := proof.Or(preds...) // make a big Or predicate
+	suite := config.CryptoSuite
+	// Verify the signature
+	verifier := pred.Verifier(suite, msg.Pub)
+	err := proof.HashVerify(suite, M, verifier, msg.NIZK)
+	if err != nil {
+		log.Error("signature failed to verify: ", err)
+	}
+	log.Lvl3("Linkable Ring Signature verified.")
+	
 	val := p.replayRounds(msg.Secret)
 	if val != p.relayState.blamingData.ClientBitRevealed {
 		log.Fatal("Disruption Phase 2: Disruptor is Client", msg.ClientID, ".")

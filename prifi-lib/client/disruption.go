@@ -7,6 +7,9 @@ import (
 	"go.dedis.ch/kyber/proof"
 	"gopkg.in/dedis/onet.v2/log"
 	"time"
+
+	"fmt"
+	"go.dedis.ch/kyber"
 )
 
 /*
@@ -70,11 +73,50 @@ func (p *PriFiLibClientInstance) Received_REL_ALL_REVEAL_SHARED_SECRETS(msg net.
 	// CARLOS TODO: NIZK
 	// TODO: check that the relay asks for the correct entity, and not a honest entity. There should be a signature check on the TRU_REL_DISRUPTION_REVEAL the relay received (and forwarded to the client)
 	secret := p.clientState.sharedSecrets[msg.EntityID]
+
+	// as a pseudorandom base point multiplied by our private key.
+	suite := config.CryptoSuite
+	X := make([]kyber.Point, 1)
+	X[0] = p.clientState.PublicKey
+	B := suite.Point().Base() //BACK
+	// Generate the proof predicate: an OR branch for each public key.
+	sec := map[string]kyber.Scalar{"x": p.clientState.privateKey} //BACK
+	pub := map[string]kyber.Point{"B": B, "BT": p.clientState.TrusteePublicKey[msg.EntityID], "T": p.clientState.sharedSecrets[msg.EntityID]}
+	preds := make([]proof.Predicate, len(X))
+	for i := range X {
+		name := fmt.Sprintf("X[%d]", i) // "X[0]","X[1]",...
+		pub[name] = X[i]                // public point value
+
+		// Predicate indicates knowledge of the private key for X[i]
+		// and correspondence of the key with the linkage tag
+		preds[i] = proof.And(proof.Rep(name, "x", "B"), proof.Rep("T", "x", "BT"))
+	}
+	pred := proof.Or(preds...) // make a big Or predicate
+
+	// The prover needs to know which Or branch (mine) is actually true.
+	choice := make(map[proof.Predicate]int)
+	choice[pred] = 0
+
+	// Generate the signature
+	M := "SHAREDKEY"
+	prover := pred.Prover(suite, sec, pub, choice)
+	NIZK, _ := proof.HashProve(suite, M, prover)
+
+	// Verify the signature
+	verifier := pred.Verifier(suite, pub)
+	err := proof.HashVerify(suite, M, verifier, NIZK)
+	if err != nil {
+		log.Lvl1("signature failed to verify: ", err)
+	}
+	log.Lvl1("Linkable Ring Signature verified.")
+
 	toSend := &net.CLI_REL_SHARED_SECRET{
 		ClientID:  p.clientState.ID,
-		TrusteeID: msg.EntityID,
+		TrusteeID: msg.EntityID, 
 		Secret:    secret,
-		NIZK:      make([]byte, 0)}
+		NIZK:      make([]byte, 0),
+		Pub: 	   pub,
+	}
 
 	if p.clientState.ForceDisruptionSinceRound3 && p.clientState.ID == 0 {
 		//this client is hesitant to answer as he will get caught
