@@ -281,12 +281,16 @@ type REL_ALL_DISRUPTION_REVEAL struct {
 type CLI_REL_DISRUPTION_REVEAL struct {
 	ClientID int
 	Bits     map[int]int
+	NIZK     []byte
+	Pval     map[string]kyber.Point
 }
 
 // TRU_REL_DISRUPTION_REVEAL contains a map with individual bits to find a disruptor, and is sent to the relay
 type TRU_REL_DISRUPTION_REVEAL struct {
 	TrusteeID int
 	Bits      map[int]int
+	NIZK      []byte
+	Pval      map[string]kyber.Point
 }
 
 // REL_ALL_REVEAL_SHARED_SECRETS contains request ro reveal the shared secret with the specified recipient, and is sent by the relay
@@ -300,7 +304,7 @@ type CLI_REL_SHARED_SECRET struct {
 	TrusteeID int
 	Secret    kyber.Point
 	NIZK      []byte
-	Pub 	  map[string]kyber.Point
+	Pub       map[string]kyber.Point
 }
 
 // TRU_REL_SHARED_SECRET contains the shared secret requested by the relay, with a proof we computed it correctly
@@ -309,5 +313,5 @@ type TRU_REL_SHARED_SECRET struct {
 	ClientID  int
 	Secret    kyber.Point
 	NIZK      []byte
-	Pub 	  map[string]kyber.Point
+	Pub       map[string]kyber.Point
 }

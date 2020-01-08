@@ -6,9 +6,9 @@ import (
 	"go.dedis.ch/kyber"
 	"go.dedis.ch/onet/log"
 
+	"fmt"
 	"go.dedis.ch/kyber/proof"
 	"strconv"
-	"fmt"
 )
 
 // Received_CLI_REL_BLAME
@@ -75,6 +75,19 @@ func (p *PriFiLibRelayInstance) Received_CLI_REL_DISRUPTION_BLAME(msg net.CLI_RE
 func (p *PriFiLibRelayInstance) Received_CLI_REL_DISRUPTION_REVEAL(msg net.CLI_REL_DISRUPTION_REVEAL) error {
 
 	log.Lvl1("Disruption Phase 1: Received bits from Client", msg.ClientID, "value", msg.Bits)
+	var pred_array []proof.Predicate
+	suite := config.CryptoSuite
+	for i := 1; i < p.relayState.nTrustees; i++ {
+		i_string := strconv.Itoa(i)
+		pred_array = append(pred_array, proof.Rep("T"+i_string, "t"+i_string, "B"))
+	}
+	pred := proof.And(pred_array...)
+	verifier := pred.Verifier(suite, msg.Pval)
+	err := proof.HashVerify(suite, "DISRUPTION", verifier, msg.NIZK)
+	if err != nil {
+		log.Fatal("Proof failed to verify: ")
+	}
+	log.Lvl3("Proof verified.")
 
 	p.relayState.clientBitMap[msg.ClientID] = msg.Bits
 
@@ -112,6 +125,20 @@ func (p *PriFiLibRelayInstance) Received_CLI_REL_DISRUPTION_REVEAL(msg net.CLI_R
 func (p *PriFiLibRelayInstance) Received_TRU_REL_DISRUPTION_REVEAL(msg net.TRU_REL_DISRUPTION_REVEAL) error {
 
 	log.Lvl1("Disruption Phase 1: Received bits from Trustee", msg.TrusteeID, "value", msg.Bits)
+
+	var pred_array []proof.Predicate
+	suite := config.CryptoSuite
+	for i := 1; i < p.relayState.nTrustees; i++ {
+		i_string := strconv.Itoa(i)
+		pred_array = append(pred_array, proof.Rep("T"+i_string, "t"+i_string, "B"))
+	}
+	pred := proof.And(pred_array...)
+	verifier := pred.Verifier(suite, msg.Pval)
+	err := proof.HashVerify(suite, "DISRUPTION", verifier, msg.NIZK)
+	if err != nil {
+		log.Fatal("Proof failed to verify: ")
+	}
+	log.Lvl3("Proof verified.")
 
 	p.relayState.trusteeBitMap[msg.TrusteeID] = msg.Bits
 	result := p.compareBits(msg.TrusteeID, msg.Bits, p.relayState.CiphertextsHistoryTrustees)
@@ -199,7 +226,7 @@ func (p *PriFiLibRelayInstance) Received_TRU_REL_SHARED_SECRETS(msg net.TRU_REL_
 	preds := make([]proof.Predicate, len(X))
 	for i := range X {
 		name := fmt.Sprintf("X[%d]", i) // "X[0]","X[1]",...
-		msg.Pub[name] = X[i]                // public point value
+		msg.Pub[name] = X[i]            // public point value
 
 		// Predicate indicates knowledge of the private key for X[i]
 		// and correspondence of the key with the linkage tag
@@ -237,7 +264,7 @@ func (p *PriFiLibRelayInstance) Received_CLI_REL_SHARED_SECRET(msg net.CLI_REL_S
 	preds := make([]proof.Predicate, len(X))
 	for i := range X {
 		name := fmt.Sprintf("X[%d]", i) // "X[0]","X[1]",...
-		msg.Pub[name] = X[i]                // public point value
+		msg.Pub[name] = X[i]            // public point value
 
 		// Predicate indicates knowledge of the private key for X[i]
 		// and correspondence of the key with the linkage tag
@@ -252,7 +279,7 @@ func (p *PriFiLibRelayInstance) Received_CLI_REL_SHARED_SECRET(msg net.CLI_REL_S
 		log.Error("signature failed to verify: ", err)
 	}
 	log.Lvl3("Linkable Ring Signature verified.")
-	
+
 	val := p.replayRounds(msg.Secret)
 	if val != p.relayState.blamingData.ClientBitRevealed {
 		log.Fatal("Disruption Phase 2: Disruptor is Client", msg.ClientID, ".")

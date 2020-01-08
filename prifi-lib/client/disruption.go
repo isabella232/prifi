@@ -2,14 +2,14 @@ package client
 
 import (
 	"bytes"
+	"fmt"
 	"github.com/dedis/prifi/prifi-lib/config"
 	"github.com/dedis/prifi/prifi-lib/net"
+	"go.dedis.ch/kyber"
 	"go.dedis.ch/kyber/proof"
 	"gopkg.in/dedis/onet.v2/log"
+	"strconv"
 	"time"
-
-	"fmt"
-	"go.dedis.ch/kyber"
 )
 
 /*
@@ -20,33 +20,34 @@ import (
 func (p *PriFiLibClientInstance) Received_REL_ALL_DISRUPTION_REVEAL(msg net.REL_ALL_DISRUPTION_REVEAL) error {
 	log.Lvl1("Disruption Phase 1: Received de-anonymization query for round", msg.RoundID, "bit pos", msg.BitPos)
 
-	// TODO: check the proper NIZK
-	//CALROS
-	pred := proof.Rep("X", "x", "B")
-	suite := config.CryptoSuite
-	//B := suite.Point().Base()
-	/*for _, key := range(p.relayState.EphemeralPublicKeys) {
-		pval := map[string]kyber.Point{"B": B, "X": key}
-		verifier := pred.Verifier(suite, pval)
-		err := proof.HashVerify(suite, "DISRUPTION", verifier, msg.NIZK)
-		if err != nil {
-			log.Lvl1("Proof failed to verify: ", key)
-			continue
-		}
-		log.Lvl1("Proof verified.", key)
-	}*/
-	verifier := pred.Verifier(suite, msg.Pval)
-	err := proof.HashVerify(suite, "DISRUPTION", verifier, msg.NIZK)
-	if err != nil {
-		log.Fatal("Proof failed to verify: ")
-	}
-	log.Lvl1("Proof verified.")
+	bitMap, PRGs := p.clientState.DCNet.GetBitsOfRound(int32(msg.RoundID), int32(msg.BitPos))
 
-	bitMap := p.clientState.DCNet.GetBitsOfRound(int32(msg.RoundID), int32(msg.BitPos))
+	var pred_array []proof.Predicate
+	sval := make(map[string]kyber.Scalar)
+	pval := make(map[string]kyber.Point)
+	suite := config.CryptoSuite
+	B := suite.Point().Base()
+	pval["B"] = B
+	for i, prg := range PRGs {
+		i_string := strconv.Itoa(i)
+		pred_array = append(pred_array, proof.Rep("T"+i_string, "t"+i_string, "B"))
+		p_i := suite.Scalar().SetBytes(prg)
+		P_i := suite.Point().Mul(p_i, B)
+		sval["t"+i_string] = p_i
+		pval["T"+i_string] = P_i
+	}
+	pred := proof.And(pred_array...)
+	log.Lvl1("CARLOS EXPLODE: ", pred)
+
+	prover := pred.Prover(suite, sval, pval, nil)
+	NIZK, _ := proof.HashProve(suite, "DISRUPTION", prover)
+
 	//send the data to the relay
 	toSend := &net.CLI_REL_DISRUPTION_REVEAL{
 		ClientID: p.clientState.ID,
 		Bits:     bitMap,
+		NIZK:     NIZK,
+		Pval:     pval,
 	}
 
 	if p.clientState.ForceDisruptionSinceRound3 && p.clientState.ID == 0 {
@@ -112,10 +113,10 @@ func (p *PriFiLibClientInstance) Received_REL_ALL_REVEAL_SHARED_SECRETS(msg net.
 
 	toSend := &net.CLI_REL_SHARED_SECRET{
 		ClientID:  p.clientState.ID,
-		TrusteeID: msg.EntityID, 
+		TrusteeID: msg.EntityID,
 		Secret:    secret,
 		NIZK:      make([]byte, 0),
-		Pub: 	   pub,
+		Pub:       pub,
 	}
 
 	if p.clientState.ForceDisruptionSinceRound3 && p.clientState.ID == 0 {

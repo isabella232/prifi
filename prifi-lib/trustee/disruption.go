@@ -7,6 +7,7 @@ import (
 	"go.dedis.ch/kyber"
 	"go.dedis.ch/kyber/proof"
 	"gopkg.in/dedis/onet.v2/log"
+	"strconv"
 )
 
 /*
@@ -16,7 +17,34 @@ import (
  */
 func (p *PriFiLibTrusteeInstance) Received_REL_ALL_DISRUPTION_REVEAL(msg net.REL_ALL_DISRUPTION_REVEAL) error {
 	log.Lvl1("Disruption Phase 1: Received de-anonymization query for round", msg.RoundID, "bit pos", msg.BitPos)
-	bitMap := p.trusteeState.DCNet.GetBitsOfRound(int32(msg.RoundID), int32(msg.BitPos))
+	bitMap, PRGs := p.trusteeState.DCNet.GetBitsOfRound(int32(msg.RoundID), int32(msg.BitPos))
+
+	var pred_array []proof.Predicate
+	sval := make(map[string]kyber.Scalar)
+	pval := make(map[string]kyber.Point)
+	suite := config.CryptoSuite
+	B := suite.Point().Base()
+	pval["B"] = B
+	for i, prg := range PRGs {
+		i_string := strconv.Itoa(i)
+		pred_array = append(pred_array, proof.Rep("T"+i_string, "t"+i_string, "B"))
+		p_i := suite.Scalar().SetBytes(prg)
+		P_i := suite.Point().Mul(p_i, B)
+		sval["t"+i_string] = p_i
+		pval["T"+i_string] = P_i
+	}
+	pred := proof.And(pred_array...)
+	log.Lvl1("CARLOS EXPLODE: ", pred)
+
+	prover := pred.Prover(suite, sval, pval, nil)
+	NIZK, _ := proof.HashProve(suite, "DISRUPTION", prover)
+
+	verifier := pred.Verifier(suite, pval)
+	err := proof.HashVerify(suite, "DISRUPTION", verifier, NIZK)
+	if err != nil {
+		log.Error("EE Proof failed to verify: ")
+	}
+	log.Lvl1("EE Proof verified.")
 	toSend := &net.TRU_REL_DISRUPTION_REVEAL{
 		TrusteeID: p.trusteeState.ID,
 		Bits:      bitMap,
@@ -76,7 +104,7 @@ func (p *PriFiLibTrusteeInstance) Received_REL_ALL_REVEAL_SHARED_SECRETS(msg net
 		ClientID:  msg.EntityID,
 		Secret:    secret,
 		NIZK:      NIZK,
-		Pub: 	   pub,
+		Pub:       pub,
 	}
 	p.messageSender.SendToRelayWithLog(toSend, "Sent secret to relay")
 	log.Lvl1("Reveling secret with client", msg.EntityID)

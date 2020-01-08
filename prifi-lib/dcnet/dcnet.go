@@ -292,10 +292,10 @@ func (e *DCNetEntity) trusteeEncode() *DCNetCipher {
 }
 
 // Function to get the bits from previous round in an exact position.
-func (e *DCNetEntity) GetBitsOfRound(roundID int32, bitPosition int32) map[int]int {
+func (e *DCNetEntity) GetBitsOfRound(roundID int32, bitPosition int32) (map[int]int, [][]byte) {
 	log.Lvl1("CARLOS ROUND:", roundID)
 	if roundID >= e.currentRound {
-		return nil
+		return nil, nil
 	}
 
 	sharedKeys := e.sharedKeys
@@ -337,9 +337,9 @@ func (e *DCNetEntity) GetBitsOfRound(roundID int32, bitPosition int32) map[int]i
 	}
 	// DC-net encrypt the Payload
 	for i := range p_ij {
-		bytePosition := int(bitPosition/8)
+		bytePosition := int(bitPosition / 8)
 		// TODO: CHECK WHY THIS HAPPEN, CLEARLY A BUG HERE
-		if !e.EquivocationProtectionEnabled{
+		if !e.EquivocationProtectionEnabled {
 			bytePosition++
 		}
 		byte_toGet := p_ij[i][bytePosition]
@@ -354,7 +354,7 @@ func (e *DCNetEntity) GetBitsOfRound(roundID int32, bitPosition int32) map[int]i
 
 	}
 
-	return rtn
+	return rtn, p_ij
 }
 
 // Used by the relay to start decoding a round
