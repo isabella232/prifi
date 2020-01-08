@@ -541,7 +541,9 @@ func (p *PriFiLibClientInstance) SendUpstreamData(ownerSlotID int) error {
 
 	if p.clientState.ID == 0 && p.clientState.ForceDisruptionSinceRound3 && p.clientState.RoundNo > 3 && !slotOwner {
 		if p.clientState.AllreadyDisrupted {
-			p.clientState.AllreadyDisrupted = false
+			if p.clientState.RoundNo != 6 {
+				p.clientState.AllreadyDisrupted = false
+			}
 		} else {
 			// TESTING DISRUPTION
 			log.Error("Pre-disruption", upstreamCell)

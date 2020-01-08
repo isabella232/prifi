@@ -337,7 +337,11 @@ func (e *DCNetEntity) GetBitsOfRound(roundID int32, bitPosition int32) map[int]i
 	}
 	// DC-net encrypt the Payload
 	for i := range p_ij {
-		bytePosition := int(bitPosition/8) + 1
+		bytePosition := int(bitPosition/8)
+		// TODO: CHECK WHY THIS HAPPEN, CLEARLY A BUG HERE
+		if !e.EquivocationProtectionEnabled{
+			bytePosition++
+		}
 		byte_toGet := p_ij[i][bytePosition]
 		log.Lvl1("CARLOS BYTE:", byte_toGet)
 		bitInByte := (8-bitPosition%8)%8 - 1
