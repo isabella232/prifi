@@ -18,7 +18,6 @@ func TestPCAPReader(t *testing.T) {
 	}
 }
 
-
 func TestPKTSReader(t *testing.T) {
 
 	packets, error := ParsePKTS("../../pcap/test.pkts", 100, 0)
