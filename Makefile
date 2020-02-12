@@ -2,7 +2,7 @@
 all: test coveralls it-verbose it2-verbose
 
 .PHONY: test
-test: build test_fmt test_lint
+test: build test_fmt test_govet test_lint
 	DEBUG_COLOR="True" DEBUG_LVL=1 go test -short ./...
 
 .PHONY: test_fmt

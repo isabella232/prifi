@@ -2,7 +2,7 @@ package main
 
 import (
 	"flag"
-	"github.com/ginuerzh/gost"
+	"github.com/armon/go-socks5"
 	"go.dedis.ch/onet/log"
 	"strconv"
 )
@@ -21,11 +21,6 @@ func main() {
 	flag.Parse()
 	log.SetDebugVisible(*debugFlag)
 
-	// Enable or disable Gost logger based on the ONet debug level
-	if contains(onetDebugLevels, *debugFlag) {
-		gost.SetLogger(&gost.LogLogger{})
-	}
-
 	// Check if the port is valid
 	if *portFlag <= 1024 {
 		log.Lvl1("Port number below 1024. Without super-admin privileges, this server will crash.")
@@ -40,18 +35,17 @@ func main() {
 
 	log.Lvl2("Starting a SOCKS5 server...")
 
-	gostTCPListener, err := gost.TCPListener(port)
-
+	// Create a SOCKS5 server
+	conf := &socks5.Config{}
+	server, err := socks5.New(conf)
 	if err != nil {
-		log.Fatal("Could not listen on port", port, "error is", err)
+		panic(err)
 	}
 
-	log.Lvl1("Server listening on port " + port)
-
-	gostServer := gost.Server{Listener: gostTCPListener}
-	gostHandler := gost.SOCKS5Handler()
-
-	gostServer.Serve(gostHandler)
+	// Create SOCKS5 proxy on localhost port 8000
+	if err := server.ListenAndServe("tcp", port); err != nil {
+		log.Fatal("Could not listen on port", port, "error is", err)
+	}
 }
 
 func contains(intSlice []int, searchInt int) bool {
