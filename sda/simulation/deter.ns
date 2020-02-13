@@ -13,6 +13,7 @@ set trustee_bandwidth 100Mb
 set client_bandwidth 1000Mb
 set trustee_delay 100ms
 set client_delay 10ms
+set client_loss 0.05
 
 set lanstr_trustees ""
 set lanstr_clients ""
@@ -69,6 +70,7 @@ for {set i 0} {$i < $n_trustees} {incr i} {
 for {set i 0} {$i < $n_clients} {incr i} {
     set ip 10.0.1.[expr {$i + 1}]
     tb-set-ip-lan $client($i) $lanclients $ip
+    tb-set-node-lan-loss $client($i) $lanclients $client_loss
 }
 
 # Do not remove - automatically generated tunnelcode for connectivity
