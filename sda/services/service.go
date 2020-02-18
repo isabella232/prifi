@@ -156,7 +156,7 @@ func (s *ServiceState) StartRelay(group *app.Group) error {
 	}
 
 	//the relay has a socks Client
-	if !s.hasSocksClientGoRoutine {
+	if s.prifiTomlConfig.RelayDataOutputEnabled && !s.hasSocksClientGoRoutine {
 		stopChan := make(chan bool, 1)
 		log.Lvl1("Starting EGRESS", s.prifiTomlConfig.VerboseIngressEgressServers)
 		go stream_multiplexer.StartEgressHandler(socksServerConfig.ListeningAddr, socksServerConfig.PayloadSize,
@@ -188,7 +188,7 @@ func (s *ServiceState) StartClient(group *app.Group, delay time.Duration) error 
 	}
 
 	//the client has a socks server
-	if !s.hasSocksServerGoRoutine {
+	if s.prifiTomlConfig.ClientDataOutputEnabled && !s.hasSocksServerGoRoutine {
 		log.Lvl1("Starting SOCKS server on port", socksClientConfig.Port)
 		stopChan := make(chan bool, 1)
 		go stream_multiplexer.StartIngressServer(socksClientConfig.Port, socksClientConfig.PayloadSize,

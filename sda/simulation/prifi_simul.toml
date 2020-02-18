@@ -1,14 +1,14 @@
-Hosts = 94
-PayloadSize = 5000
-CellSizeDown = 17500
-RelayWindowSize = 7
+Hosts = 14
+PayloadSize = 100
+CellSizeDown = 100
+RelayWindowSize = 1
 DCNetType = "Simple"
 RelayReportingLimit = -1
 RelayMaxNumberOfConsecutiveFailedRounds = 5
 RelayProcessingLoopSleepTime = 0
 RelayRoundTimeOut = 20000
 RelayTrusteeCacheLowBound = 10000
-RelayTrusteeCacheHighBound = 50000
+RelayTrusteeCacheHighBound = 20000
 RelayUseDummyDataDown = false
 RelayDataOutputEnabled = false
 ClientDataOutputEnabled = false
@@ -18,7 +18,7 @@ ReplayPCAP = false
 PCAPFolder = "pcap/"
 DisruptionProtectionEnabled = false
 RelayUseOpenClosedSlots = true
-OpenClosedSlotsMinDelayBetweenRequests = 0
+OpenClosedSlotsMinDelayBetweenRequests = 10
 TrusteeSleepTimeBetweenMessages = 0
 TrusteeAlwaysSlowDown = false
 TrusteeNeverSlowDown = false
@@ -37,6 +37,7 @@ RunWait = "10000000ms"
 NTrustees = 3
 SimulDelayBetweenClients = 0
 Suite = "Ed25519"
+SchedulerStrategy = "Always-Latency0"
 
 Rounds
 1

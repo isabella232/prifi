@@ -18,7 +18,6 @@ package client
  * ProcessDownStreamData() <- is called by Received_REL_CLI_DOWNSTREAM_DATA; it handles the raw data received
  * SendUpstreamData() <- it is called at the end of ProcessDownStreamData(). Hence, after getting some data down, we send some data up.
  *
- * TODO : traffic need to be encrypted
  */
 
 import (
@@ -65,6 +64,7 @@ type ClientState struct {
 	DisruptionProtectionEnabled   bool
 	LastWantToSend                time.Time
 	EquivocationProtectionEnabled bool
+	SchedulerStrategy			  string
 
 	//concurrent stuff
 	RoundNo           int32
@@ -89,7 +89,7 @@ type PriFiLibClientInstance struct {
 }
 
 // NewClient creates a new PriFi client entity state.
-func NewClient(doLatencyTest bool, dataOutputEnabled bool, dataForDCNet chan []byte, dataFromDCNet chan []byte, doReplayPcap bool, pcapFolder string, msgSender *net.MessageSenderWrapper) *PriFiLibClientInstance {
+func NewClient(doLatencyTest bool, dataOutputEnabled bool, dataForDCNet chan []byte, dataFromDCNet chan []byte, doReplayPcap bool, pcapFolder string, schedulerStrategy string, msgSender *net.MessageSenderWrapper) *PriFiLibClientInstance {
 
 	clientState := new(ClientState)
 
@@ -98,8 +98,8 @@ func NewClient(doLatencyTest bool, dataOutputEnabled bool, dataForDCNet chan []b
 	//clientState.StartStopReceiveBroadcast = make(chan bool) //this should stay nil, !=nil -> we have a listener goroutine active
 	clientState.LatencyTest = &prifilog.LatencyTests{
 		DoLatencyTests:       doLatencyTest,
-		LatencyTestsInterval: 2 * time.Second,
-		NextLatencyTest:      time.Now(),
+		LatencyTestsInterval: 1 * time.Second,
+		NextLatencyTest:      time.Now().Add(30 * time.Second),
 		LatencyTestsToSend:   make([]*prifilog.LatencyTestToSend, 0),
 	}
 	clientState.timeStatistics = make(map[string]*prifilog.TimeStatistics)
@@ -111,6 +111,7 @@ func NewClient(doLatencyTest bool, dataOutputEnabled bool, dataForDCNet chan []b
 	clientState.DataFromDCNet = dataFromDCNet
 	clientState.DataOutputEnabled = dataOutputEnabled
 	clientState.LastWantToSend = time.Now()
+	clientState.SchedulerStrategy = schedulerStrategy
 	clientState.pcapReplay = &PCAPReplayer{
 		Enabled:    doReplayPcap,
 		PCAPFolder: pcapFolder,

@@ -1,7 +1,7 @@
 Hosts = x
-PayloadSize = 5000
-CellSizeDown = 17500
-RelayWindowSize = 7
+PayloadSize = 100
+CellSizeDown = 100
+RelayWindowSize = 2
 DCNetType = "Simple"
 RelayReportingLimit = -1
 RelayMaxNumberOfConsecutiveFailedRounds = 5
@@ -19,7 +19,7 @@ PCAPFolder = "pcap/"
 DisruptionProtectionEnabled = false
 RelayUseOpenClosedSlots = true
 OpenClosedSlotsMinDelayBetweenRequests = 0
-TrusteeSleepTimeBetweenMessages = 0
+TrusteeSleepTimeBetweenMessages = 10
 TrusteeAlwaysSlowDown = false
 TrusteeNeverSlowDown = false
 SocksServerPort = 8080
@@ -37,6 +37,7 @@ RunWait = "10000000ms"
 NTrustees = 3
 SimulDelayBetweenClients = 0
 Suite = "Ed25519"
+SchedulerStrategy = "Always-Latency0"
 
 Rounds
 1

@@ -67,8 +67,6 @@ func NewRelay(dataOutputEnabled bool, dataForClients chan []byte, dataFromDCNet 
 	relayState.DataFromDCNet = dataFromDCNet
 	relayState.DataOutputEnabled = dataOutputEnabled
 	relayState.timeoutHandler = timeoutHandler
-	relayState.ExperimentResultChannel = experimentResultChan
-	relayState.ExperimentResultData = make([]string, 0)
 	relayState.PriorityDataForClients = make(chan []byte, 10) // This is used for relay's control message (like latency-tests) d
 	relayState.schedulesStatistics = prifilog.NewSchedulesStatistics()
 	relayState.timeStatistics = make(map[string]*prifilog.TimeStatistics)
@@ -146,8 +144,6 @@ type RelayState struct {
 	UseUDP                                 bool
 	numberOfNonAckedDownstreamPackets      int
 	WindowSize                             int
-	ExperimentResultChannel                chan interface{}
-	ExperimentResultData                   []string
 	timeoutHandler                         func([]int, []int)
 	bitrateStatistics                      *prifilog.BitrateStatistics
 	schedulesStatistics                    *prifilog.SchedulesStatistics

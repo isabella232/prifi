@@ -105,6 +105,9 @@ func (stats *BitrateStatistics) ReportWithInfo(info string) string {
 			int64(stats.totalUpstreamCells)*int64(stats.cellSize))
 
 		log.Lvlf1(str)
+		if info != "" {
+			log.Lvl1(info)
+		}
 
 		//json output
 		strJSON := fmt.Sprintf("{ \"type\"=\"relay_bw\", \"report_id\"=\"%v\", \"round_per_sec\"=\"%0.1f\", \"up_kbps\"=\"%0.1f\", \"down_kbps\"=\"%0.1f\", \"down_udp_kbps\"=\"%0.1f\", \"down_re_udp_kbps\"=\"%0.1f\" }\n",

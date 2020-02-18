@@ -2,13 +2,14 @@ package log
 
 import (
 	"fmt"
+	"strconv"
 	"time"
 
 	"go.dedis.ch/onet/log"
 )
 
 //This class hold latencies values, and performs the average/std distribution of it. That is the max number of value stored.
-const MAX_LATENCY_STORED = 100
+const MAX_LATENCY_STORED = 30
 
 //LatencyStatistics holds the latencies reported
 type TimeStatistics struct {
@@ -60,6 +61,14 @@ func (stats *TimeStatistics) AddTime(latency int64) {
 	}
 }
 
+func (stats *TimeStatistics) ReturnLastValue() string {
+	if len(stats.times) == 0 {
+		return "NoData"
+	}
+
+	return strconv.Itoa(int(stats.times[len(stats.times)-1]))
+}
+
 //Report prints (if t>period=5 seconds have passed since the last report) all the information, without extra data
 func (stats *TimeStatistics) Report() string {
 	return stats.ReportWithInfo("")
@@ -80,6 +89,27 @@ func (stats *TimeStatistics) ReportWithInfo(info string) string {
 		//json output
 		//strJSON := fmt.Sprintf("{ \"type\"=\"relay_timings\", \"report_id\"=\"%v\", \"duration_mean_ms\"=\"%s\", \"duration_dev_ms\"=\"%s\", \"mean_over\"=\"%s\", \"total_pop\"=\"%v\", \"info\"=\"%s\" }\n",
 		//	stats.reportNo, mean, variance, n, stats.totalValuesAdded, info)
+
+		stats.nextReport = now.Add(stats.period)
+		stats.reportNo++
+
+		return str
+	}
+	return ""
+}
+
+
+//ReportWithInfo prints (if t>period=5 seconds have passed since the last report) all the information, with extra data
+func (stats *TimeStatistics) ReportWithExtraInfo(info string, extrainfo string) string {
+	now := time.Now()
+	if now.After(stats.nextReport) {
+
+		mean, variance, n := stats.TimeStatistics()
+
+		//human-readable output
+		str := fmt.Sprintf("[%v] %s ms +- %s (over %s, happened %v). Info: %s, extrainfo: %s", stats.reportNo, mean, variance, n, stats.totalValuesAdded, info, extrainfo)
+
+		log.Lvl1(str)
 
 		stats.nextReport = now.Add(stats.period)
 		stats.reportNo++

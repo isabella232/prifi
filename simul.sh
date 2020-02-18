@@ -11,7 +11,7 @@
 
 # variables that you might change often
 
-dbg_lvl=3                                  # 1=less verbose, 3=more verbose. goes up to 5, but then prints the SDA's message (network framework)
+dbg_lvl=5                                  # 1=less verbose, 3=more verbose. goes up to 5, but then prints the SDA's message (network framework)
 colors="true"                              # if  "false", the output of PriFi (and this script) will be in black-n-white
 
 # Experiment settings

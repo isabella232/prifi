@@ -220,7 +220,7 @@ Either we send something from the SOCKS/VPN buffer, or we answer the latency-tes
 func (p *PriFiLibRelayInstance) Received_CLI_REL_UPSTREAM_DATA(msg net.CLI_REL_UPSTREAM_DATA) error {
 	p.relayState.roundManager.AddClientCipher(msg.RoundID, msg.ClientID, msg.Data)
 	if p.relayState.roundManager.HasAllCiphersForCurrentRound() {
-		p.upstreamPhase1_processCiphers(true)
+		p.upstreamPhase1_processCiphers(false)
 	}
 
 	return nil
@@ -234,6 +234,7 @@ If for a future round we need to Buffer it.
 func (p *PriFiLibRelayInstance) Received_TRU_REL_DC_CIPHER(msg net.TRU_REL_DC_CIPHER) error {
 	p.relayState.roundManager.AddTrusteeCipher(msg.RoundID, msg.TrusteeID, msg.Data)
 	if p.relayState.roundManager.HasAllCiphersForCurrentRound() {
+		log.Lvl1("Round finished by Trustee", msg.TrusteeID, p.relayState.roundManager.TrusteeStatus())
 		p.upstreamPhase1_processCiphers(true)
 	}
 
@@ -260,9 +261,11 @@ func (p *PriFiLibRelayInstance) upstreamPhase1_processCiphers(finishedByTrustee 
 	if finishedByTrustee {
 		timeMs := timing.StopMeasure("waiting-on-someone").Nanoseconds() / 1e6
 		p.relayState.timeStatistics["waiting-on-trustees"].AddTime(timeMs)
+		p.relayState.timeStatistics["waiting-on-clients"].AddTime(0)
 	} else {
 		timeMs := timing.StopMeasure("waiting-on-someone").Nanoseconds() / 1e6
 		p.relayState.timeStatistics["waiting-on-clients"].AddTime(timeMs)
+		p.relayState.timeStatistics["waiting-on-trustees"].AddTime(0)
 	}
 
 	roundID := p.relayState.roundManager.CurrentRound()
@@ -472,22 +475,24 @@ func (p *PriFiLibRelayInstance) upstreamPhase3_finalizeRound(roundID int32) erro
 		log.Lvl2("Relay finished round " + strconv.Itoa(int(roundID)) + " .")
 	} else {
 		log.Lvl2("Relay finished round "+strconv.Itoa(int(roundID))+" (after", p.relayState.roundManager.TimeSpentInRound(roundID), ").")
-		p.collectExperimentResult(p.relayState.bitrateStatistics.Report())
-		p.collectExperimentResult(p.relayState.schedulesStatistics.Report())
-		timeSpent := p.relayState.roundManager.TimeSpentInRound(roundID)
-		p.relayState.timeStatistics["round-duration"].AddTime(timeSpent.Nanoseconds() / 1e6) //ms
-		for k, v := range p.relayState.timeStatistics {
-			p.collectExperimentResult(v.ReportWithInfo(k))
-		}
-		if false && roundID%1000 == 0 {
-			log.Info("Round", roundID, "Relay Memory\n", memoryUsage())
-			memoryUsage2()
-			i := 0
-			for _, s := range p.relayState.ExperimentResultData {
-				i += len(s)
+		p.relayState.bitrateStatistics.Report()
+		p.relayState.schedulesStatistics.Report()
+		timeSpent := p.relayState.roundManager.TimeSpentInRound(roundID).Nanoseconds() / 1e6 //ms
+		p.relayState.timeStatistics["round-duration"].AddTime(timeSpent)
+
+		if false && timeSpent > 100 {
+			log.Warn("Slow round", roundID, "total time", timeSpent, "ms")
+			for k, v := range p.relayState.timeStatistics {
+				log.Warn(k, v.ReturnLastValue())
 			}
-			log.Info("Size of experiment collect:", i, "B")
-			p.relayState.roundManager.MemoryUsage()
+		}
+
+		for k, v := range p.relayState.timeStatistics {
+			if k == "waiting-on-trustees" {
+				v.ReportWithExtraInfo(k, p.relayState.roundManager.TrusteeStatus())
+			} else {
+				v.ReportWithInfo(k)
+			}
 		}
 	}
 
@@ -495,7 +500,6 @@ func (p *PriFiLibRelayInstance) upstreamPhase3_finalizeRound(roundID int32) erro
 	newRound := p.relayState.roundManager.CurrentRound()
 	if newRound == int32(p.relayState.ExperimentRoundLimit) {
 		log.Lvl1("Relay : Experiment round limit (", newRound, ") reached")
-		p.relayState.ExperimentResultChannel <- p.relayState.ExperimentResultData
 
 		// shut down everybody
 		msg := net.ALL_ALL_SHUTDOWN{}
@@ -558,9 +562,6 @@ func (p *PriFiLibRelayInstance) downstreamPhase1_openRoundAndSendData() error {
 		p.relayState.time0 = uint64(prifilog.MsTimeStampNow())
 	}
 
-	// TODO : if something went wrong before, this flag should be used to warn the clients that the config has changed
-	flagResync := false
-
 	// periodically set to True so client can advertise their bitmap
 	flagOpenClosedRequest := p.relayState.UseOpenClosedSlots &&
 		p.relayState.roundManager.IsNextDownstreamRoundForOpenClosedRequest(p.relayState.nClients)
@@ -583,7 +584,7 @@ func (p *PriFiLibRelayInstance) downstreamPhase1_openRoundAndSendData() error {
 		RoundID:               nextDownstreamRoundID,
 		OwnershipID:           nextOwner,
 		Data:                  downstreamCellContent,
-		FlagResync:            flagResync,
+		FlagResync:            false,
 		FlagOpenClosedRequest: flagOpenClosedRequest}
 
 	if roundOpened, _ := p.relayState.roundManager.currentRound(); !roundOpened {
@@ -851,20 +852,6 @@ func ValidateHmac256(message, inputHmac []byte, clientID int) bool {
 	h.Write(message)
 	computedHmac := h.Sum(nil)
 	return bytes.Equal(inputHmac, computedHmac)
-}
-
-// updates p.relayState.ExperimentResultData
-func (p *PriFiLibRelayInstance) collectExperimentResult(str string) {
-	if str == "" {
-		return
-	}
-
-	// if this is not an experiment, simply return
-	if p.relayState.ExperimentRoundLimit == -1 {
-		return
-	}
-
-	p.relayState.ExperimentResultData = append(p.relayState.ExperimentResultData, str)
 }
 
 func memoryUsage() string {

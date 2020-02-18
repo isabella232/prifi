@@ -55,7 +55,7 @@ func (s *ServiceState) HandleStop(msg *network.Envelope) error {
 // Packet send by relay to trustees at start
 func (s *ServiceState) HandleHelloMsg(msg *network.Envelope) error {
 	if s.role != prifi_protocol.Trustee {
-		log.Error("Received a Hello message, but we're not a trustee ! ignoring.")
+		//log.Error("Received a Hello message, but we're not a trustee ! ignoring.")
 		return nil
 	}
 

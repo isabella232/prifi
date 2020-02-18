@@ -8,6 +8,7 @@ import (
 	"runtime/debug"
 	"sort"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
 )
@@ -66,6 +67,30 @@ func sortedIntMapOfIntMapDump(m map[int]map[int32][]byte) {
 	for _, i := range nodes {
 		log.Lvlf1("%2d: %+v", i, m[i])
 	}
+}
+
+// Show how much we buffered from the trustees
+func (b *BufferableRoundManager) TrusteeStatus() string {
+
+	trustees := make([]string, 0)
+
+
+	_, round := b.currentRound()
+
+	for i := 0; i < b.nTrustees; i++ {
+
+		ids := make([]string,0)
+		j := int32(0)
+		for j < int32(100) {
+			if _, ok := b.bufferedTrusteeCiphers[i][round+j]; !ok {
+				ids = append(ids, strconv.Itoa(int(j)))
+			}
+			j += 1
+		}
+		trustees = append(trustees, "T"+strconv.Itoa(i)+":"+strconv.Itoa(len(b.bufferedTrusteeCiphers[i]))+" ("+strings.Join(ids, ",")+")")
+	}
+
+	return "Round "+ strconv.Itoa(int(round)) + " ->" + strings.Join(trustees, ",  ")
 }
 
 // Dumps precise statistics about the memory used by this datastructure

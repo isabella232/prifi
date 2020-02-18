@@ -58,7 +58,7 @@ type PrifiTomlConfig struct {
 	TrusteeNeverSlowDown                    bool
 	SimulDelayBetweenClients                int
 	DisruptionProtectionEnabled             bool
-	EquivocationProtectionEnabled           bool // not linked in the back
+	EquivocationProtectionEnabled           bool
 	OpenClosedSlotsMinDelayBetweenRequests  int
 	RelayMaxNumberOfConsecutiveFailedRounds int
 	RelayProcessingLoopSleepTime            int
@@ -66,6 +66,7 @@ type PrifiTomlConfig struct {
 	RelayTrusteeCacheLowBound               int
 	RelayTrusteeCacheHighBound              int
 	VerboseIngressEgressServers             bool
+	SchedulerStrategy						string
 }
 
 //PriFiSDAWrapperConfig is all the information the SDA-Protocols needs. It contains the network map of identities, our role, and the socks parameters if we are the corresponding role
@@ -132,6 +133,7 @@ func (p *PriFiSDAProtocol) SetConfigFromPriFiService(config *PriFiSDAWrapperConf
 			config.ClientSideSocksConfig.DownstreamChannel,
 			config.Toml.ReplayPCAP,
 			config.Toml.PCAPFolder,
+			config.Toml.SchedulerStrategy,
 			ms)
 	}
 

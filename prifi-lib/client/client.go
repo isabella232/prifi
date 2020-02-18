@@ -215,7 +215,11 @@ func (p *PriFiLibClientInstance) ProcessDownStreamData(msg net.REL_CLI_DOWNSTREA
 		if p.clientState.LatencyTest.DoLatencyTests && len(msg.Data) > 2 {
 
 			actionFunction := func(roundRec int32, roundDiff int32, timeDiff int64) {
-				log.Lvl3("Measured latency is", timeDiff, ", for client", p.clientState.ID, ", roundDiff", roundDiff, ", received on round", msg.RoundID)
+				if timeDiff > 200 {
+					log.Warn("Measured latency is", timeDiff, ", for client", p.clientState.ID, ", roundDiff", roundDiff, ", received on round", msg.RoundID)
+				} else {
+					log.Lvl3("Measured latency is", timeDiff, ", for client", p.clientState.ID, ", roundDiff", roundDiff, ", received on round", msg.RoundID)
+				}
 				p.clientState.timeStatistics["measured-latency"].AddTime(timeDiff)
 				p.clientState.timeStatistics["measured-latency"].ReportWithInfo("measured-latency")
 			}
@@ -226,7 +230,11 @@ func (p *PriFiLibClientInstance) ProcessDownStreamData(msg net.REL_CLI_DOWNSTREA
 	//test if we have latency test to send
 	now := time.Now()
 	if p.clientState.LatencyTest.DoLatencyTests && p.clientState.ID == 0 && now.After(p.clientState.LatencyTest.NextLatencyTest) {
-		log.Lvl1("Client 0 wants to send a latency test")
+		if len(p.clientState.LatencyTest.LatencyTestsToSend) == 0 {
+			log.Lvl3("Client 0 wants to send a latency test (", len(p.clientState.LatencyTest.LatencyTestsToSend), "queued), we are in round", msg.RoundID, ".")
+		} else {
+			log.Warn("Client 0 wants to send a latency test (number queued:", len(p.clientState.LatencyTest.LatencyTestsToSend), ", oldest:", MsTimeStampNow() - MsTimeStamp(p.clientState.LatencyTest.LatencyTestsToSend[0].CreatedAt),"), we are in round", msg.RoundID, ".")
+		}
 		newLatTest := &prifilog.LatencyTestToSend{
 			CreatedAt: now,
 		}
@@ -255,9 +263,9 @@ func (p *PriFiLibClientInstance) ProcessDownStreamData(msg net.REL_CLI_DOWNSTREA
 		bmc.Client_ReceivedScheduleRequest(p.clientState.nClients)
 
 		//check if we want to transmit
-		if p.WantsToTransmit() {
+		if  p.WantsToTransmit() {
 			bmc.Client_ReserveRound(p.clientState.MySlot)
-			log.Lvl3("Client ", p.clientState.ID, "Gonna reserve slot", p.clientState.MySlot, "(we are in round", msg.RoundID, ")")
+			//log.Lvl1("Client ", p.clientState.ID, "Gonna reserve slot", p.clientState.MySlot, "(we are in round", msg.RoundID, ")")
 		}
 		contribution := bmc.Client_GetOpenScheduleContribution()
 
@@ -288,7 +296,14 @@ func (p *PriFiLibClientInstance) ProcessDownStreamData(msg net.REL_CLI_DOWNSTREA
 	p.clientState.RoundNo++
 
 	p.clientState.timeStatistics["round-processing"].AddTime(timeMs)
-	//p.clientState.timeStatistics["round-processing"].ReportWithInfo("round-processing")
+	p.clientState.timeStatistics["round-processing"].ReportWithInfo("round-processing")
+
+	if false && timeMs > 100 {
+		log.Warn("CLIENT Slow round", msg.RoundID, "total time", timeMs, "ms")
+		for k, v := range p.clientState.timeStatistics {
+			log.Warn(k, v.ReturnLastValue())
+		}
+	}
 
 	//now we will be expecting next message. Except if we already received and buffered it !
 	if msg, hasAMessage := p.clientState.BufferedRoundData[int32(p.clientState.RoundNo)]; hasAMessage {
@@ -301,48 +316,90 @@ func (p *PriFiLibClientInstance) ProcessDownStreamData(msg net.REL_CLI_DOWNSTREA
 // WantsToTransmit returns true if [we have a latency message to send] OR [we have data to send]
 func (p *PriFiLibClientInstance) WantsToTransmit() bool {
 
-	//we have some pcap to send
-	if p.clientState.pcapReplay.Enabled && len(p.clientState.pcapReplay.Packets) > 0 && p.clientState.pcapReplay.currentPacket < len(p.clientState.pcapReplay.Packets) {
-		relativeNow := uint64(MsTimeStampNow()) - p.clientState.pcapReplay.time0
-		currentPacket := p.clientState.pcapReplay.Packets[p.clientState.pcapReplay.currentPacket]
-
-		if currentPacket.MsSinceBeginningOfCapture <= relativeNow {
+	switch p.clientState.SchedulerStrategy {
+	case "Always":
+		// effectively cancels the benefits of the scheduling. Use for debug
+		return true
+	case "Aggressive-Latency":
+		// if we have a latency test message
+		if len(p.clientState.LatencyTest.LatencyTestsToSend) > 0 {
 			return true
 		}
-	}
 
-	// if we have a latency test message
-	if len(p.clientState.LatencyTest.LatencyTestsToSend) > 0 {
-		return true
-	}
-
-	// if we have already ready-to-send data
-	if p.clientState.NextDataForDCNet != nil {
-		return true
-	}
-
-	// if we transmitted in the last second, keep reserving (but don't do this with pcaps)
-	if true || !p.clientState.pcapReplay.Enabled {
+		// if we transmitted in the last second, keep reserving (but don't do this with pcaps)
 		now := time.Now()
 		//if we transmitted in the last second, keep reserving slots
 		if now.Before(p.clientState.LastWantToSend.Add(1 * time.Second)) {
 			log.Lvl3("WantToSend < 5 sec,  true")
 			return true
 		}
-	}
+	case "Always-Latency0":
+		// if we have a latency test message
+		if p.clientState.ID == 0 {
+			return true
+		}
 
-	// otherwise, poll the channel
-	select {
-	case myData := <-p.clientState.DataForDCNet:
-		p.clientState.LastWantToSend = time.Now()
-		p.clientState.NextDataForDCNet = &myData
-		log.Lvl3("WantToSend has data, true")
-		return true
+	case "PCAP-Basic":
+		//we have some pcap to send
+		if p.clientState.pcapReplay.Enabled && len(p.clientState.pcapReplay.Packets) > 0 && p.clientState.pcapReplay.currentPacket < len(p.clientState.pcapReplay.Packets) {
+			relativeNow := uint64(MsTimeStampNow()) - p.clientState.pcapReplay.time0
+			currentPacket := p.clientState.pcapReplay.Packets[p.clientState.pcapReplay.currentPacket]
+
+			if currentPacket.MsSinceBeginningOfCapture <= relativeNow {
+				return true
+			}
+		}
+	case "Polyvalent":
+		//we have some pcap to send
+		if p.clientState.pcapReplay.Enabled && len(p.clientState.pcapReplay.Packets) > 0 && p.clientState.pcapReplay.currentPacket < len(p.clientState.pcapReplay.Packets) {
+			relativeNow := uint64(MsTimeStampNow()) - p.clientState.pcapReplay.time0
+			currentPacket := p.clientState.pcapReplay.Packets[p.clientState.pcapReplay.currentPacket]
+
+			// if we have something to send, reserve
+			if currentPacket.MsSinceBeginningOfCapture <= relativeNow {
+				return true
+			}
+		}
+
+		// if we have a latency test message
+		if len(p.clientState.LatencyTest.LatencyTestsToSend) > 0 {
+			return true
+		}
+
+		// if we have already ready-to-send data
+		if p.clientState.NextDataForDCNet != nil {
+			return true
+		}
+
+		// if we transmitted in the last second, keep reserving (but don't do this with pcaps)
+		if !p.clientState.pcapReplay.Enabled {
+			now := time.Now()
+			//if we transmitted in the last second, keep reserving slots
+			if now.Before(p.clientState.LastWantToSend.Add(1 * time.Second)) {
+				log.Lvl3("WantToSend < 5 sec,  true")
+				return true
+			}
+		}
+
+		// otherwise, poll the channel
+		select {
+		case myData := <-p.clientState.DataForDCNet:
+			p.clientState.LastWantToSend = time.Now()
+			p.clientState.NextDataForDCNet = &myData
+			log.Lvl3("WantToSend has data, true")
+			return true
+
+		default:
+			log.Lvl3("WantToSend           false")
+			return false
+		}
 
 	default:
-		log.Lvl3("WantToSend           false")
-		return false
+		log.Fatal("Client", p.clientState.ID, "unknown scheduler strategy:", p.clientState.SchedulerStrategy)
 	}
+
+	// nothing to send
+	return false
 }
 
 /*
