@@ -52,6 +52,15 @@ sleeptime_between_spawns=1                  # time in second between entities la
     
 DETERLAB_PCAP_LOCATION='/users/lbarman/remote/pcap/'
 
+cleanup() {
+  trap 'kill -INT -$pid' INT
+  echo "SIGINT caught, killing."
+  exit 1
+}
+
+trap 'cleanup' SIGINT INT
+
+
 source "helpers.lib.sh"
 
 # ------------------------
@@ -111,7 +120,9 @@ simul-helper() {
     echo "Simulating for TRAFFIC $traffic, CLIENTS=$clients, ACTIVE_CLIENTS=$active_hosts, UCS $upCellSize, win $window REPEAT ${repeat}..."
     setPCAPOnServer "$traffic" "$active_hosts"
     $(cd ./sda/simulation && ./setparam.py "Hosts=$hosts" "RelayWindowSize=$window" "CellSizeUp=$upCellSize")
-    timeout "$SIMULATION_TIMEOUT" "$THIS_SCRIPT" simul | tee experiment_${traffic}_${clients}_${active_hosts}_${repeat}.txt
+    timeout "$SIMULATION_TIMEOUT" "$THIS_SCRIPT" simul | tee experiment_${traffic}_${clients}_${active_hosts}_${repeat}.txt &
+    pid=$!
+    wait $pid
 }
 
 # ------------------------
@@ -276,7 +287,7 @@ case $1 in
 
         "$THIS_SCRIPT" simul-cl
 
-        for repeat in {11..20}
+        for repeat in {1..10}
         do
             for i in 10 20 30 40 50 60 70 80 90
             do
@@ -287,7 +298,9 @@ case $1 in
                 rm -f "$CONFIG_FILE"
                 sed "s/Hosts = x/Hosts = $hosts/g" "$TEMPLATE_FILE" > "$CONFIG_FILE"
 
-                timeout "$SIMULATION_TIMEOUT" "$THIS_SCRIPT" simul | tee experiment_${i}_${repeat}.txt
+                timeout "$SIMULATION_TIMEOUT" "$THIS_SCRIPT" simul | tee experiment_${i}_${repeat}.txt &
+                pid=$!
+                wait $pid
             done
         done
 
@@ -310,7 +323,9 @@ case $1 in
                 rm -f "$CONFIG_FILE"
                 sed "s/OpenClosedSlotsMinDelayBetweenRequests = x/OpenClosedSlotsMinDelayBetweenRequests = $i/g" "$TEMPLATE_FILE" > "$CONFIG_FILE"
 
-                timeout "$SIMULATION_TIMEOUT" "$THIS_SCRIPT" simul | tee experiment_${i}_${repeat}.txt
+                timeout "$SIMULATION_TIMEOUT" "$THIS_SCRIPT" simul | tee experiment_${i}_${repeat}.txt &
+                pid=$!
+                wait $pid
             done
         done
 
