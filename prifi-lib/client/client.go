@@ -198,7 +198,7 @@ When this function ends, it calls SendUpstreamData() which continues the communi
 */
 func (p *PriFiLibClientInstance) ProcessDownStreamData(msg net.REL_CLI_DOWNSTREAM_DATA) error {
 
-	timing.StartMeasure("round-processing")
+	//timing.StartMeasure("round-processing")
 
 	/*
 	 * HANDLE THE DOWNSTREAM DATA
@@ -295,8 +295,8 @@ func (p *PriFiLibClientInstance) ProcessDownStreamData(msg net.REL_CLI_DOWNSTREA
 	//one round just passed
 	p.clientState.RoundNo++
 
-	p.clientState.timeStatistics["round-processing"].AddTime(timeMs)
-	p.clientState.timeStatistics["round-processing"].ReportWithInfo("round-processing")
+	//p.clientState.timeStatistics["round-processing"].AddTime(timeMs)
+	//p.clientState.timeStatistics["round-processing"].ReportWithInfo("round-processing")
 
 	if false && timeMs > 100 {
 		log.Warn("CLIENT Slow round", msg.RoundID, "total time", timeMs, "ms")
@@ -320,6 +320,11 @@ func (p *PriFiLibClientInstance) WantsToTransmit() bool {
 	case "Always":
 		// effectively cancels the benefits of the scheduling. Use for debug
 		return true
+	case "Latency":
+		// if we have a latency test message
+		if len(p.clientState.LatencyTest.LatencyTestsToSend) > 0 {
+			return true
+		}
 	case "Aggressive-Latency":
 		// if we have a latency test message
 		if len(p.clientState.LatencyTest.LatencyTestsToSend) > 0 {

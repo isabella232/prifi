@@ -20,7 +20,7 @@ func (p *PriFiLibRelayInstance) checkIfRoundHasEndedAfterTimeOut_Phase1(roundID 
 	defer p.relayState.processingLock.Unlock()
 
 	if !p.relayState.roundManager.IsRoundOpenend(roundID) {
-		return //everything went dwell, it's great !
+		return //everything went well, it's great !
 	}
 
 	if p.stateMachine.State() == "SHUTDOWN" {
