@@ -1,7 +1,9 @@
 package relay
 
 import (
+	"github.com/dedis/prifi/prifi-lib/net"
 	"go.dedis.ch/onet/log"
+	"strconv"
 	"time"
 )
 
@@ -68,4 +70,34 @@ func (p *PriFiLibRelayInstance) checkIfRoundHasEndedAfterTimeOut_Phase1(roundID 
 			p.upstreamPhase1_processCiphers(true)
 		}
 	}
+}
+
+func (p *PriFiLibRelayInstance) timeoutRetransmitPk(msg *net.REL_CLI_TELL_EPH_PKS_AND_TRUSTEES_SIG) {
+
+	time.Sleep(10 * time.Duration(p.relayState.RoundTimeOut) * time.Millisecond)
+
+	log.Lvl1("Timeout fired")
+
+	// never start treating two timeout concurrently (or receiving a message)
+	p.relayState.processingLock.Lock()
+	defer p.relayState.processingLock.Unlock()
+
+	if !p.relayState.roundManager.IsRoundOpenend(0) {
+		return //everything went well, it's great !
+	}
+
+	if p.stateMachine.State() == "SHUTDOWN" {
+		return //nothing to ensure in that case
+	}
+
+	log.Lvl1("Timeout fired, continuing")
+
+	// broadcast to all clients
+	for i := 0; i < p.relayState.nClients; i++ {
+		if !p.relayState.roundManager.clientAckMap[i] {
+			log.Lvl1("Timeout: retransmitting all keys to client", i)
+			p.messageSender.SendToClientWithLog(i, msg, "(client "+strconv.Itoa(i+1)+")")
+		}
+	}
+
 }

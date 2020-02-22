@@ -218,6 +218,12 @@ If we finished a round (we had collected all data, and called DecodeCell()), we 
 Either we send something from the SOCKS/VPN buffer, or we answer the latency-test message if we received any, or we send 1 bit.
 */
 func (p *PriFiLibRelayInstance) Received_CLI_REL_UPSTREAM_DATA(msg net.CLI_REL_UPSTREAM_DATA) error {
+
+	if p.relayState.nClients > 200 && p.relayState.roundManager.CurrentRound() == 0 {
+		p.relayState.round0NumberOfCollectedCiphers += 1
+		log.Lvl2("Round", p.relayState.roundManager.CurrentRound(), "already collected", p.relayState.round0NumberOfCollectedCiphers, "over", p.relayState.nClients)
+	}
+
 	p.relayState.roundManager.AddClientCipher(msg.RoundID, msg.ClientID, msg.Data)
 	if p.relayState.roundManager.HasAllCiphersForCurrentRound() {
 		p.upstreamPhase1_processCiphers(false)
@@ -840,6 +846,9 @@ func (p *PriFiLibRelayInstance) Received_TRU_REL_SHUFFLE_SIG(msg net.TRU_REL_SHU
 
 		//client will answer will CLI_REL_UPSTREAM_DATA. There is no data down on round 0. We set the following variable to 1 since the reception of CLI_REL_UPSTREAM_DATA decrements it.
 		p.relayState.numberOfNonAckedDownstreamPackets = 1
+
+		// prepare re-transmission if necessary
+		go p.timeoutRetransmitPk(msg)
 	}
 
 	return nil

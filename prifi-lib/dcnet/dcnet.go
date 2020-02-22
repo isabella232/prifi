@@ -148,7 +148,7 @@ func (e *DCNetEntity) TrusteeEncodeForRound(roundID int32) []byte {
 // and crash if the round is in the past or the Payload is too long
 func (e *DCNetEntity) EncodeForRound(roundID int32, slotOwner bool, payload []byte) []byte {
 	if len(payload) > e.DCNetPayloadSize {
-		panic("DCNet: cannot encode Payload of length " + strconv.Itoa(int(len(payload))) + " max length is " + strconv.Itoa(len(payload)))
+		panic("DCNet: cannot encode Payload of length " + strconv.Itoa(int(len(payload))) + " max length is " + strconv.Itoa(e.DCNetPayloadSize))
 	}
 
 	if roundID < e.currentRound {

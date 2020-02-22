@@ -174,6 +174,8 @@ type RelayState struct {
 	//Used for verifiable DC-net, part of the dcnet.old/owned.go
 	VerifiableDCNetKeys [][]byte
 	nVkeysCollected     int
+
+	round0NumberOfCollectedCiphers int
 }
 
 // ReceivedMessage must be called when a PriFi host receives a message.

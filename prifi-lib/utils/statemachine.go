@@ -1,6 +1,9 @@
 package utils
 
-import "sync"
+import (
+	"go.dedis.ch/onet/log"
+	"sync"
+)
 
 // is used to asset that an entity is in a given state
 type StateMachine struct {
@@ -78,6 +81,7 @@ func (s *StateMachine) ChangeState(newState string) {
 		s.logErr(s.entity + ": Cannot change state to " + newState + " which is not valid.")
 		return
 	}
+	log.Lvl2(s.entity, "switched state from", s.currentState, "to", newState)
 	s.currentState = newState
 }
 

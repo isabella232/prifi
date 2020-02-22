@@ -234,24 +234,13 @@ case $1 in
         #   ssh relay.LB-LLD.SAFER.isi.deterlab.net 'cd remote; sudo chmod ugo+rw -R .'
         # [EOF]
 
-        echo -e "${warningMsg} This tool *deletes* all experiment data on the remote server. Make sure you backuped what you need !"
+        echo -n "Making logs R/W... " #this is needed since simul runs and writes log as root
+        ssh $DETERLAB_USER@users.deterlab.net './makelogsrw.sh'
+        echo -e "$okMsg"
 
-        read -p "Would you like to continue and *delete* all logs [y/n] ? " ans
-
-        if [ $ans = y -o $ans = Y -o $ans = yes -o $ans = Yes -o $ans = YES ]
-        then
-
-            echo -n "Making logs R/W... " #this is needed since simul runs and writes log as root
-            ssh $DETERLAB_USER@users.deterlab.net './makelogsrw.sh'
-            echo -e "$okMsg"
-
-            echo -n "Deleting all remote logs... "
-            ssh $DETERLAB_USER@users.deterlab.net 'cd remote; rm -rf output_*;'
-            echo -e "$okMsg"
-
-        else
-            echo "Aborting without taking any action."
-        fi
+        echo -n "Deleting all remote logs... "
+        ssh $DETERLAB_USER@users.deterlab.net 'cd remote; rm -rf output_*; rm -rf *.db'
+        echo -e "$okMsg"
 
         ;;
 
@@ -305,6 +294,43 @@ case $1 in
         done
 
         ;;
+
+    simul-vary-nclients-trustees-large)
+
+        NTRUSTEES=3
+        NRELAY=1
+
+        "$THIS_SCRIPT" simul-cl
+
+        for repeat in {1..20}
+        do
+            for ntrustees in 3 5 10
+            do
+              $(cd ./sda/simulation && ./gen_mapping.py $ntrustees)
+
+              for i in 10 50 100 500 1000
+              do
+                  hosts=$(($ntrustees + 1 + $i))
+                  echo "Simulating for NTRUSTEES=${ntrustees} NCLIENTS=$i HOSTS=$hosts..."
+                  window=5
+                  upCellSize=$(($i <= 800 ? 100 : $i / 8 + 1)) # after 800 clients, we need a bigger window for the Reservation mechanism
+
+                  $(cd ./sda/simulation && ./setparam.py "Hosts=$hosts" "RelayWindowSize=$window" "PayloadSize=$upCellSize" "NTrustees=$ntrustees")
+
+                  cat $CONFIG_FILE
+                  echo ""
+
+                  timeout "$SIMULATION_TIMEOUT" "$THIS_SCRIPT" simul | tee experiment_${ntrustees}_${i}_${repeat}.txt &
+                  pid=$!
+                  wait $pid
+              done
+            done
+        done
+
+        ;;
+
+
+
 
     simul-vary-sleep)
 
@@ -585,7 +611,6 @@ case $1 in
 
     *)
         test_go
-        test_cothority
         print_usage
         ;;
 

@@ -216,7 +216,7 @@ func (p *PriFiLibClientInstance) ProcessDownStreamData(msg net.REL_CLI_DOWNSTREA
 
 			actionFunction := func(roundRec int32, roundDiff int32, timeDiff int64) {
 				if timeDiff > 200 {
-					log.Warn("Measured latency is", timeDiff, ", for client", p.clientState.ID, ", roundDiff", roundDiff, ", received on round", msg.RoundID)
+					log.Lvl2("Measured latency is", timeDiff, ", for client", p.clientState.ID, ", roundDiff", roundDiff, ", received on round", msg.RoundID)
 				} else {
 					log.Lvl3("Measured latency is", timeDiff, ", for client", p.clientState.ID, ", roundDiff", roundDiff, ", received on round", msg.RoundID)
 				}
@@ -268,6 +268,10 @@ func (p *PriFiLibClientInstance) ProcessDownStreamData(msg net.REL_CLI_DOWNSTREA
 			//log.Lvl1("Client ", p.clientState.ID, "Gonna reserve slot", p.clientState.MySlot, "(we are in round", msg.RoundID, ")")
 		}
 		contribution := bmc.Client_GetOpenScheduleContribution()
+
+		if len(contribution) > p.clientState.DCNet.DCNetPayloadSize {
+			log.Fatal("DCNetPayloadSize is too small to encode ReservationMap of length", len(contribution), "bytes")
+		}
 
 		//produce the next upstream cell
 
@@ -522,8 +526,8 @@ func (p *PriFiLibClientInstance) SendUpstreamData(ownerSlotID int) error {
 		RoundID:  p.clientState.RoundNo,
 		Data:     upstreamCell,
 	}
-
 	p.messageSender.SendToRelayWithLog(toSend, "(round "+strconv.Itoa(int(p.clientState.RoundNo))+")")
+	p.clientState.lastDataSent = toSend
 
 	return nil
 }
@@ -591,6 +595,14 @@ As the client should send the first data, we do so; to keep this function simple
 */
 func (p *PriFiLibClientInstance) Received_REL_CLI_TELL_EPH_PKS_AND_TRUSTEES_SIG(msg net.REL_CLI_TELL_EPH_PKS_AND_TRUSTEES_SIG) error {
 
+	if p.stateMachine.State() == "READY" {
+		// kind of a hack here, this might be re-called if the upstream message was missing; just resend anything (round will be invalid, but process will continue)
+
+		log.Lvl1("Client", p.clientState.ID, " retransmitting round 0")
+		p.messageSender.SendToRelayWithLog(p.clientState.lastDataSent, "(round 0)")
+		return nil
+	}
+
 	//verify the signature
 	neff := new(scheduler.NeffShuffle)
 	mySlot, err := neff.ClientVerifySigAndRecognizeSlot(p.clientState.ephemeralPrivateKey, p.clientState.TrusteePublicKey, msg.Base, msg.EphPks, msg.GetSignatures())
@@ -645,6 +657,7 @@ func (p *PriFiLibClientInstance) Received_REL_CLI_TELL_EPH_PKS_AND_TRUSTEES_SIG(
 		Data:     upstreamCell,
 	}
 	p.messageSender.SendToRelayWithLog(toSend, "(round "+strconv.Itoa(int(p.clientState.RoundNo))+")")
+	p.clientState.lastDataSent = toSend
 
 	p.clientState.RoundNo++
 

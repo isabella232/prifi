@@ -58,11 +58,11 @@ func StopMeasure(name string) time.Duration {
 // StopMeasureAndLog prints the value to Lvl1 instead of returning it
 func StopMeasureAndLog(name string) {
 	duration := StopMeasure(name)
-	log.Lvl1("[StopMeasureAndLog] measured time for", name, ":", duration.Nanoseconds(), "ns")
+	log.Lvl1("[StopMeasureAndLog] measured time for", name, ":", duration.Milliseconds(), "ms")
 }
 
 // StopMeasureAndLog prints the value to Lvl1 instead of returning it (logs "info" too)
 func StopMeasureAndLogWithInfo(name, info string) {
 	duration := StopMeasure(name)
-	log.Lvl1("[StopMeasureAndLog] measured time for", name, ":", duration.Nanoseconds(), "ns, info:", info)
+	log.Lvl1("[StopMeasureAndLog] measured time for", name, ":", duration.Milliseconds(), "ms, info:", info)
 }

@@ -65,6 +65,7 @@ type ClientState struct {
 	LastWantToSend                time.Time
 	EquivocationProtectionEnabled bool
 	SchedulerStrategy			  string
+	lastDataSent				  *net.CLI_REL_UPSTREAM_DATA
 
 	//concurrent stuff
 	RoundNo           int32
@@ -164,7 +165,7 @@ func (p *PriFiLibClientInstance) ReceivedMessage(msg interface{}) error {
 			err = p.Received_REL_CLI_UDP_DOWNSTREAM_DATA(typedMsg)
 		}
 	case net.REL_CLI_TELL_EPH_PKS_AND_TRUSTEES_SIG:
-		if p.stateMachine.AssertState("EPH_KEYS_SENT") {
+		if p.stateMachine.AssertStateOrState("EPH_KEYS_SENT", "READY") {
 			err = p.Received_REL_CLI_TELL_EPH_PKS_AND_TRUSTEES_SIG(typedMsg)
 		}
 	default:
