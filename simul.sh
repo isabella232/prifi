@@ -329,6 +329,75 @@ case $1 in
 
         ;;
 
+    simul-clientslarge-3t)
+
+        ntrustees=3
+        NRELAY=1
+        
+        for repeat in {1..20}
+        do
+            for i in 10 50 100 500 1000
+            do
+                  hosts=$(($ntrustees + 1 + $i))
+                  echo "Simulating for NTRUSTEES=${ntrustees} NCLIENTS=$i HOSTS=$hosts..."
+                  window=5
+                  upCellSize=$(($i <= 800 ? 100 : $i / 8 + 1)) # after 800 clients, we need a bigger window for the Reservation mechanism
+
+                  $(cd ./sda/simulation && ./setparam.py "Hosts=$hosts" "RelayWindowSize=$window" "PayloadSize=$upCellSize" "NTrustees=$ntrustees")
+
+                  timeout "$SIMULATION_TIMEOUT" "$THIS_SCRIPT" simul | tee experiment_${i}_${repeat}.txt &
+            done
+        done
+
+        ;;
+
+    simul-clientslarge-5t)
+
+        ntrustees=5
+        NRELAY=1
+        
+        for repeat in {1..20}
+        do
+            for i in 10 50 100 500 1000
+            do
+                  hosts=$(($ntrustees + 1 + $i))
+                  echo "Simulating for NTRUSTEES=${ntrustees} NCLIENTS=$i HOSTS=$hosts..."
+                  window=5
+                  upCellSize=$(($i <= 800 ? 100 : $i / 8 + 1)) # after 800 clients, we need a bigger window for the Reservation mechanism
+
+                  $(cd ./sda/simulation && ./setparam.py "Hosts=$hosts" "RelayWindowSize=$window" "PayloadSize=$upCellSize" "NTrustees=$ntrustees")
+
+                  timeout "$SIMULATION_TIMEOUT" "$THIS_SCRIPT" simul | tee experiment_${i}_${repeat}.txt &
+            done
+        done
+
+        ;;
+
+    simul-clientslarge-10t)
+
+        ntrustees=10
+        NRELAY=1
+        
+        for repeat in {1..20}
+        do
+            for i in 10 50 100 500 1000
+            do
+                  hosts=$(($ntrustees + 1 + $i))
+                  echo "Simulating for NTRUSTEES=${ntrustees} NCLIENTS=$i HOSTS=$hosts..."
+                  window=5
+                  upCellSize=$(($i <= 800 ? 100 : $i / 8 + 1)) # after 800 clients, we need a bigger window for the Reservation mechanism
+
+                  $(cd ./sda/simulation && ./setparam.py "Hosts=$hosts" "RelayWindowSize=$window" "PayloadSize=$upCellSize" "NTrustees=$ntrustees")
+
+                  timeout "$SIMULATION_TIMEOUT" "$THIS_SCRIPT" simul | tee experiment_${i}_${repeat}.txt &
+            done
+        done
+
+        ;;
+
+    
+    
+
 
 
 
