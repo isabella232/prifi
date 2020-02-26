@@ -345,7 +345,7 @@ case $1 in
 
                   $(cd ./sda/simulation && ./setparam.py "Hosts=$hosts" "RelayWindowSize=$window" "PayloadSize=$upCellSize" "NTrustees=$ntrustees")
 
-                  timeout "$SIMULATION_TIMEOUT" "$THIS_SCRIPT" simul | tee experiment_${i}_${repeat}.txt &
+                  timeout "$SIMULATION_TIMEOUT" "$THIS_SCRIPT" simul | tee experiment_${i}_${repeat}.txt
             done
         done
 
@@ -367,7 +367,7 @@ case $1 in
 
                   $(cd ./sda/simulation && ./setparam.py "Hosts=$hosts" "RelayWindowSize=$window" "PayloadSize=$upCellSize" "NTrustees=$ntrustees")
 
-                  timeout "$SIMULATION_TIMEOUT" "$THIS_SCRIPT" simul | tee experiment_${i}_${repeat}.txt &
+                  timeout "$SIMULATION_TIMEOUT" "$THIS_SCRIPT" simul | tee experiment_${i}_${repeat}.txt
             done
         done
 
@@ -389,16 +389,11 @@ case $1 in
 
                   $(cd ./sda/simulation && ./setparam.py "Hosts=$hosts" "RelayWindowSize=$window" "PayloadSize=$upCellSize" "NTrustees=$ntrustees")
 
-                  timeout "$SIMULATION_TIMEOUT" "$THIS_SCRIPT" simul | tee experiment_${i}_${repeat}.txt &
+                  timeout "$SIMULATION_TIMEOUT" "$THIS_SCRIPT" simul | tee experiment_${i}_${repeat}.txt
             done
         done
 
         ;;
-
-    
-    
-
-
 
 
     simul-vary-sleep)
