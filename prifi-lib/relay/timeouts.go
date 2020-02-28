@@ -74,7 +74,7 @@ func (p *PriFiLibRelayInstance) checkIfRoundHasEndedAfterTimeOut_Phase1(roundID 
 
 func (p *PriFiLibRelayInstance) timeoutRetransmitPk(msg *net.REL_CLI_TELL_EPH_PKS_AND_TRUSTEES_SIG) {
 
-	time.Sleep(10 * time.Duration(p.relayState.RoundTimeOut) * time.Millisecond)
+	time.Sleep(20 * time.Second)
 
 	log.Lvl1("Timeout fired")
 
