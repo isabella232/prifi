@@ -308,7 +308,7 @@ case $1 in
             do
               $(cd ./sda/simulation && ./gen_mapping.py $ntrustees)
 
-              for i in 10 50 100 500 1000
+              for i in 1000 #10 50 100 500 1000
               do
                   hosts=$(($ntrustees + 1 + $i))
                   echo "Simulating for NTRUSTEES=${ntrustees} NCLIENTS=$i HOSTS=$hosts..."
