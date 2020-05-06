@@ -4,9 +4,6 @@
 # min required go version
 min_go_version=19                           # min required go version, without the '.', e.g. 17 for 1.7.x
 
-# required branch of cothority/onet
-cothorityBranchRequired="master"            # the branch required for the cothority (SDA) framework
-
 #pretty colored message
 highlightOn="\033[33m"
 highlightOff="\033[0m"
@@ -36,16 +33,6 @@ test_go(){
     GO_VER=$(go version 2>&1 | sed 's/.*version go\([[:digit:]]*\)\.\([[:digit:]]*\)\(.*\)/\1\2/; 1q')
     if [ "$GO_VER" -lt "$min_go_version" ]; then
         echo -e "$errorMsg Go >= 1.7.0 is required"
-        exit 1
-    fi
-}
-
-# tests if the cothority exists and is on the correct branch
-test_cothority() {
-    branchOk=$(cd "$GOPATH/src/gopkg.in/dedis/onet.v2"; git status | grep "On branch $cothorityBranchRequired" | wc -l)
-
-    if [ "$branchOk" -ne 1 ]; then
-        echo -e "$errorMsg Make sure \"$GOPATH/src/gopkg.in/dedis/onet.v2\" is a git repo, on branch \"$cothorityBranchRequired\". Try running \"./prifi.sh install\""
         exit 1
     fi
 }

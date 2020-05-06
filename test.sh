@@ -308,7 +308,6 @@ case $1 in
 
         #test for proper setup
         test_go
-        test_cothority
 
         # the 2rd argument can replace the port number
         if [ "$#" -gt 1 ]; then
@@ -406,7 +405,6 @@ case $1 in
 
     *)
         test_go
-        test_cothority
         print_usage
         ;;
 esac
