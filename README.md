@@ -37,10 +37,9 @@ Each component (relay/client/trustee) has an *ONet configuration* : an identity 
 Travis should have made these check for you; current status: [![Build Status](https://travis-ci.org/dedis/prifi.svg?branch=master)](https://travis-ci.org/dedis/prifi)
 
 What is tested:
-- Go tests for all important modules
-- Go style (fmt/lint)
-- Integration tests with multiple configurations, no data (simply tests that the PriFi network runs)
-- Integration tests with multiple configurations + GET request to google.com through PriFi
+- `make test`: Go tests for all important modules + Go style (fmt/lint)
+- `make it`: Integration tests with multiple configurations, no data (simply tests that the PriFi network runs)
+- `make it2`: Integration tests with multiple configurations + GET request to google.com through PriFi
 
 All-in-one test (tests all 16 configurations in `config/`, takes 5min):
 ```bash
@@ -61,11 +60,10 @@ Doing SOCKS HTTP request via :8083...   [ok]
 Test succeeded
 ...
 ```
-(for **i**ntegration-**t**est number **2** = with GET request to Google)
 
 Running only the "main" configuration (takes 20 seconds):
-```bash
-./test.sh integration2 config/prifi.toml
+```
+$ ./test.sh integration2 config/prifi.toml
 
 This test check that PriFi's clients, trustees and relay connect and start performing communication rounds, and that a Ping request can go through (back and forth).
 Gonna test with config/prifi.toml
