@@ -98,3 +98,15 @@ To test a real PriFi deployement, first, re-generates your identity (so your pri
  - [README about ./prifi.sh startup script](README_prifi.sh.md)
 
  - [README about contributing to this repository](README_contributing.md)
+ 
+## Reproducing experiments
+
+You need a [Deterlab](http://deterlab.net/) account, which needs to be setup in [the following config file](sda/simulation/deter.toml).
+
+In Deterlab, deploy [the following topology](sda/simulation/hosts_mapping_remote_trustees.toml).
+
+Then, simply run `./simul.sh simul`; as you can see in `simul.sh`, there are dozen of commands to regenerate the various graphs, e.g., `simul-vary-nclients`, ` simul-skype`, etc.
+
+## Reproducing graphs
+
+Experiments produce raw log files; then, they are processed into graph using some scripts. This happens in [this other repo](https://github.com/lbarman/prifi-experiments), where all raw logs & resulting graphics have been preserved for reproducibility.
