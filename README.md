@@ -101,7 +101,7 @@ To test a real PriFi deployement, first, re-generates your identity (so your pri
 
 You need a [Deterlab](http://deterlab.net/) account, which needs to be setup in [the following config file](sda/simulation/deter.toml).
 
-In Deterlab, deploy [the following topology](sda/simulation/hosts_mapping_remote_trustees.toml).
+In Deterlab, deploy [the following topology](sda/simulation/deter.ns).
 
 Then, simply run `./simul.sh simul`; as you can see in `simul.sh`, there are dozen of commands to regenerate the various graphs, e.g., `simul-vary-nclients`, ` simul-skype`, etc.
 
