@@ -7,31 +7,83 @@ This repository implements PriFi, an anonymous communication protocol with prova
 
 For an extended introduction, please check our [website](https://prifi.net/).
 
-For more details about PriFi, please check our [WPES 2016 paper](http://www.cs.yale.edu/homes/jf/PriFi-WPES2016.pdf).
+For more details about PriFi, please check our [paper](https://arxiv.org/abs/1710.10237).
 
 
 **Warning: This software is experimental and still under development. Do not use it yet for security-critical purposes. Use at your own risk!**
 
 ## Getting PriFi
 
-First, [get the Go language](https://golang.org/dl/), >= 1.9. They have some `.tar.gz`, but I personally prefer to use my package manager :
-`sudo apt-get install golang` for Ubuntu, or `sudo dnf install golang` for Fedora 24.
+First, [get the Go language](https://golang.org/dl/), >= 1.13
 
 Then, get PriFi by doing:
 
 ```
 go get github.com/dedis/prifi/sda/app
 cd $GOPATH/src/github.com/dedis/prifi
-./prifi.sh install
+make install
 ```
 
 ## Running PriFi
 
+### Configuration
+
 PriFi uses [ONet](https://github.com/dedis/onet) as a network framework. It is easy to run all components (trustees, relay, clients) on one machine for testing purposes, or on different machines for the real setup.
 
-Each component has a *SDA configuration* : an identity (`identity.toml`, containing a private and public key), and some knowledge of the others participants via `group.toml`. For your convenience, we pre-generated some identities in `config/identities_default`.
+Each component (relay/client/trustee) has an *ONet configuration* : an identity (`identity.toml`, containing a private and public key), and some knowledge of the others participants via `group.toml`. For your convenience, we pre-generated some identities in `config/identities_default`.
 
-### Testing PriFi, all components in localhost
+### Automated Testing, all components in localhost
+
+Travis should have made these check for you; current status: [![Build Status](https://travis-ci.org/dedis/prifi.svg?branch=master)](https://travis-ci.org/dedis/prifi)
+
+What is tested:
+- Go tests for all important modules
+- Go style (fmt/lint)
+- Integration tests with multiple configurations, no data (simply tests that the PriFi network runs)
+- Integration tests with multiple configurations + GET request to google.com through PriFi
+
+All-in-one test (tests all 16 configurations in `config/`, takes 5min):
+```bash
+$ make it2
+
+This test check that PriFi's clients, trustees and relay connect and start performing communication rounds, and that a Ping request can go through (back and forth).
+Gonna test with config/prifi-integration-dummydown-test.toml
+Socks proxy not running, starting it...[ok]
+Starting relay...                      [ok]
+Starting trustee 0...                  [ok]
+Starting client 0... (SOCKS on :8081)  [ok]
+Starting client 1... (SOCKS on :8082)  [ok]
+Starting client 2... (SOCKS on :8083)  [ok]
+Waiting 20 seconds...
+Doing SOCKS HTTP request via :8081...   [ok]
+Doing SOCKS HTTP request via :8082...   [ok]
+Doing SOCKS HTTP request via :8083...   [ok]
+Test succeeded
+...
+```
+(for **i**ntegration-**t**est number **2** = with GET request to Google)
+
+Running only the "main" configuration (takes 20 seconds):
+```bash
+./test.sh integration2 config/prifi.toml
+
+This test check that PriFi's clients, trustees and relay connect and start performing communication rounds, and that a Ping request can go through (back and forth).
+Gonna test with config/prifi.toml
+Socks proxy not running, starting it...[ok]
+Starting relay...                      [ok]
+Starting trustee 0...                  [ok]
+Starting client 0... (SOCKS on :8081)  [ok]
+Starting client 1... (SOCKS on :8082)  [ok]
+Starting client 2... (SOCKS on :8083)  [ok]
+Waiting 20 seconds...
+Doing SOCKS HTTP request via :8081...   [ok]
+Doing SOCKS HTTP request via :8082...   [ok]
+Doing SOCKS HTTP request via :8083...   [ok]
+Test succeeded
+All tests passed.
+```
+
+### Manual Testing, all components in localhost
 
 You can test PriFi by running `./prifi.sh all-localhost`. This will run a SOCKS server, a PriFi relay, a Trustee, and three clients on your machine. They will use the identities in `config/identities_default`. You can check what is going on by doing `tail -f {clientX|relay|trusteeX|socks}.log`. You can test browsing through PriFi by setting your browser to use a SOCKS proxy on `localhost:8081`.
 

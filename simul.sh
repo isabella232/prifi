@@ -570,7 +570,6 @@ case $1 in
 
     *)
         test_go
-        test_cothority
         print_usage
         ;;
 
