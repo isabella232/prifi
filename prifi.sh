@@ -98,6 +98,10 @@ case $1 in
 		cd ..
 		cd prifi-mobile; go get -u -v ./...
 		cd ..
+
+		# this package somehow fails to install itself
+		go get -u -v github.com/montanaflynn/stats
+
 		echo -e "$okMsg"
 		;;
 
