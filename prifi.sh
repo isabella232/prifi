@@ -98,32 +98,17 @@ case $1 in
 		cd ..
 		cd prifi-mobile; go get -u -v ./...
 		cd ..
-		echo -e "$okMsg"
 
 		# this package somehow fails to install itself
 		go get -u -v github.com/montanaflynn/stats
 
-		#echo -en "Switching ONet branch to ${highlightOn}$cothorityBranchRequired${highlightOff}... "
-		#cd "$GOPATH/src/gopkg.in/dedis/onet.v2"; git checkout "$cothorityBranchRequired" 1>/dev/null 2>&1
-		#echo -e "$okMsg"
-
-		echo -n "Re-getting all go packages (since we switched branch)... "
-		cd "$GOPATH/src/github.com/dedis/prifi/sda/app"; go get ./...
-		cd ../..
-		cd "$GOPATH/src/go.dedis.ch/onet"; go get -u ./...
 		echo -e "$okMsg"
-
-		#echo -n "Testing ONet branch... "
-		#test_cothority
-		#echo -e "$okMsg"
-
 		;;
 
 	relay|Relay|RELAY)
 
 		#test for proper setup
 		test_go
-		test_cothority
 
 		# the 2nd argument can replace the port number
 		if [ "$#" -eq 2 ]; then
@@ -162,7 +147,6 @@ case $1 in
 
 		#test for proper setup
 		test_go
-		test_cothority
 
 		if [ "$#" -lt 2 ]; then
 			echo -e "$errorMsg parameter 2 need to be the trustee id."
@@ -201,7 +185,6 @@ case $1 in
 
 		#test for proper setup
 		test_go
-		test_cothority
 
 		if [ "$#" -lt 2 ]; then
 			echo -e "$errorMsg parameter 2 need to be the client id."
@@ -251,7 +234,6 @@ case $1 in
 
 		#test for proper setup
 		test_go
-		test_cothority
 
 		#test if a socks proxy is already running (needed for relay), or start ours
 		socks=$(netstat -tunpl 2>/dev/null | grep "$socksServer2Port" | wc -l)
@@ -351,7 +333,6 @@ case $1 in
 
 		#test for proper setup
 		test_go
-		test_cothority
 
 		#if running, kill the previous one
 		if [ -f .GPID_RELAY ]; then
@@ -379,7 +360,6 @@ case $1 in
 
 		#test for proper setup
 		test_go
-		test_cothority
 
 		#if running, kill the previous one
 		if [ -f .GPID_TRUSTEE ]; then
