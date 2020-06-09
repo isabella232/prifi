@@ -97,17 +97,17 @@ func (p *PriFiSDAProtocol) Received_TRU_REL_DISRUPTION_REVEAL(msg Struct_TRU_REL
 	return p.prifiLibInstance.ReceivedMessage(msg.TRU_REL_DISRUPTION_REVEAL)
 }
 
-// Received_REL_ALL_DISRUPTION_SECRET forward an REL_ALL_DISRUPTION_SECRET message to PriFi's lib
+// Received_REL_ALL_REVEAL_SHARED_SECRETS forward an REL_ALL_REVEAL_SHARED_SECRETS message to PriFi's lib
 func (p *PriFiSDAProtocol) Received_REL_ALL_DISRUPTION_SECRET(msg Struct_REL_ALL_DISRUPTION_SECRET) error {
-	return p.prifiLibInstance.ReceivedMessage(msg.REL_ALL_DISRUPTION_SECRET)
+	return p.prifiLibInstance.ReceivedMessage(msg.REL_ALL_REVEAL_SHARED_SECRETS)
 }
 
-// Received_CLI_REL_DISRUPTION_SECRET forward an CLI_REL_DISRUPTION_SECRET message to PriFi's lib
+// Received_CLI_REL_DISRUPTION_SECRET forward an CLI_REL_SHARED_SECRET message to PriFi's lib
 func (p *PriFiSDAProtocol) Received_CLI_REL_DISRUPTION_SECRET(msg Struct_CLI_REL_DISRUPTION_SECRET) error {
-	return p.prifiLibInstance.ReceivedMessage(msg.CLI_REL_DISRUPTION_SECRET)
+	return p.prifiLibInstance.ReceivedMessage(msg.CLI_REL_SHARED_SECRET)
 }
 
-// Received_TRU_REL_DISRUPTION_SECRET forward an TRU_REL_DISRUPTION_SECRET message to PriFi's lib
+// Received_TRU_REL_DISRUPTION_SECRET forward an TRU_REL_SHARED_SECRET message to PriFi's lib
 func (p *PriFiSDAProtocol) Received_TRU_REL_DISRUPTION_SECRET(msg Struct_TRU_REL_DISRUPTION_SECRET) error {
-	return p.prifiLibInstance.ReceivedMessage(msg.TRU_REL_DISRUPTION_SECRET)
+	return p.prifiLibInstance.ReceivedMessage(msg.TRU_REL_SHARED_SECRET)
 }

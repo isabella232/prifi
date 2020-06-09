@@ -1,6 +1,8 @@
 package dcnet
 
 import (
+	"crypto/aes"
+	"crypto/cipher"
 	"crypto/rand"
 	"crypto/sha256"
 	"github.com/dedis/prifi/prifi-lib/config"
@@ -35,7 +37,7 @@ func NewEquivocation() *EquivocationProtection {
 	e.suite = config.CryptoSuite
 	e.history = e.suite.Scalar().One()
 
-	randomKey := make([]byte, 100)
+	randomKey := make([]byte, 32)
 	rand.Read(randomKey)
 	e.randomness = e.suite.XOF(randomKey)
 
@@ -85,6 +87,7 @@ func (e *EquivocationProtection) ClientEncryptPayload(slotOwner bool, x []byte, 
 		if err != nil {
 			log.Fatal("Couldn't marshall", err)
 		}
+
 		return x, kappa_i_bytes
 	}
 
@@ -95,10 +98,21 @@ func (e *EquivocationProtection) ClientEncryptPayload(slotOwner bool, x []byte, 
 	}
 
 	// encrypt payload
-	for i := range x {
-		x[i] ^= k_i_bytes[i%len(k_i_bytes)]
+	// LB->CV: Replace by traditional encryption (AES-GCM or what not) instead of XOR
+
+	block, err := aes.NewCipher(k_i_bytes)
+	if err != nil {
+		panic(err.Error())
 	}
 
+	nonce := make([]byte, 12)
+
+	aesgcm, err := cipher.NewGCM(block)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	x = aesgcm.Seal(nil, nonce, x, nil)
 	// compute kappa
 	kappa_i := k_i.Add(k_i, product)
 	kappa_i_bytes, err := kappa_i.MarshalBinary()
@@ -106,6 +120,12 @@ func (e *EquivocationProtection) ClientEncryptPayload(slotOwner bool, x []byte, 
 		log.Fatal("Couldn't marshall", err)
 	}
 	return x, kappa_i_bytes
+}
+
+// LB->CV todo
+func (e *EquivocationProtection) ClientProve() []byte {
+
+	return nil
 }
 
 // a function that takes returns the byte[] version of sigma_j
@@ -130,6 +150,12 @@ func (e *EquivocationProtection) TrusteeGetContribution(s_i [][]byte) []byte {
 		log.Fatal("Couldn't marshall", err)
 	}
 	return kappa_j_bytes
+}
+
+// LB->CV todo
+func (e *EquivocationProtection) TrusteeProve() []byte {
+
+	return nil
 }
 
 // given all contributions, decodes the payload
@@ -185,9 +211,23 @@ func (e *EquivocationProtection) RelayDecode(encryptedPayload []byte, trusteesCo
 	}
 
 	// decrypt the payload
-	for i := range encryptedPayload {
-		encryptedPayload[i] ^= k_bytes[i%len(k_bytes)]
+	nonce := make([]byte, 12)
+
+	block, err := aes.NewCipher(k_bytes)
+	if err != nil {
+		panic(err.Error())
 	}
 
-	return encryptedPayload
+	aesgcm, err := cipher.NewGCM(block)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	message, err := aesgcm.Open(nil, nonce, encryptedPayload, nil)
+	if err != nil {
+		//TODO: DISRUPTION
+		message = make([]byte, len(encryptedPayload)-16)
+	}
+
+	return message
 }

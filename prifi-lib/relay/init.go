@@ -118,6 +118,17 @@ type NodeRepresentation struct {
 	EphemeralPublicKey kyber.Point
 }
 
+// BlamingData is a struct used in the blame phase of the disruption protection.
+// [round#, bitPos, clientID, bitRevealed, trusteeID, bitRevealed]
+type BlamingData struct {
+	RoundID            int32
+	BitPos             int
+	ClientID           int
+	ClientBitRevealed  int
+	TrusteeID          int
+	TrusteeBitRevealed int
+}
+
 // RelayState contains the mutable state of the relay.
 type RelayState struct {
 	DCNet                                  *dcnet.DCNetEntity
@@ -126,6 +137,7 @@ type RelayState struct {
 	neffShuffle                            *scheduler.NeffShuffleRelay
 	currentState                           int16
 	DataForClients                         chan []byte // VPN / SOCKS should put data there !
+	HashOfLastUpstreamMessage              [32]byte
 	PriorityDataForClients                 chan []byte
 	DataFromDCNet                          chan []byte // VPN / SOCKS should read data from there !
 	DataOutputEnabled                      bool        // If FALSE, nothing will be written to DataFromDCNet
@@ -171,9 +183,18 @@ type RelayState struct {
 	processingLock sync.Mutex // either we treat a message, or a timeout, never both
 
 	//disruption protection
-	clientBitMap  map[int]map[int]int
-	trusteeBitMap map[int]map[int]int
-	blamingData   []int //[round#, bitPos, clientID, bitRevealed, trusteeID, bitRevealed]
+	LastMessageOfClients       map[int32][]byte
+	BEchoFlags                 map[int32]byte
+	CiphertextsHistoryTrustees map[int32]map[int32][]byte
+	CiphertextsHistoryClients  map[int32]map[int32][]byte
+	DisruptionReveal           bool
+	clientBitMap               map[int]map[int]int
+	trusteeBitMap              map[int]map[int]int
+	blamingData                BlamingData
+	EphemeralPublicKeys        []kyber.Point
+
+	//disruption testing
+	ForceDisruptionSinceRound3 bool
 
 	//Used for verifiable DC-net, part of the dcnet.old/owned.go
 	VerifiableDCNetKeys [][]byte
@@ -188,7 +209,6 @@ func (p *PriFiLibRelayInstance) ReceivedMessage(msg interface{}) error {
 	defer p.relayState.processingLock.Unlock()
 
 	var err error
-
 	switch typedMsg := msg.(type) {
 	case net.ALL_ALL_PARAMETERS:
 		if typedMsg.ForceParams || p.stateMachine.AssertState("BEFORE_INIT") {
@@ -199,6 +219,22 @@ func (p *PriFiLibRelayInstance) ReceivedMessage(msg interface{}) error {
 	case net.CLI_REL_UPSTREAM_DATA:
 		if p.stateMachine.AssertState("COMMUNICATING") {
 			err = p.Received_CLI_REL_UPSTREAM_DATA(typedMsg)
+		}
+	case net.CLI_REL_DISRUPTION_REVEAL:
+		if p.stateMachine.AssertState("COMMUNICATING") {
+			err = p.Received_CLI_REL_DISRUPTION_REVEAL(typedMsg)
+		}
+	case net.TRU_REL_DISRUPTION_REVEAL:
+		if p.stateMachine.AssertState("COMMUNICATING") {
+			err = p.Received_TRU_REL_DISRUPTION_REVEAL(typedMsg)
+		}
+	case net.CLI_REL_SHARED_SECRET:
+		if p.stateMachine.AssertState("COMMUNICATING") {
+			err = p.Received_CLI_REL_SHARED_SECRET(typedMsg)
+		}
+	case net.TRU_REL_SHARED_SECRET:
+		if p.stateMachine.AssertState("COMMUNICATING") {
+			err = p.Received_TRU_REL_SHARED_SECRETS(typedMsg)
 		}
 	case net.CLI_REL_OPENCLOSED_DATA:
 		if p.stateMachine.AssertState("COMMUNICATING") {
@@ -223,6 +259,10 @@ func (p *PriFiLibRelayInstance) ReceivedMessage(msg interface{}) error {
 	case net.TRU_REL_SHUFFLE_SIG:
 		if p.stateMachine.AssertState("COLLECTING_SHUFFLE_SIGNATURES") {
 			err = p.Received_TRU_REL_SHUFFLE_SIG(typedMsg)
+		}
+	case net.CLI_REL_DISRUPTION_BLAME:
+		if p.stateMachine.AssertState("COMMUNICATING") {
+			err = p.Received_CLI_REL_DISRUPTION_BLAME(typedMsg)
 		}
 	default:
 		err = errors.New("Unrecognized message, type" + reflect.TypeOf(msg).String())

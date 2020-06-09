@@ -194,7 +194,6 @@ It returns the new round number (previous + 1).
 */
 func sendData(p *PriFiLibTrusteeInstance, roundID int32) (int32, error) {
 	data := p.trusteeState.DCNet.TrusteeEncodeForRound(roundID)
-
 	//send the data
 	toSend := &net.TRU_REL_DC_CIPHER{
 		RoundID:   roundID,
@@ -288,35 +287,5 @@ func (p *PriFiLibTrusteeInstance) Received_REL_TRU_TELL_TRANSCRIPT(msg net.REL_T
 	//everything is ready, we start sending
 	go p.Send_TRU_REL_DC_CIPHER(p.trusteeState.sendingRate)
 
-	return nil
-}
-
-/*
-Received_REL_ALL_REVEAL handles REL_ALL_REVEAL messages.
-We send back one bit per client, from the shared cipher, at bitPos
-*/
-/*
-func (p *PriFiLibTrusteeInstance) Received_REL_ALL_REVEAL(msg net.REL_ALL_DISRUPTION_REVEAL) error {
-	p.stateMachine.ChangeState("BLAMING")
-	bits := p.trusteeState.DCNet.RevealBits(msg.RoundID, msg.BitPos, p.trusteeState.PayloadSize)
-	toSend := &net.TRU_REL_DISRUPTION_REVEAL{
-		TrusteeID: p.trusteeState.ID,
-		Bits:      bits}
-	p.messageSender.SendToRelayWithLog(toSend, "Revealed bits")
-	return nil
-}
-*/
-
-/*
-Received_REL_ALL_SECRET handles REL_ALL_SECRET messages.
-We send back the shared secret with the indicated client
-*/
-func (p *PriFiLibTrusteeInstance) Received_REL_ALL_SECRET(msg net.REL_ALL_DISRUPTION_SECRET) error {
-
-	secret := p.trusteeState.sharedSecrets[msg.UserID]
-	toSend := &net.TRU_REL_DISRUPTION_SECRET{
-		Secret: secret,
-		NIZK:   make([]byte, 0)}
-	p.messageSender.SendToRelayWithLog(toSend, "Sent secret to relay")
 	return nil
 }

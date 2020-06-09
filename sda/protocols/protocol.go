@@ -82,6 +82,7 @@ func (p *PriFiSDAProtocol) Start() error {
 	msg.Add("RelayTrusteeCacheLowBound", p.config.Toml.RelayTrusteeCacheLowBound)
 	msg.Add("RelayTrusteeCacheHighBound", p.config.Toml.RelayTrusteeCacheHighBound)
 	msg.Add("EquivocationProtectionEnabled", p.config.Toml.EquivocationProtectionEnabled)
+	msg.Add("ForceDisruptionSinceRound3", p.config.Toml.ForceDisruptionSinceRound3)
 	msg.ForceParams = true
 
 	p.SendTo(p.TreeNode(), msg)
@@ -134,9 +135,9 @@ func init() {
 	network.RegisterMessage(net.REL_ALL_DISRUPTION_REVEAL{})
 	network.RegisterMessage(net.CLI_REL_DISRUPTION_REVEAL{})
 	network.RegisterMessage(net.TRU_REL_DISRUPTION_REVEAL{})
-	network.RegisterMessage(net.REL_ALL_DISRUPTION_SECRET{})
-	network.RegisterMessage(net.CLI_REL_DISRUPTION_SECRET{})
-	network.RegisterMessage(net.TRU_REL_DISRUPTION_SECRET{})
+	network.RegisterMessage(net.REL_ALL_REVEAL_SHARED_SECRETS{})
+	network.RegisterMessage(net.CLI_REL_SHARED_SECRET{})
+	network.RegisterMessage(net.TRU_REL_SHARED_SECRET{})
 
 	onet.GlobalProtocolRegister(ProtocolName, NewPriFiSDAWrapperProtocol)
 }

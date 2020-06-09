@@ -83,19 +83,34 @@ All tests passed.
 
 ### Manual Testing, all components in localhost
 
-You can test PriFi by running `./prifi.sh all-localhost`. This will run a SOCKS server, a PriFi relay, a Trustee, and three clients on your machine. They will use the identities in `config/identities_default`. You can check what is going on by doing `tail -f {clientX|relay|trusteeX|socks}.log`. You can test browsing through PriFi by setting your browser to use a SOCKS proxy on `localhost:8081`.
+You can test PriFi by running `./prifi.sh all-localhost`. This will run a SOCKS server, a PriFi relay, a Trustee, and three clients on your machine. They will use the identities in `config/identities_default`.
+ 
+You can check what is going on by doing `tail -f {clientX|relay|trusteeX|socks}.log`.
+
+![relay.log](screenshots/relay.png)
+
+You can test browsing through PriFi by setting your browser to use a SOCKS proxy on `localhost:8081`, or with `curl`:
+
+```curl -w "@curl_format.cnf" --socks5 127.0.0.1:8080 --max-time 10 "http://google.com/"```
+
+### Running PriFi manually, entity by entity
+
+Move to `$GOPATH/src/github.com/dedis/prifi`, and open 5 terminals as follows:
+ 
+ ![like this](screenshots/manual-run1.png)
+
+Run in order the following commands:
+- `./prifi.sh trustee 0`
+- `./prifi.sh relay`
+- `cd socks && ./run-socks-proxy.sh`
+- `./prifi.sh client 0`
+- and, after a while `curl -w "@curl_format.cnf" --socks5 127.0.0.1:8080 --max-time 10 "http://google.com/"`
+
+The result should look like [this](screenshots/manual-run2.png).
 
 ### Using PriFi in a real setup
 
 To test a real PriFi deployement, first, re-generates your identity (so your private key is really private). The processed is detailed in the [README about ./prifi.sh startup script](README_prifi.sh.md).
-
-## More documentation :
-
- - [README about the Architecture and SOCKS Proxies](README_architecture.md)
-
- - [README about ./prifi.sh startup script](README_prifi.sh.md)
-
- - [README about contributing to this repository](README_contributing.md)
  
 ## Reproducing experiments
 
@@ -108,3 +123,11 @@ Then, simply run `./simul.sh simul`; as you can see in `simul.sh`, there are doz
 ## Reproducing graphs
 
 Experiments produce raw log files; then, they are processed into graph using some scripts. This happens in [this other repo](https://github.com/lbarman/prifi-experiments), where all raw logs & resulting graphics have been preserved for reproducibility.
+
+## More documentation
+
+ - [README about the Architecture and SOCKS Proxies](README_architecture.md)
+
+ - [README about ./prifi.sh startup script](README_prifi.sh.md)
+
+ - [README about contributing to this repository](README_contributing.md)

@@ -107,6 +107,7 @@ func (p *PriFiLibRelayInstance) Received_ALL_ALL_PARAMETERS(msg net.ALL_ALL_PARA
 	trusteeCacheLowBound := msg.IntValueOrElse("RelayTrusteeCacheLowBound", p.relayState.TrusteeCacheLowBound)
 	trusteeCacheHighBound := msg.IntValueOrElse("RelayTrusteeCacheHighBound", p.relayState.TrusteeCacheHighBound)
 	equivocationProtectionEnabled := msg.BoolValueOrElse("EquivocationProtectionEnabled", p.relayState.EquivocationProtectionEnabled)
+	ForceDisruptionSinceRound3 := msg.BoolValueOrElse("ForceDisruptionSinceRound3", false)
 
 	if payloadSize < 1 {
 		return errors.New("payloadSize cannot be 0")
@@ -134,6 +135,7 @@ func (p *PriFiLibRelayInstance) Received_ALL_ALL_PARAMETERS(msg net.ALL_ALL_PARA
 	p.relayState.TrusteeCacheLowBound = trusteeCacheLowBound
 	p.relayState.TrusteeCacheHighBound = trusteeCacheHighBound
 	p.relayState.EquivocationProtectionEnabled = equivocationProtectionEnabled
+	p.relayState.ForceDisruptionSinceRound3 = ForceDisruptionSinceRound3
 	p.relayState.MessageHistory = config.CryptoSuite.XOF([]byte("init")) //any non-nil, non-empty, constant array
 	p.relayState.VerifiableDCNetKeys = make([][]byte, nTrustees)
 	p.relayState.nVkeysCollected = 0
@@ -143,9 +145,18 @@ func (p *PriFiLibRelayInstance) Received_ALL_ALL_PARAMETERS(msg net.ALL_ALL_PARA
 	p.relayState.DisruptionProtectionEnabled = disruptionProtection
 	p.relayState.clientBitMap = make(map[int]map[int]int)
 	p.relayState.trusteeBitMap = make(map[int]map[int]int)
-	p.relayState.blamingData = make([]int, 6)
 	p.relayState.OpenClosedSlotsRequestsRoundID = make(map[int32]bool)
-
+	p.relayState.LastMessageOfClients = make(map[int32][]byte)
+	p.relayState.BEchoFlags = make(map[int32]byte)
+	p.relayState.CiphertextsHistoryTrustees = make(map[int32]map[int32][]byte)
+	p.relayState.CiphertextsHistoryClients = make(map[int32]map[int32][]byte)
+	//CV->LB: Is this the proper way to initialize this?
+	for i := int32(0); i < int32(nClients); i++ {
+		p.relayState.CiphertextsHistoryClients[i] = make(map[int32][]byte)
+	}
+	for j := int32(0); j < int32(nTrustees); j++ {
+		p.relayState.CiphertextsHistoryTrustees[j] = make(map[int32][]byte)
+	}
 	switch dcNetType {
 	case "Verifiable":
 		panic("Verifiable DCNet not implemented yet")
@@ -218,6 +229,12 @@ If we finished a round (we had collected all data, and called DecodeCell()), we 
 Either we send something from the SOCKS/VPN buffer, or we answer the latency-test message if we received any, or we send 1 bit.
 */
 func (p *PriFiLibRelayInstance) Received_CLI_REL_UPSTREAM_DATA(msg net.CLI_REL_UPSTREAM_DATA) error {
+	// CV-LB: I am not sure if this is a good programing practice...
+	if p.relayState.CiphertextsHistoryClients[int32(msg.ClientID)] == nil {
+		p.relayState.CiphertextsHistoryClients[int32(msg.ClientID)] = make(map[int32][]byte)
+	}
+	p.relayState.CiphertextsHistoryClients[int32(msg.ClientID)][msg.RoundID] = msg.Data
+	// TODO: CLEAN HISTORY
 	p.relayState.roundManager.AddClientCipher(msg.RoundID, msg.ClientID, msg.Data)
 	if p.relayState.roundManager.HasAllCiphersForCurrentRound() {
 		p.upstreamPhase1_processCiphers(true)
@@ -232,6 +249,11 @@ If it's for this round, we call decode on it, and remember we received it.
 If for a future round we need to Buffer it.
 */
 func (p *PriFiLibRelayInstance) Received_TRU_REL_DC_CIPHER(msg net.TRU_REL_DC_CIPHER) error {
+	if p.relayState.CiphertextsHistoryTrustees[int32(msg.TrusteeID)] == nil {
+		p.relayState.CiphertextsHistoryTrustees[int32(msg.TrusteeID)] = make(map[int32][]byte)
+	}
+	p.relayState.CiphertextsHistoryTrustees[int32(msg.TrusteeID)][msg.RoundID] = msg.Data
+	// TODO: CLEAN HISTORY
 	p.relayState.roundManager.AddTrusteeCipher(msg.RoundID, msg.TrusteeID, msg.Data)
 	if p.relayState.roundManager.HasAllCiphersForCurrentRound() {
 		p.upstreamPhase1_processCiphers(true)
@@ -321,7 +343,7 @@ func (p *PriFiLibRelayInstance) upstreamPhase2a_extractOCMap(roundID int32) erro
 	}
 
 	//here we have the plaintext map
-	openClosedData := p.relayState.DCNet.DecodeCell()
+	openClosedData, _ := p.relayState.DCNet.DecodeCell(true)
 
 	//compute the map
 	newSchedule := p.relayState.slotScheduler.Relay_ComputeFinalSchedule(openClosedData, p.relayState.nClients)
@@ -366,26 +388,75 @@ func (p *PriFiLibRelayInstance) upstreamPhase2b_extractPayload() error {
 	for _, s := range trusteesSlices {
 		p.relayState.DCNet.DecodeTrustee(roundID, s)
 	}
-	upstreamPlaintext := p.relayState.DCNet.DecodeCell()
 
+	upstreamPlaintext, ciphertext := p.relayState.DCNet.DecodeCell(false)
+	if p.relayState.EquivocationProtectionEnabled && p.relayState.DisruptionProtectionEnabled {
+		// Generating and storing the hash from the payload
+		p.relayState.HashOfLastUpstreamMessage = sha256.Sum256([]byte(ciphertext))
+		p.relayState.LastMessageOfClients[roundID] = ciphertext
+	}
 	p.relayState.bitrateStatistics.AddUpstreamCell(int64(len(upstreamPlaintext)))
 
-	//disruption-protection
 	if p.relayState.DisruptionProtectionEnabled {
 
-		log.Lvl3("Verifying HMAC for disruption protection")
-		hmac := upstreamPlaintext[0:32]
-		upstreamPlaintext = upstreamPlaintext[32:]
+		var b_echo_last byte
+		b_echo_last = upstreamPlaintext[0]
+		p.relayState.BEchoFlags[roundID] = b_echo_last
+		p.relayState.DisruptionReveal = false
+		previousRound := roundID - int32(p.relayState.nClients)
 
-		clientID := -1 // todo loop with the schedule
-		valid := ValidateHmac256(upstreamPlaintext, hmac, clientID)
+		if b_echo_last == 1 {
+			if len(upstreamPlaintext) > 13 && string(upstreamPlaintext[1:6]) == "BLAME" {
+				log.Error("Detected a BLAME request!")
 
-		if !valid {
-			// start blame
-			log.Error("Warning: Disruption Protection check failed")
+				blameRoundID := int32(binary.BigEndian.Uint32(upstreamPlaintext[6:10]))
+				blameBitPosition := int(binary.BigEndian.Uint32(upstreamPlaintext[10:14]))
+
+				_ = blameRoundID // TODO: This should be used insted of "previousRound-p.relayState.nClients"
+				blameRoundID = previousRound - int32(p.relayState.nClients)
+
+				log.Error("Disruption: Going into Blame phase 1. Round:", blameRoundID, ", bit position:", blameBitPosition)
+
+				p.relayState.DisruptionReveal = true
+
+				p.relayState.blamingData.RoundID = blameRoundID
+				p.relayState.blamingData.BitPos = blameBitPosition
+
+				// Broadcast Blame phase 1
+				toSend := &net.REL_ALL_DISRUPTION_REVEAL{
+					RoundID: int32(p.relayState.blamingData.RoundID),
+					BitPos:  p.relayState.blamingData.BitPos,
+				}
+				for j := 0; j < p.relayState.nClients; j++ {
+					p.messageSender.SendToClientWithLog(j, toSend, "")
+				}
+				for j := 0; j < p.relayState.nTrustees; j++ {
+					p.messageSender.SendToTrusteeWithLog(j, toSend, "")
+				}
+
+			} else {
+				log.Lvl1("b_echo_last=", b_echo_last, "(current round:", roundID, ")")
+			}
 		}
-	}
+		upstreamPlaintext = upstreamPlaintext[1:]
+		if !p.relayState.EquivocationProtectionEnabled {
+			// Saving in history
+			p.relayState.LastMessageOfClients[roundID] = upstreamPlaintext
+		}
 
+		// TODO: Clean the lastmessageofclients map
+
+		//TEST
+		if p.relayState.roundManager.CurrentRound() == 100 {
+			//upstreamPlaintext[3] = 8
+		}
+
+		if !p.relayState.EquivocationProtectionEnabled {
+			// Generating and storing the hash from the payload
+			p.relayState.HashOfLastUpstreamMessage = sha256.Sum256([]byte(upstreamPlaintext))
+		}
+
+	}
 	log.Lvl4("Decoded cell is", upstreamPlaintext)
 
 	// check if we have a latency test message, or a pcap meta message
@@ -444,7 +515,11 @@ func (p *PriFiLibRelayInstance) upstreamPhase2b_extractPayload() error {
 		// verify that the decoded payload has the correct size
 		expectedSize := p.relayState.PayloadSize
 		if p.relayState.DisruptionProtectionEnabled {
-			expectedSize -= 32
+			// One less because of the b_echo_last flag
+			expectedSize--
+		}
+		if p.relayState.EquivocationProtectionEnabled {
+			expectedSize -= 16
 		}
 		if len(upstreamPlaintext) != expectedSize {
 			e := "Relay : DecodeCell produced wrong-size payload, " + strconv.Itoa(len(upstreamPlaintext)) + "!=" + strconv.Itoa(p.relayState.PayloadSize)
@@ -544,6 +619,17 @@ func (p *PriFiLibRelayInstance) downstreamPhase1_openRoundAndSendData() error {
 		}
 	}
 
+	if p.relayState.DisruptionProtectionEnabled {
+		// Check if the b_echo_last flag from the client was set.
+		// If so, send the previous round message
+		if p.relayState.BEchoFlags[p.relayState.roundManager.lastRoundClosed] == 1 {
+			previousRound := p.relayState.roundManager.lastRoundClosed - int32(p.relayState.nClients)
+			downstreamCellContent = p.relayState.LastMessageOfClients[previousRound]
+			log.Lvl1("b_echo_last=1 on round", p.relayState.roundManager.lastRoundClosed, "retransmitting upstream of round", previousRound)
+			log.Lvl1(downstreamCellContent)
+		}
+	}
+
 	// if we want to use dummy data down, pad to the correct size
 	if p.relayState.UseDummyDataDown && len(downstreamCellContent) < p.relayState.DownstreamCellSize {
 		data := make([]byte, p.relayState.DownstreamCellSize)
@@ -580,11 +666,12 @@ func (p *PriFiLibRelayInstance) downstreamPhase1_openRoundAndSendData() error {
 	}
 
 	toSend := &net.REL_CLI_DOWNSTREAM_DATA{
-		RoundID:               nextDownstreamRoundID,
-		OwnershipID:           nextOwner,
-		Data:                  downstreamCellContent,
-		FlagResync:            flagResync,
-		FlagOpenClosedRequest: flagOpenClosedRequest}
+		RoundID:                    nextDownstreamRoundID,
+		OwnershipID:                nextOwner,
+		HashOfPreviousUpstreamData: p.relayState.HashOfLastUpstreamMessage[:],
+		Data:                       downstreamCellContent,
+		FlagResync:                 flagResync,
+		FlagOpenClosedRequest:      flagOpenClosedRequest}
 
 	if roundOpened, _ := p.relayState.roundManager.currentRound(); !roundOpened {
 		//prepare for the next round (this empties the dc-net buffer, making them ready for a new round)
@@ -655,6 +742,7 @@ func (p *PriFiLibRelayInstance) Received_TRU_REL_TELL_PK(msg net.TRU_REL_TELL_PK
 		toSend.Add("DCNetType", p.relayState.dcNetType)
 		toSend.Add("DisruptionProtectionEnabled", p.relayState.DisruptionProtectionEnabled)
 		toSend.Add("EquivocationProtectionEnabled", p.relayState.EquivocationProtectionEnabled)
+		toSend.Add("ForceDisruptionSinceRound3", p.relayState.ForceDisruptionSinceRound3)
 		toSend.TrusteesPks = trusteesPk
 
 		// Send those parameters to all clients
@@ -728,7 +816,7 @@ func (p *PriFiLibRelayInstance) Received_TRU_REL_TELL_NEW_BASE_AND_EPH_PKS(msg n
 
 	p.relayState.VerifiableDCNetKeys[p.relayState.nVkeysCollected] = msg.VerifiableDCNetKey
 	p.relayState.nVkeysCollected++
-
+	p.relayState.EphemeralPublicKeys = msg.NewEphPks
 	done, err := p.relayState.neffShuffle.ReceivedShuffleFromTrustee(msg.NewBase, msg.NewEphPks, msg.Proof)
 	if err != nil {
 		e := "Relay : error in p.relayState.neffShuffle.ReceivedShuffleFromTrustee " + err.Error()
@@ -805,7 +893,6 @@ func (p *PriFiLibRelayInstance) Received_TRU_REL_SHUFFLE_SIG(msg net.TRU_REL_SHU
 		log.Error(e)
 		return errors.New(e)
 	}
-
 	// if we have all the signatures
 	if done {
 		trusteesPks := make([]kyber.Point, p.relayState.nTrustees)

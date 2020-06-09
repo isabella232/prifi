@@ -450,7 +450,7 @@ func TestRelayRun1(t *testing.T) {
 }
 
 func TestRelayRun2(t *testing.T) {
-
+	//TODO: HASH CHECKING
 	timeoutHandler := func(clients, trustees []int) { log.Error(clients, trustees) }
 	resultChan := make(chan interface{}, 1)
 
