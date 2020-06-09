@@ -141,18 +141,45 @@ func (e *DCNetEntity) verbosePrint(info ...interface{}) {
 // Encodes "Payload" in the correct round. Will skip PRNG material if the round is in the future,
 // and crash if the round is in the past or the Payload is too long
 func (e *DCNetEntity) TrusteeEncodeForRound(roundID int32) []byte {
-	return e.EncodeForRound(roundID, false, nil)
+	upstreamCell, _ := e.EncodeForRound(roundID, false, nil)
+	return upstreamCell
 }
 
 // Encodes "Payload" in the correct round. Will skip PRNG material if the round is in the future,
 // and crash if the round is in the past or the Payload is too long
-func (e *DCNetEntity) EncodeForRound(roundID int32, slotOwner bool, payload []byte) []byte {
+func (e *DCNetEntity) EncodeForRound(roundID int32, slotOwner bool, payload []byte) ([]byte, []byte) {
 	if len(payload) > e.DCNetPayloadSize {
 		panic("DCNet: cannot encode Payload of length " + strconv.Itoa(int(len(payload))) + " max length is " + strconv.Itoa(len(payload)))
 	}
 
 	if roundID < e.currentRound {
-		panic("DCNet: asked to encode for round " + strconv.Itoa(int(roundID)) + " but we are at  round " + strconv.Itoa(int(e.currentRound)))
+		sharedKeys := e.sharedKeys
+
+		// Use the provided shared secrets to seed a pseudorandom DC-nets ciphers shared with each peer.
+		sharedPRNGsCopy := make([]kyber.XOF, len(sharedKeys))
+		for i := range sharedKeys {
+			e.verbosePrint("key", i, ":", sharedKeys[i])
+			seed, err := sharedKeys[i].MarshalBinary()
+			if err != nil {
+				log.Fatal("Could not extract data from shared key", err)
+			}
+			sharedPRNGsCopy[i] = e.cryptoSuite.XOF(seed)
+		}
+		round := int32(0)
+		for round < roundID {
+			//discard crypto material
+
+			// consume the PRNGs
+			for i := range e.sharedPRNGs {
+				dummy := make([]byte, e.DCNetPayloadSize)
+				sharedPRNGsCopy[i].XORKeyStream(dummy, dummy)
+			}
+
+			round++
+
+		}
+		e.sharedPRNGs = sharedPRNGsCopy
+		e.currentRound = roundID
 	}
 
 	for e.currentRound < roundID {
@@ -167,10 +194,10 @@ func (e *DCNetEntity) EncodeForRound(roundID int32, slotOwner bool, payload []by
 
 		e.currentRound++
 	}
-
+	var plainPayload []byte
 	var c *DCNetCipher
 	if e.Entity == DCNET_CLIENT {
-		c = e.clientEncode(slotOwner, payload)
+		c, plainPayload = e.clientEncode(slotOwner, payload)
 	} else {
 		c = e.trusteeEncode()
 	}
@@ -178,8 +205,7 @@ func (e *DCNetEntity) EncodeForRound(roundID int32, slotOwner bool, payload []by
 
 	e.verbosePrint("r[", roundID, "]:\n", c.Payload)
 	e.verbosePrint("r[", roundID, "]: equiv\n", c.EquivocationProtectionTag)
-
-	return c.ToBytes()
+	return c.ToBytes(), plainPayload
 }
 
 // Adds `newdata` into the sponge representing the received downstream data
@@ -189,14 +215,20 @@ func (e *DCNetEntity) UpdateReceivedMessageHistory(newData []byte) {
 	}
 }
 
-func (e *DCNetEntity) clientEncode(slotOwner bool, payload []byte) *DCNetCipher {
+// Encode for clients
+func (e *DCNetEntity) clientEncode(slotOwner bool, payload []byte) (*DCNetCipher, []byte) {
+
 	c := new(DCNetCipher)
 
 	if payload == nil {
 		payload = make([]byte, e.DCNetPayloadSize)
 	} else {
 		// deep clone and pad
-		payload2 := make([]byte, e.DCNetPayloadSize)
+		dcnetPayloadSize := e.DCNetPayloadSize
+		if e.EquivocationProtectionEnabled && slotOwner {
+			dcnetPayloadSize -= 16
+		}
+		payload2 := make([]byte, dcnetPayloadSize)
 		copy(payload2[0:len(payload)], payload)
 		payload = payload2
 	}
@@ -208,10 +240,12 @@ func (e *DCNetEntity) clientEncode(slotOwner bool, payload []byte) *DCNetCipher 
 		p_ij[i] = make([]byte, e.DCNetPayloadSize)
 		e.sharedPRNGs[i].XORKeyStream(p_ij[i], p_ij[i])
 	}
+	plainPayload := make([]byte, e.DCNetPayloadSize)
 
 	// if the equivocation protection is enabled, encrypt the Payload, and add the tag
 	if e.EquivocationProtectionEnabled {
 		payload, sigma_j := e.equivocationProtection.ClientEncryptPayload(slotOwner, payload, p_ij)
+		copy(plainPayload[:], payload)
 		e.verbosePrint("payload\n", payload)
 		e.verbosePrint("sigma_j\n", sigma_j)
 		c.Payload = payload // replace the Payload with the encrypted version
@@ -224,10 +258,11 @@ func (e *DCNetEntity) clientEncode(slotOwner bool, payload []byte) *DCNetCipher 
 			c.Payload[k] ^= p_ij[i][k] // XORs in the pads
 		}
 	}
-
-	return c
+	log.Lvl1("CARLOS: post XOR", c.Payload)
+	return c, plainPayload[:]
 }
 
+// Encode for trustees
 func (e *DCNetEntity) trusteeEncode() *DCNetCipher {
 	c := new(DCNetCipher)
 
@@ -254,6 +289,72 @@ func (e *DCNetEntity) trusteeEncode() *DCNetCipher {
 	}
 
 	return c
+}
+
+// Function to get the bits from previous round in an exact position.
+func (e *DCNetEntity) GetBitsOfRound(roundID int32, bitPosition int32) (map[int]int, [][]byte) {
+	log.Lvl1("CARLOS ROUND:", roundID)
+	if roundID >= e.currentRound {
+		return nil, nil
+	}
+
+	sharedKeys := e.sharedKeys
+
+	// Use the provided shared secrets to seed a pseudorandom DC-nets ciphers shared with each peer.
+	sharedPRNGsCopy := make([]kyber.XOF, len(sharedKeys))
+	for i := range sharedKeys {
+		e.verbosePrint("key", i, ":", sharedKeys[i])
+		seed, err := sharedKeys[i].MarshalBinary()
+		if err != nil {
+			log.Fatal("Could not extract data from shared key", err)
+		}
+		sharedPRNGsCopy[i] = e.cryptoSuite.XOF(seed)
+	}
+	round := int32(0)
+	for round < roundID {
+		//discard crypto material
+
+		// consume the PRNGs
+		for i := range e.sharedPRNGs {
+			dummy := make([]byte, e.DCNetPayloadSize)
+			sharedPRNGsCopy[i].XORKeyStream(dummy, dummy)
+		}
+
+		round++
+
+	}
+	e.sharedPRNGs = sharedPRNGsCopy
+	e.currentRound = roundID
+
+	rtn := make(map[int]int)
+
+	// prepare the pads
+
+	p_ij := make([][]byte, len(e.sharedPRNGs))
+	for i := range p_ij {
+		p_ij[i] = make([]byte, e.DCNetPayloadSize)
+		e.sharedPRNGs[i].XORKeyStream(p_ij[i], p_ij[i])
+	}
+	// DC-net encrypt the Payload
+	for i := range p_ij {
+		bytePosition := int(bitPosition / 8)
+		// TODO: CHECK WHY THIS HAPPEN, CLEARLY A BUG HERE
+		if !e.EquivocationProtectionEnabled {
+			bytePosition++
+		}
+		byte_toGet := p_ij[i][bytePosition]
+		log.Lvl1("CARLOS BYTE:", byte_toGet)
+		bitInByte := (8-bitPosition%8)%8 - 1
+		mask := byte(1 << uint(bitInByte))
+		if (byte_toGet & mask) == 0 {
+			rtn[i] = 0
+		} else {
+			rtn[i] = 1
+		}
+
+	}
+
+	return rtn, p_ij
 }
 
 // Used by the relay to start decoding a round
@@ -304,14 +405,17 @@ func (e *DCNetEntity) DecodeTrustee(roundID int32, slice []byte) {
 }
 
 // Called on the relay to decode the cell, after having stored the cryptographic materials
-func (e *DCNetEntity) DecodeCell() []byte {
+func (e *DCNetEntity) DecodeCell(isOpenClosedSlot bool) ([]byte, []byte) {
 	//No Equivocation -> just XOR
 	d := e.DCNetRoundDecoder
 
-	decoded := d.xorBuffer
-	if e.EquivocationProtectionEnabled {
+	cipherText := d.xorBuffer
+	var decoded []byte
+	if e.EquivocationProtectionEnabled && !isOpenClosedSlot {
 		decoded = e.equivocationProtection.RelayDecode(d.xorBuffer, d.equivTrusteeContribs, d.equivClientContribs)
+	} else {
+		decoded = cipherText
 	}
 
-	return decoded
+	return decoded, cipherText
 }

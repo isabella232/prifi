@@ -47,8 +47,10 @@ func equivocationTestForDataLength(t *testing.T, payloadSize int) {
 
 	// get the pads
 	padRound2_t := DCNetCipherFromBytes(dcnet_Trustee.TrusteeEncodeForRound(0))
-	padRound1_c1 := DCNetCipherFromBytes(dcnet_Client1.EncodeForRound(0, true, data))
-	padRound1_c2 := DCNetCipherFromBytes(dcnet_Client2.EncodeForRound(0, false, nil))
+	encode_for_round_1, _ := dcnet_Client1.EncodeForRound(0, true, data)
+	padRound1_c1 := DCNetCipherFromBytes(encode_for_round_1)
+	encode_for_round_2, _ := dcnet_Client2.EncodeForRound(0, false, nil)
+	padRound1_c2 := DCNetCipherFromBytes(encode_for_round_2)
 
 	res := make([]byte, payloadSize)
 	for i := range padRound1_c2.Payload {

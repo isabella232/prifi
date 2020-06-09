@@ -124,7 +124,11 @@ func SimulateRounds(t *testing.T, tg *TestGroup, maxRounds int32) {
 		clientMessages := make([][]byte, 0)
 		trusteesMessages := make([][]byte, 0)
 		first := true
-		message := randomBytes(d.DCNetPayloadSize)
+		dcNetPayloadSize := d.DCNetPayloadSize
+		if d.EquivocationProtectionEnabled {
+			dcNetPayloadSize -= 16
+		}
+		message := randomBytes(dcNetPayloadSize)
 
 		downstreamMessage := randomBytes(d.DCNetPayloadSize) //used only to update the history
 		for i := range tg.Clients {
@@ -137,10 +141,10 @@ func SimulateRounds(t *testing.T, tg *TestGroup, maxRounds int32) {
 			var m []byte
 			if first {
 				//fmt.Println("Embedding message:", message)
-				m = tg.Clients[i].DCNetEntity.EncodeForRound(roundID, true, message)
+				m, _ = tg.Clients[i].DCNetEntity.EncodeForRound(roundID, true, message)
 				first = false
 			} else {
-				m = tg.Clients[i].DCNetEntity.EncodeForRound(roundID, false, nil)
+				m, _ = tg.Clients[i].DCNetEntity.EncodeForRound(roundID, false, nil)
 			}
 			clientMessages = append(clientMessages, m)
 		}
@@ -160,7 +164,7 @@ func SimulateRounds(t *testing.T, tg *TestGroup, maxRounds int32) {
 			tg.Relay.DCNetEntity.DecodeTrustee(roundID, m)
 		}
 
-		output := tg.Relay.DCNetEntity.DecodeCell()
+		output, _ := tg.Relay.DCNetEntity.DecodeCell(false)
 
 		//fmt.Println("-----------------")
 		//fmt.Println(output)

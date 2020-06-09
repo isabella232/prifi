@@ -674,6 +674,5 @@ func (b *BufferableRoundManager) addToBuffer(bufferPtr *map[int]map[int32][]byte
 	if buffer[entityID] == nil {
 		buffer[entityID] = make(map[int32][]byte)
 	}
-
 	buffer[entityID][roundID] = data
 }

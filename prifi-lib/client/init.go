@@ -43,6 +43,11 @@ type ClientState struct {
 	NextDataForDCNet              *[]byte     //if not nil, send this before polling DataForDCNet
 	DataFromDCNet                 chan []byte //Data from the relay : VPN / SOCKS should read data from there !
 	DataOutputEnabled             bool        //if FALSE, nothing will be written to DataFromDCNet
+	HashFromPreviousMessage       [32]byte
+	MyLastRound                   int32
+	LastMessage                   []byte
+	B_echo_last                   byte
+	DisruptionWrongBitPosition    int
 	ephemeralPrivateKey           kyber.Scalar
 	EphemeralPublicKey            kyber.Point
 	ID                            int
@@ -65,6 +70,10 @@ type ClientState struct {
 	DisruptionProtectionEnabled   bool
 	LastWantToSend                time.Time
 	EquivocationProtectionEnabled bool
+	EphemeralPublicKeys           []kyber.Point
+	// TEST DISRUPTION
+	ForceDisruptionSinceRound3 bool
+	AllreadyDisrupted          bool
 
 	//concurrent stuff
 	RoundNo           int32
@@ -165,6 +174,14 @@ func (p *PriFiLibClientInstance) ReceivedMessage(msg interface{}) error {
 	case net.REL_CLI_TELL_EPH_PKS_AND_TRUSTEES_SIG:
 		if p.stateMachine.AssertState("EPH_KEYS_SENT") {
 			err = p.Received_REL_CLI_TELL_EPH_PKS_AND_TRUSTEES_SIG(typedMsg)
+		}
+	case net.REL_ALL_DISRUPTION_REVEAL:
+		if p.stateMachine.AssertState("READY") {
+			err = p.Received_REL_ALL_DISRUPTION_REVEAL(typedMsg)
+		}
+	case net.REL_ALL_REVEAL_SHARED_SECRETS:
+		if p.stateMachine.AssertState("READY") {
+			err = p.Received_REL_ALL_REVEAL_SHARED_SECRETS(typedMsg)
 		}
 	default:
 		err = errors.New("Unrecognized message, type" + reflect.TypeOf(msg).String())

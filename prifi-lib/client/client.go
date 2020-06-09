@@ -38,6 +38,7 @@ import (
 	"github.com/dedis/prifi/prifi-lib/scheduler"
 	"github.com/dedis/prifi/prifi-lib/utils"
 	"github.com/dedis/prifi/utils"
+	"go.dedis.ch/kyber/proof"
 	"math/rand"
 	"time"
 )
@@ -66,7 +67,7 @@ func (p *PriFiLibClientInstance) Received_ALL_ALL_PARAMETERS(msg net.ALL_ALL_PAR
 	dcNetType := msg.StringValueOrElse("DCNetType", "not initialized")
 	disruptionProtection := msg.BoolValueOrElse("DisruptionProtectionEnabled", false)
 	equivProtection := msg.BoolValueOrElse("EquivocationProtectionEnabled", false)
-
+	ForceDisruptionSinceRound3 := msg.BoolValueOrElse("ForceDisruptionSinceRound3", false)
 	//sanity checks
 	if clientID < -1 {
 		return errors.New("ClientID cannot be negative")
@@ -101,6 +102,10 @@ func (p *PriFiLibClientInstance) Received_ALL_ALL_PARAMETERS(msg net.ALL_ALL_PAR
 	p.clientState.MessageHistory = config.CryptoSuite.XOF([]byte("init")) //any non-nil, non-empty, constant array
 	p.clientState.DisruptionProtectionEnabled = disruptionProtection
 	p.clientState.EquivocationProtectionEnabled = equivProtection
+	p.clientState.ForceDisruptionSinceRound3 = ForceDisruptionSinceRound3
+	p.clientState.MyLastRound = -10
+	p.clientState.DisruptionWrongBitPosition = -1
+	p.clientState.AllreadyDisrupted = false
 
 	//we know our client number, if needed, parse the pcap for replay
 	if p.clientState.pcapReplay.Enabled {
@@ -192,21 +197,24 @@ func (p *PriFiLibClientInstance) Received_REL_CLI_UDP_DOWNSTREAM_DATA(msg net.RE
 }
 
 /*
-ProcessDownStreamData handles the downstream data. After determining if the data is for us (this is not done yet), we test if it's a
+ProcessDownStreamData handles the downstream data. After determining if the data is for us, we test if it's a
 latency-test message, test if the resync flag is on (which triggers a re-setup).
 When this function ends, it calls SendUpstreamData() which continues the communication loop.
 */
 func (p *PriFiLibClientInstance) ProcessDownStreamData(msg net.REL_CLI_DOWNSTREAM_DATA) error {
-
 	timing.StartMeasure("round-processing")
 
 	/*
 	 * HANDLE THE DOWNSTREAM DATA
 	 */
 
+	//if disruption protection is enabled, perform the checks
+	if p.clientState.DisruptionProtectionEnabled {
+		p.handlePossibleDisruption(msg)
+	}
+
 	//if it's just one byte, no data
 	if len(msg.Data) > 1 {
-
 		//pass the data to the VPN/SOCKS5 proxy, if enabled
 		if p.clientState.DataOutputEnabled {
 			p.clientState.DataFromDCNet <- msg.Data
@@ -263,7 +271,7 @@ func (p *PriFiLibClientInstance) ProcessDownStreamData(msg net.REL_CLI_DOWNSTREA
 
 		//produce the next upstream cell
 
-		upstreamCell := p.clientState.DCNet.EncodeForRound(p.clientState.RoundNo, false, contribution)
+		upstreamCell, _ := p.clientState.DCNet.EncodeForRound(p.clientState.RoundNo, false, contribution)
 
 		//send the data to the relay
 		toSend := &net.CLI_REL_OPENCLOSED_DATA{
@@ -353,20 +361,31 @@ func (p *PriFiLibClientInstance) SendUpstreamData(ownerSlotID int) error {
 
 	var upstreamCellContent []byte
 
-	//how much data we can send
-	actualPayloadSize := p.clientState.PayloadSize
-	if p.clientState.DisruptionProtectionEnabled {
-		actualPayloadSize -= 32
-		if actualPayloadSize <= 0 {
-			log.Fatal("Client", p.clientState.ID, "Cannot have disruption protection with less than 32 bytes payload")
-		}
-	}
-
 	//if we can send data
 	slotOwner := false
 	if ownerSlotID == p.clientState.MySlot {
 		slotOwner = true
+		log.Lvl1("SLOT OWNER", p.clientState.RoundNo)
+		p.clientState.MyLastRound = p.clientState.RoundNo
 	}
+
+	//how much data we can send
+	actualPayloadSize := p.clientState.PayloadSize
+	if p.clientState.DisruptionProtectionEnabled {
+		// Making room for the b_echo_last flag
+		actualPayloadSize--
+		if actualPayloadSize <= 0 {
+			log.Fatal("Client", p.clientState.ID, "Cannot have disruption protection with less than 1 bytes payload")
+		}
+	}
+	if p.clientState.EquivocationProtectionEnabled && slotOwner {
+		// Making room for the
+		actualPayloadSize -= 16
+		if actualPayloadSize <= 0 {
+			log.Fatal("Client", p.clientState.ID, "Cannot have equivocation protection with less than 16 bytes payload")
+		}
+	}
+
 	if slotOwner {
 
 		//this data has already been polled out of the DataForDCNet chan, so send it first
@@ -446,14 +465,94 @@ func (p *PriFiLibClientInstance) SendUpstreamData(ownerSlotID int) error {
 		}
 	}
 
-	//produce the next upstream cell
-	var hmac []byte
-	if p.clientState.DisruptionProtectionEnabled {
-		hmac = p.computeHmac256(upstreamCellContent)
-	}
-	payload := append(hmac, upstreamCellContent...)
-	upstreamCell := p.clientState.DCNet.EncodeForRound(p.clientState.RoundNo, slotOwner, payload)
+	if p.clientState.DisruptionProtectionEnabled && slotOwner {
+		// If we are in blame part and checking the previous message
+		if p.clientState.DisruptionWrongBitPosition != -1 {
+			// TODO => there should be a NIZK here proving the ownership of the slot
 
+			blameRoundID := p.clientState.RoundNo - int32(p.clientState.nClients)*2
+
+			pred := proof.Rep("X", "x", "B")
+			suite := config.CryptoSuite
+			B := suite.Point().Base()
+			sval := map[string]kyber.Scalar{"x": p.clientState.ephemeralPrivateKey}
+			pval := map[string]kyber.Point{"B": B, "X": p.clientState.EphemeralPublicKey}
+			prover := pred.Prover(suite, sval, pval, nil)
+			NIZK, _ := proof.HashProve(suite, "DISRUPTION", prover)
+
+			//send the data to the relay
+			toSend := &net.CLI_REL_DISRUPTION_BLAME{
+				BitPos:  p.clientState.DisruptionWrongBitPosition,
+				RoundID: blameRoundID,
+				NIZK:    NIZK,
+				Pval:    pval,
+			}
+
+			log.Lvl1("Disruption: Attempting to transmit blame for round", blameRoundID, p.clientState.DisruptionWrongBitPosition)
+
+			p.messageSender.SendToRelayWithLog(toSend, "(round "+strconv.Itoa(int(p.clientState.RoundNo))+")")
+
+			return nil
+		}
+		if !p.clientState.EquivocationProtectionEnabled {
+			// Making and storing hash
+			var hash [32]byte
+			if upstreamCellContent == nil {
+				// If the content is nil, some code will later change it into an empty slice. So the Hash must be from that
+				payload_to_hash := make([]byte, p.clientState.DCNet.DCNetPayloadSize-1)
+
+				// Saving data for possible disruption
+				p.clientState.LastMessage = payload_to_hash
+
+				// Creating hash
+				hash = sha256.Sum256(payload_to_hash)
+			} else {
+				// CARLOS TODO: CHECK IT FITS
+				upstreamCellContent[3] = byte(p.clientState.ID)
+				// Saving data for possible disruption
+				p.clientState.LastMessage = upstreamCellContent
+				// Creating hash
+				hash = sha256.Sum256([]byte(upstreamCellContent))
+			}
+
+			p.clientState.HashFromPreviousMessage = hash
+		}
+
+	}
+
+	// Adding the b_echo_last if the disruption protection is enabled
+	var slice_b_echo_last []byte
+	if p.clientState.DisruptionProtectionEnabled && slotOwner {
+		slice_b_echo_last = make([]byte, 1)
+		b_echo_last := p.clientState.B_echo_last
+		slice_b_echo_last[0] = b_echo_last
+	}
+	payload := append(slice_b_echo_last, upstreamCellContent...)
+
+	upstreamCell, plainPayload := p.clientState.DCNet.EncodeForRound(p.clientState.RoundNo, slotOwner, payload)
+
+	if p.clientState.EquivocationProtectionEnabled && p.clientState.DisruptionProtectionEnabled && slotOwner && p.clientState.B_echo_last != 1 {
+		// Saving data for possible disruption
+		p.clientState.LastMessage = plainPayload
+		hash := sha256.Sum256(plainPayload)
+		p.clientState.HashFromPreviousMessage = hash
+		log.Lvl1("CARLOS: HASING", plainPayload[:10], "HASH", hash)
+	}
+
+	if p.clientState.ID == 0 && p.clientState.ForceDisruptionSinceRound3 && p.clientState.RoundNo > 3 && !slotOwner {
+		if p.clientState.AllreadyDisrupted {
+			if p.clientState.RoundNo != 6 {
+				p.clientState.AllreadyDisrupted = false
+			}
+		} else {
+			// TESTING DISRUPTION
+			log.Error("Pre-disruption", upstreamCell)
+			upstreamCell[len(upstreamCell)-1]++ // only disrupt a 0->1. if there was already a 1, no disruption (this simplifies things)
+			log.Error("Disrupting!   ", upstreamCell)
+			p.clientState.AllreadyDisrupted = true
+		}
+
+	}
 	//send the data to the relay
 	toSend := &net.CLI_REL_UPSTREAM_DATA{
 		ClientID: p.clientState.ID,
@@ -466,6 +565,7 @@ func (p *PriFiLibClientInstance) SendUpstreamData(ownerSlotID int) error {
 	return nil
 }
 
+// TODO: Delete
 func (p *PriFiLibClientInstance) computeHmac256(message []byte) []byte {
 	key := []byte("client-secret" + strconv.Itoa(p.clientState.ID))
 	h := hmac.New(sha256.New, key)
@@ -528,11 +628,10 @@ As the client should send the first data, we do so; to keep this function simple
 "round function", that is Received_REL_CLI_DOWNSTREAM_DATA().
 */
 func (p *PriFiLibClientInstance) Received_REL_CLI_TELL_EPH_PKS_AND_TRUSTEES_SIG(msg net.REL_CLI_TELL_EPH_PKS_AND_TRUSTEES_SIG) error {
-
 	//verify the signature
 	neff := new(scheduler.NeffShuffle)
 	mySlot, err := neff.ClientVerifySigAndRecognizeSlot(p.clientState.ephemeralPrivateKey, p.clientState.TrusteePublicKey, msg.Base, msg.EphPks, msg.GetSignatures())
-
+	p.clientState.EphemeralPublicKeys = msg.EphPks
 	if err != nil {
 		e := "Client " + strconv.Itoa(p.clientState.ID) + "; Can't recognize our slot ! err is " + err.Error()
 		log.Error(e)
@@ -559,22 +658,45 @@ func (p *PriFiLibClientInstance) Received_REL_CLI_TELL_EPH_PKS_AND_TRUSTEES_SIG(
 	log.Lvl3("Client", p.clientState.ID, "ready to communicate.")
 
 	//produce a blank cell (we could embed data, but let's keep the code simple, one wasted message is not much)
-	data := make([]byte, p.clientState.PayloadSize)
 	slotOwner := false
-	if p.clientState.DisruptionProtectionEnabled {
-		if p.clientState.PayloadSize < 32 {
-			log.Fatal("Client", p.clientState.ID, "Cannot have disruption protection with less than 32 bytes payload")
-		}
-		data2 := make([]byte, p.clientState.PayloadSize-32)
-		hmac := p.computeHmac256(data2)
-
-		data = append(hmac, data2...)
-	}
 	if p.clientState.ID == 0 {
 		slotOwner = true // we need one guy that takes the responsability for this first slot
 	}
+	payloadSize := p.clientState.PayloadSize
 
-	upstreamCell := p.clientState.DCNet.EncodeForRound(0, slotOwner, data)
+	if p.clientState.EquivocationProtectionEnabled && slotOwner {
+		payloadSize -= 16
+	}
+	data := make([]byte, payloadSize)
+	if p.clientState.DisruptionProtectionEnabled {
+		// Making space for the b_echo_last
+		data2 := make([]byte, payloadSize-1)
+
+		// Saving data for possible disruption
+		p.clientState.LastMessage = data2
+
+		// Creating and storing hash
+		var hash [32]byte
+		hash = sha256.Sum256([]byte(data2))
+		p.clientState.HashFromPreviousMessage = hash
+
+		// As is inicialization, b_echo_last is 0
+		slice_b_echo_last := make([]byte, 1)
+		p.clientState.B_echo_last = 0
+		b_echo_last := p.clientState.B_echo_last
+		slice_b_echo_last[0] = b_echo_last
+		data = append(slice_b_echo_last, data2...)
+	}
+
+	upstreamCell, plainPayload := p.clientState.DCNet.EncodeForRound(0, slotOwner, data)
+	if p.clientState.EquivocationProtectionEnabled && p.clientState.DisruptionProtectionEnabled {
+		// Saving data for possible disruption
+		p.clientState.LastMessage = plainPayload
+		hash := sha256.Sum256(plainPayload)
+		p.clientState.HashFromPreviousMessage = hash
+		log.Lvl1("CARLOS: HASING", plainPayload[:10], "HASH", hash)
+		log.Lvl1("CARLOS: UPSTREAM: ", upstreamCell)
+	}
 
 	//send the data to the relay
 	toSend := &net.CLI_REL_UPSTREAM_DATA{
