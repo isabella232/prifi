@@ -365,7 +365,6 @@ func (p *PriFiLibClientInstance) SendUpstreamData(ownerSlotID int) error {
 	slotOwner := false
 	if ownerSlotID == p.clientState.MySlot {
 		slotOwner = true
-		log.Lvl1("SLOT OWNER", p.clientState.RoundNo)
 		p.clientState.MyLastRound = p.clientState.RoundNo
 	}
 

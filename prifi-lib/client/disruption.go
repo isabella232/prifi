@@ -131,7 +131,6 @@ func (p *PriFiLibClientInstance) Received_REL_ALL_REVEAL_SHARED_SECRETS(msg net.
 }
 
 func (p *PriFiLibClientInstance) handlePossibleDisruption(msg net.REL_CLI_DOWNSTREAM_DATA) error {
-	log.Lvl1("POSSIBLE DISRUPTION!", p.clientState.MyLastRound, p.clientState.RoundNo-1)
 	if p.clientState.RoundNo-1 == p.clientState.MyLastRound {
 
 		if p.clientState.B_echo_last == 1 {

@@ -113,7 +113,6 @@ func (e *EquivocationProtection) ClientEncryptPayload(slotOwner bool, x []byte, 
 	}
 
 	x = aesgcm.Seal(nil, nonce, x, nil)
-	log.Lvl1("THIS IS IT:", x)
 	// compute kappa
 	kappa_i := k_i.Add(k_i, product)
 	kappa_i_bytes, err := kappa_i.MarshalBinary()
