@@ -111,14 +111,6 @@ The result should look like [this](screenshots/manual-run2.png).
 ### Using PriFi in a real setup
 
 To test a real PriFi deployement, first, re-generates your identity (so your private key is really private). The processed is detailed in the [README about ./prifi.sh startup script](README_prifi.sh.md).
-
-## More documentation :
-
- - [README about the Architecture and SOCKS Proxies](README_architecture.md)
-
- - [README about ./prifi.sh startup script](README_prifi.sh.md)
-
- - [README about contributing to this repository](README_contributing.md)
  
 ## Reproducing experiments
 
@@ -131,3 +123,11 @@ Then, simply run `./simul.sh simul`; as you can see in `simul.sh`, there are doz
 ## Reproducing graphs
 
 Experiments produce raw log files; then, they are processed into graph using some scripts. This happens in [this other repo](https://github.com/lbarman/prifi-experiments), where all raw logs & resulting graphics have been preserved for reproducibility.
+
+## More documentation
+
+ - [README about the Architecture and SOCKS Proxies](README_architecture.md)
+
+ - [README about ./prifi.sh startup script](README_prifi.sh.md)
+
+ - [README about contributing to this repository](README_contributing.md)
