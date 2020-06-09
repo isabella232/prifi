@@ -226,11 +226,8 @@ func (e *EquivocationProtection) RelayDecode(encryptedPayload []byte, trusteesCo
 
 	message, err := aesgcm.Open(nil, nonce, encryptedPayload, nil)
 	if err != nil {
-		//CARLOS TODO: DISRUPTION
-		log.Lvl1("DISRUPTION, CANNOT DECODE")
+		//TODO: DISRUPTION
 		message = make([]byte, len(encryptedPayload)-16)
-	} else {
-		log.Lvl1("CORRECT DECRYPTION:", encryptedPayload, message)
 	}
 
 	return message

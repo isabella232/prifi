@@ -34,7 +34,6 @@ func (p *PriFiLibTrusteeInstance) Received_REL_ALL_DISRUPTION_REVEAL(msg net.REL
 		pval["T"+i_string] = P_i
 	}
 	pred := proof.And(pred_array...)
-	log.Lvl1("CARLOS EXPLODE: ", pred)
 
 	prover := pred.Prover(suite, sval, pval, nil)
 	NIZK, _ := proof.HashProve(suite, "DISRUPTION", prover)
@@ -60,7 +59,6 @@ func (p *PriFiLibTrusteeInstance) Received_REL_ALL_DISRUPTION_REVEAL(msg net.REL
  */
 func (p *PriFiLibTrusteeInstance) Received_REL_ALL_REVEAL_SHARED_SECRETS(msg net.REL_ALL_REVEAL_SHARED_SECRETS) error {
 	log.Lvl1("Disruption Phase 2: Received a reveal secret message for client", msg.EntityID)
-	// CARLOS TODO: NIZK
 	// TODO: check that the relay asks for the correct entity, and not a honest entity. There should be a signature check on the TRU_REL_DISRUPTION_REVEAL the relay received (and forwarded to the client)
 	secret := p.trusteeState.sharedSecrets[msg.EntityID]
 	// as a pseudorandom base point multiplied by our private key.

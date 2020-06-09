@@ -507,7 +507,7 @@ func (p *PriFiLibClientInstance) SendUpstreamData(ownerSlotID int) error {
 				// Creating hash
 				hash = sha256.Sum256(payload_to_hash)
 			} else {
-				// CARLOS TODO: CHECK IT FITS
+				// TODO: CHECK IT FITS
 				upstreamCellContent[3] = byte(p.clientState.ID)
 				// Saving data for possible disruption
 				p.clientState.LastMessage = upstreamCellContent
@@ -536,7 +536,6 @@ func (p *PriFiLibClientInstance) SendUpstreamData(ownerSlotID int) error {
 		p.clientState.LastMessage = plainPayload
 		hash := sha256.Sum256(plainPayload)
 		p.clientState.HashFromPreviousMessage = hash
-		log.Lvl1("CARLOS: HASING", plainPayload[:10], "HASH", hash)
 	}
 
 	if p.clientState.ID == 0 && p.clientState.ForceDisruptionSinceRound3 && p.clientState.RoundNo > 3 && !slotOwner {
@@ -694,8 +693,6 @@ func (p *PriFiLibClientInstance) Received_REL_CLI_TELL_EPH_PKS_AND_TRUSTEES_SIG(
 		p.clientState.LastMessage = plainPayload
 		hash := sha256.Sum256(plainPayload)
 		p.clientState.HashFromPreviousMessage = hash
-		log.Lvl1("CARLOS: HASING", plainPayload[:10], "HASH", hash)
-		log.Lvl1("CARLOS: UPSTREAM: ", upstreamCell)
 	}
 
 	//send the data to the relay

@@ -234,7 +234,7 @@ func (p *PriFiLibRelayInstance) Received_CLI_REL_UPSTREAM_DATA(msg net.CLI_REL_U
 		p.relayState.CiphertextsHistoryClients[int32(msg.ClientID)] = make(map[int32][]byte)
 	}
 	p.relayState.CiphertextsHistoryClients[int32(msg.ClientID)][msg.RoundID] = msg.Data
-	//CARLOS TODO: CLEAN HISTORY
+	// TODO: CLEAN HISTORY
 	p.relayState.roundManager.AddClientCipher(msg.RoundID, msg.ClientID, msg.Data)
 	if p.relayState.roundManager.HasAllCiphersForCurrentRound() {
 		p.upstreamPhase1_processCiphers(true)
@@ -253,7 +253,7 @@ func (p *PriFiLibRelayInstance) Received_TRU_REL_DC_CIPHER(msg net.TRU_REL_DC_CI
 		p.relayState.CiphertextsHistoryTrustees[int32(msg.TrusteeID)] = make(map[int32][]byte)
 	}
 	p.relayState.CiphertextsHistoryTrustees[int32(msg.TrusteeID)][msg.RoundID] = msg.Data
-	//CARLOS TODO: CLEAN HISTORY
+	// TODO: CLEAN HISTORY
 	p.relayState.roundManager.AddTrusteeCipher(msg.RoundID, msg.TrusteeID, msg.Data)
 	if p.relayState.roundManager.HasAllCiphersForCurrentRound() {
 		p.upstreamPhase1_processCiphers(true)
@@ -394,7 +394,6 @@ func (p *PriFiLibRelayInstance) upstreamPhase2b_extractPayload() error {
 		// Generating and storing the hash from the payload
 		p.relayState.HashOfLastUpstreamMessage = sha256.Sum256([]byte(ciphertext))
 		p.relayState.LastMessageOfClients[roundID] = ciphertext
-		log.Lvl1("CARLOS: HASING", ciphertext, "HASH", p.relayState.HashOfLastUpstreamMessage)
 	}
 	p.relayState.bitrateStatistics.AddUpstreamCell(int64(len(upstreamPlaintext)))
 
@@ -445,7 +444,7 @@ func (p *PriFiLibRelayInstance) upstreamPhase2b_extractPayload() error {
 			p.relayState.LastMessageOfClients[roundID] = upstreamPlaintext
 		}
 
-		// CARLOS TODO: Clean the lastmessageofclients map
+		// TODO: Clean the lastmessageofclients map
 
 		//TEST
 		if p.relayState.roundManager.CurrentRound() == 100 {

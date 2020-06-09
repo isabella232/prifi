@@ -12,7 +12,6 @@ import (
 )
 
 // Received_CLI_REL_BLAME
-// CARLOS NEEDS TO IMPLMENT THIS
 func (p *PriFiLibRelayInstance) Received_CLI_REL_DISRUPTION_BLAME(msg net.CLI_REL_DISRUPTION_BLAME) error {
 	// TODO: Check NIZK
 	pred := proof.Rep("X", "x", "B")
@@ -35,7 +34,7 @@ func (p *PriFiLibRelayInstance) Received_CLI_REL_DISRUPTION_BLAME(msg net.CLI_RE
 	}
 	log.Lvl1("Proof verified.")
 
-	// CARLOS TODO: p.stateMachine.ChangeState("BLAMING")
+	// TODO: p.stateMachine.ChangeState("BLAMING")
 
 	toSend := &net.REL_ALL_DISRUPTION_REVEAL{
 		RoundID: msg.RoundID,
@@ -43,7 +42,6 @@ func (p *PriFiLibRelayInstance) Received_CLI_REL_DISRUPTION_BLAME(msg net.CLI_RE
 		Pval:    msg.Pval,
 		NIZK:    msg.NIZK,
 	}
-	log.Lvl1("CARLOS: POS", msg.BitPos)
 	p.relayState.blamingData.RoundID = msg.RoundID
 	p.relayState.blamingData.BitPos = msg.BitPos
 
@@ -175,7 +173,6 @@ func (p *PriFiLibRelayInstance) compareBits(id int, bits map[int]int, Ciphertext
 	log.Lvl2("Disruption: comparing", bits, "with", CiphertextsHistory[int32(id)][int32(round)])
 
 	byteToGet := CiphertextsHistory[int32(id)][int32(round)][bytePosition]
-	log.Lvl1("CARLOS: BYTE", byteToGet)
 	bitInBytePosition := (8-bitPosition%8)%8 - 1
 	mask := byte(1 << uint(bitInBytePosition))
 	result := 0

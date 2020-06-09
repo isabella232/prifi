@@ -258,7 +258,6 @@ func (e *DCNetEntity) clientEncode(slotOwner bool, payload []byte) (*DCNetCipher
 			c.Payload[k] ^= p_ij[i][k] // XORs in the pads
 		}
 	}
-	log.Lvl1("CARLOS: post XOR", c.Payload)
 	return c, plainPayload[:]
 }
 
@@ -293,7 +292,6 @@ func (e *DCNetEntity) trusteeEncode() *DCNetCipher {
 
 // Function to get the bits from previous round in an exact position.
 func (e *DCNetEntity) GetBitsOfRound(roundID int32, bitPosition int32) (map[int]int, [][]byte) {
-	log.Lvl1("CARLOS ROUND:", roundID)
 	if roundID >= e.currentRound {
 		return nil, nil
 	}
@@ -343,7 +341,6 @@ func (e *DCNetEntity) GetBitsOfRound(roundID int32, bitPosition int32) (map[int]
 			bytePosition++
 		}
 		byte_toGet := p_ij[i][bytePosition]
-		log.Lvl1("CARLOS BYTE:", byte_toGet)
 		bitInByte := (8-bitPosition%8)%8 - 1
 		mask := byte(1 << uint(bitInByte))
 		if (byte_toGet & mask) == 0 {
