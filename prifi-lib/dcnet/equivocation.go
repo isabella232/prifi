@@ -225,7 +225,7 @@ func (e *EquivocationProtection) RelayDecode(encryptedPayload []byte, trusteesCo
 
 	message, err := aesgcm.Open(nil, nonce, encryptedPayload, nil)
 	if err != nil {
-		//TODO: DISRUPTION
+		//TODO: Bubble up this disruption in the client
 		message = make([]byte, len(encryptedPayload)-16)
 	}
 

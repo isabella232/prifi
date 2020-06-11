@@ -13,7 +13,6 @@ import (
 
 // Received_CLI_REL_BLAME
 func (p *PriFiLibRelayInstance) Received_CLI_REL_DISRUPTION_BLAME(msg net.CLI_REL_DISRUPTION_BLAME) error {
-	// TODO: Check NIZK
 	pred := proof.Rep("X", "x", "B")
 	suite := config.CryptoSuite
 	//B := suite.Point().Base()
