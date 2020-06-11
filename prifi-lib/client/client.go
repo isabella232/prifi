@@ -378,7 +378,6 @@ func (p *PriFiLibClientInstance) SendUpstreamData(ownerSlotID int) error {
 		}
 	}
 	if p.clientState.EquivocationProtectionEnabled && slotOwner {
-		// Making room for the
 		actualPayloadSize -= 16
 		if actualPayloadSize <= 0 {
 			log.Fatal("Client", p.clientState.ID, "Cannot have equivocation protection with less than 16 bytes payload")
@@ -467,8 +466,6 @@ func (p *PriFiLibClientInstance) SendUpstreamData(ownerSlotID int) error {
 	if p.clientState.DisruptionProtectionEnabled && slotOwner {
 		// If we are in blame part and checking the previous message
 		if p.clientState.DisruptionWrongBitPosition != -1 {
-			// TODO => there should be a NIZK here proving the ownership of the slot
-
 			blameRoundID := p.clientState.RoundNo - int32(p.clientState.nClients)*2
 
 			pred := proof.Rep("X", "x", "B")
