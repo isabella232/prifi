@@ -7,7 +7,7 @@ This repository implements PriFi, an anonymous communication protocol with prova
 
 For an extended introduction, please check our [website](https://prifi.net/).
 
-For more details about PriFi, please check our [paper](https://arxiv.org/abs/1710.10237).
+For more details about PriFi, please check our [paper](https://petsymposium.org/2020/files/papers/issue4/popets-2020-0059.pdf).
 
 
 **Warning: This software is experimental and still under development. Do not use it yet for security-critical purposes. Use at your own risk!**
