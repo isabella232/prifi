@@ -2,7 +2,7 @@ package utils
 
 import (
 	prifilog "github.com/dedis/prifi/prifi-lib/log"
-	"go.dedis.ch/onet/log"
+	"go.dedis.ch/onet/v3/log"
 	"math"
 	"strconv"
 	"time"

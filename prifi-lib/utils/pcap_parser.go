@@ -5,7 +5,7 @@ import (
 	"encoding/binary"
 	"errors"
 	"github.com/Lukasa/gopcap"
-	"go.dedis.ch/onet/log"
+	"go.dedis.ch/onet/v3/log"
 	"math/rand"
 	"os"
 	"strconv"
@@ -163,7 +163,7 @@ func getPayloadOrRandom(pkt gopcap.Packet, clientID uint16, packetID uint32, msS
 		return metaBytes(int(len), clientID, packetID, msSinceBeginningOfCapture, false)
 	}
 
-	return pkt.Data.LinkData().InternetData().TransportData()
+	return pkt.Data
 }
 
 func metaBytes(length int, clientID uint16, packetID uint32, timeSentInPcap uint64, isFinalPacket bool) []byte {
