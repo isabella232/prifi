@@ -81,6 +81,14 @@ Test succeeded
 All tests passed.
 ```
 
+### Automated Testing, all components in localhost, with Docker
+
+Same thing as above, but via docker (and hence without the requirement for go):
+
+- `docker run lbarman/prifi`
+
+(docker might require `sudo` on some systems)
+
 ### Manual Testing, all components in localhost
 
 You can test PriFi by running `./prifi.sh all-localhost`. This will run a SOCKS server, a PriFi relay, a Trustee, and three clients on your machine. They will use the identities in `config/identities_default`.
