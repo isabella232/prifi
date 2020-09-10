@@ -21,9 +21,11 @@ require (
 	go.dedis.ch/protobuf v1.0.11
 	go.etcd.io/bbolt v1.3.5 // indirect
 	golang.org/x/crypto v0.0.0-20200820211705-5c72a883971a // indirect
+	golang.org/x/lint v0.0.0-20200302205851-738671d3881b // indirect
 	golang.org/x/mobile v0.0.0-20200801112145-973feb4309de
 	golang.org/x/net v0.0.0-20200904194848-62affa334b73 // indirect
 	golang.org/x/sys v0.0.0-20200909081042-eff7692f9009 // indirect
+	golang.org/x/tools v0.0.0-20200909210914-44a2922940c2 // indirect
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
 	gopkg.in/dedis/onet.v2 v2.0.0-20181115163211-c8f3724038a7
 	moul.io/http2curl v1.0.0 // indirect
