@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/binary"
 	"encoding/hex"
-	"go.dedis.ch/onet/log"
+	"go.dedis.ch/onet/v3/log"
 	"io"
 	"net"
 	"time"

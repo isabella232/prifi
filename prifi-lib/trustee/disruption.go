@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"github.com/dedis/prifi/prifi-lib/config"
 	"github.com/dedis/prifi/prifi-lib/net"
-	"go.dedis.ch/kyber"
-	"go.dedis.ch/kyber/proof"
+	"go.dedis.ch/kyber/v3"
+	"go.dedis.ch/kyber/v3/proof"
 	"gopkg.in/dedis/onet.v2/log"
 	"strconv"
 )

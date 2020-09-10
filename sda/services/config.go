@@ -6,9 +6,9 @@ import (
 	"os"
 
 	prifi_protocol "github.com/dedis/prifi/sda/protocols"
-	"go.dedis.ch/onet/app"
-	"go.dedis.ch/onet/log"
-	"go.dedis.ch/onet/network"
+	"go.dedis.ch/onet/v3/app"
+	"go.dedis.ch/onet/v3/log"
+	"go.dedis.ch/onet/v3/network"
 )
 
 var socksClientConfig *prifi_protocol.SOCKSConfig

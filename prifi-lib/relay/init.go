@@ -39,8 +39,8 @@ import (
 	"github.com/dedis/prifi/prifi-lib/net"
 	"github.com/dedis/prifi/prifi-lib/scheduler"
 	"github.com/dedis/prifi/prifi-lib/utils"
-	"go.dedis.ch/kyber"
-	"go.dedis.ch/onet/log"
+	"go.dedis.ch/kyber/v3"
+	"go.dedis.ch/onet/v3/log"
 
 	"github.com/dedis/prifi/prifi-lib/crypto"
 	"reflect"

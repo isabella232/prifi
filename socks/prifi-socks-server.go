@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 	"github.com/armon/go-socks5"
-	"go.dedis.ch/onet/log"
+	"go.dedis.ch/onet/v3/log"
 	"strconv"
 )
 

@@ -5,8 +5,8 @@ import (
 	"strconv"
 
 	"github.com/dedis/prifi/prifi-lib/net"
-	"go.dedis.ch/onet"
-	"go.dedis.ch/onet/log"
+	"go.dedis.ch/onet/v3"
+	"go.dedis.ch/onet/v3/log"
 )
 
 //MessageSender is the struct we need to give PriFi-Lib so it can send messages.

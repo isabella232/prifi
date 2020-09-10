@@ -4,8 +4,8 @@ import (
 	"encoding/binary"
 	"errors"
 
-	"go.dedis.ch/kyber"
-	"go.dedis.ch/onet/log"
+	"go.dedis.ch/kyber/v3"
+	"go.dedis.ch/onet/v3/log"
 )
 
 /*

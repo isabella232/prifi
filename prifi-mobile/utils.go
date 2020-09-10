@@ -2,10 +2,10 @@ package prifimobile
 
 import (
 	"errors"
-	"go.dedis.ch/kyber/suites"
-	"go.dedis.ch/kyber/util/encoding"
-	"go.dedis.ch/kyber/util/key"
-	"go.dedis.ch/onet/network"
+	"go.dedis.ch/kyber/v3/suites"
+	"go.dedis.ch/kyber/v3/util/encoding"
+	"go.dedis.ch/kyber/v3/util/key"
+	"go.dedis.ch/onet/v3/network"
 	"strconv"
 )
 

@@ -4,8 +4,8 @@ import (
 	"errors"
 	"github.com/dedis/prifi/prifi-lib/config"
 	"github.com/dedis/prifi/prifi-lib/net"
-	"go.dedis.ch/kyber"
-	"go.dedis.ch/kyber/sign/schnorr"
+	"go.dedis.ch/kyber/v3"
+	"go.dedis.ch/kyber/v3/sign/schnorr"
 	"strconv"
 )
 

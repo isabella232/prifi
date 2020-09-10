@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"go.dedis.ch/onet/log"
+	"go.dedis.ch/onet/v3/log"
 )
 
 //This class hold latencies values, and performs the average/std distribution of it. That is the max number of value stored.

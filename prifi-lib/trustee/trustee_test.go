@@ -8,8 +8,8 @@ import (
 	"github.com/dedis/prifi/prifi-lib/crypto"
 	"github.com/dedis/prifi/prifi-lib/net"
 	"github.com/dedis/prifi/prifi-lib/scheduler"
-	"go.dedis.ch/kyber"
-	"go.dedis.ch/onet/log"
+	"go.dedis.ch/kyber/v3"
+	"go.dedis.ch/onet/v3/log"
 	"time"
 )
 

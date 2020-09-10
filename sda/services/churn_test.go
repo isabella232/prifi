@@ -3,9 +3,9 @@ package services
 import (
 	"github.com/dedis/prifi/prifi-lib/crypto"
 	"github.com/dedis/prifi/sda/protocols"
-	"go.dedis.ch/onet"
-	"go.dedis.ch/onet/log"
-	"go.dedis.ch/onet/network"
+	"go.dedis.ch/onet/v3"
+	"go.dedis.ch/onet/v3/log"
+	"go.dedis.ch/onet/v3/network"
 	"strconv"
 	"testing"
 )

@@ -9,7 +9,7 @@ import (
 	"crypto/rand"
 	"encoding/binary"
 	"encoding/hex"
-	"go.dedis.ch/onet/log"
+	"go.dedis.ch/onet/v3/log"
 	"io"
 	"sync"
 	"time"

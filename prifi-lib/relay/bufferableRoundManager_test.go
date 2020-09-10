@@ -3,7 +3,7 @@ package relay
 import (
 	"bytes"
 	"crypto/rand"
-	"go.dedis.ch/onet/log"
+	"go.dedis.ch/onet/v3/log"
 	"testing"
 )
 

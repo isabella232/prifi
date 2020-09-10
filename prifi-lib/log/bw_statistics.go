@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"go.dedis.ch/onet/log"
+	"go.dedis.ch/onet/v3/log"
 )
 
 //BitrateStatistics holds statistics about the bitrate, such as instant/total up/down/down (via udp)/retransmitted bits

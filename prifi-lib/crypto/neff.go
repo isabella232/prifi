@@ -5,7 +5,7 @@ import (
 
 	"errors"
 	"github.com/dedis/prifi/prifi-lib/config"
-	"go.dedis.ch/kyber"
+	"go.dedis.ch/kyber/v3"
 )
 
 // NeffShuffle implements Andrew Neff's verifiable shuffle proof scheme as described in the

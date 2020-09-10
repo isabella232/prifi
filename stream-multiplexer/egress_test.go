@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/binary"
 	"fmt"
-	"go.dedis.ch/onet/log"
+	"go.dedis.ch/onet/v3/log"
 	"net"
 	"sync"
 	"testing"

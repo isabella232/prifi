@@ -2,7 +2,7 @@ package protocols
 
 import (
 	"github.com/dedis/prifi/prifi-lib/net"
-	"go.dedis.ch/onet"
+	"go.dedis.ch/onet/v3"
 )
 
 //Struct_ALL_ALL_SHUTDOWN is a wrapper for ALL_ALL_SHUTDOWN (but also contains a *onet.TreeNode)

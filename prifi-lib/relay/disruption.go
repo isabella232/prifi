@@ -3,11 +3,11 @@ package relay
 import (
 	"github.com/dedis/prifi/prifi-lib/config"
 	"github.com/dedis/prifi/prifi-lib/net"
-	"go.dedis.ch/kyber"
-	"go.dedis.ch/onet/log"
+	"go.dedis.ch/kyber/v3"
+	"go.dedis.ch/onet/v3/log"
 
 	"fmt"
-	"go.dedis.ch/kyber/proof"
+	"go.dedis.ch/kyber/v3/proof"
 	"strconv"
 )
 

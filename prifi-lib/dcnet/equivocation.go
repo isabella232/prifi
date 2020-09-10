@@ -6,9 +6,9 @@ import (
 	"crypto/rand"
 	"crypto/sha256"
 	"github.com/dedis/prifi/prifi-lib/config"
-	"go.dedis.ch/kyber"
-	"go.dedis.ch/kyber/suites"
-	"go.dedis.ch/onet/log"
+	"go.dedis.ch/kyber/v3"
+	"go.dedis.ch/kyber/v3/suites"
+	"go.dedis.ch/onet/v3/log"
 )
 
 // Clients compute:

@@ -2,7 +2,7 @@ package crypto
 
 import (
 	"github.com/dedis/prifi/prifi-lib/config"
-	"go.dedis.ch/kyber"
+	"go.dedis.ch/kyber/v3"
 )
 
 /**

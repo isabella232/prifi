@@ -29,8 +29,8 @@ import (
 	"github.com/dedis/prifi/prifi-lib/crypto"
 	prifilog "github.com/dedis/prifi/prifi-lib/log"
 	"github.com/dedis/prifi/prifi-lib/net"
-	"go.dedis.ch/kyber"
-	"go.dedis.ch/onet/log"
+	"go.dedis.ch/kyber/v3"
+	"go.dedis.ch/onet/v3/log"
 
 	"crypto/hmac"
 	"crypto/sha256"
@@ -38,7 +38,7 @@ import (
 	"github.com/dedis/prifi/prifi-lib/scheduler"
 	"github.com/dedis/prifi/prifi-lib/utils"
 	"github.com/dedis/prifi/utils"
-	"go.dedis.ch/kyber/proof"
+	"go.dedis.ch/kyber/v3/proof"
 	"math/rand"
 	"time"
 )

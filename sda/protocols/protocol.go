@@ -27,9 +27,9 @@ import (
 
 	prifi_lib "github.com/dedis/prifi/prifi-lib"
 	"github.com/dedis/prifi/prifi-lib/net"
-	"go.dedis.ch/onet"
-	"go.dedis.ch/onet/log"
-	"go.dedis.ch/onet/network"
+	"go.dedis.ch/onet/v3"
+	"go.dedis.ch/onet/v3/log"
+	"go.dedis.ch/onet/v3/network"
 )
 
 // ProtocolName is the name used to register the SDA wrapper protocol with SDA.

@@ -5,7 +5,7 @@ import (
 	"github.com/dedis/prifi/prifi-lib/net"
 	"github.com/dedis/prifi/prifi-lib/relay"
 	"github.com/dedis/prifi/prifi-lib/trustee"
-	"go.dedis.ch/onet/log"
+	"go.dedis.ch/onet/v3/log"
 )
 
 /*

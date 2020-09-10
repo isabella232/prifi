@@ -5,7 +5,7 @@ import (
 	"crypto/rand"
 	"errors"
 	"github.com/dedis/prifi/prifi-lib/crypto"
-	"go.dedis.ch/kyber"
+	"go.dedis.ch/kyber/v3"
 	"testing"
 )
 

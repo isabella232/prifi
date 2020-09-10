@@ -3,8 +3,8 @@ package services
 import (
 	prifi_protocol "github.com/dedis/prifi/sda/protocols"
 	"github.com/dedis/prifi/utils"
-	"go.dedis.ch/onet/log"
-	"go.dedis.ch/onet/network"
+	"go.dedis.ch/onet/v3/log"
+	"go.dedis.ch/onet/v3/network"
 	"io/ioutil"
 	"os"
 	"runtime/pprof"

@@ -2,8 +2,8 @@ package prifimobile
 
 import (
 	prifi_service "github.com/dedis/prifi/sda/services"
-	"go.dedis.ch/onet"
-	"go.dedis.ch/onet/log"
+	"go.dedis.ch/onet/v3"
+	"go.dedis.ch/onet/v3/log"
 	"time"
 )
 

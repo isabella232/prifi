@@ -12,8 +12,8 @@ import (
 	//"github.com/dedis/prifi/prifi-lib/relay"
 	"crypto/sha256"
 	"github.com/dedis/prifi/prifi-lib/scheduler"
-	"go.dedis.ch/kyber"
-	"go.dedis.ch/onet/log"
+	"go.dedis.ch/kyber/v3"
+	"go.dedis.ch/onet/v3/log"
 	"testing"
 	"time"
 )

@@ -18,8 +18,8 @@ import (
 	"github.com/dedis/prifi/prifi-lib/config"
 	"github.com/dedis/prifi/prifi-lib/dcnet"
 	"github.com/dedis/prifi/prifi-lib/net"
-	"go.dedis.ch/kyber"
-	"go.dedis.ch/onet/log"
+	"go.dedis.ch/kyber/v3"
+	"go.dedis.ch/onet/v3/log"
 	"strconv"
 	"time"
 )
