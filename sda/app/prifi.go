@@ -22,7 +22,7 @@ import (
 	"go.dedis.ch/onet/app"
 	"go.dedis.ch/onet/log"
 	"go.dedis.ch/onet/network"
-	"gopkg.in/urfave/cli.v1"
+	"github.com/urfave/cli"
 	"net"
 	"os/exec"
 	"strconv"
