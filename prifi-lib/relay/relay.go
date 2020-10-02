@@ -234,7 +234,6 @@ func (p *PriFiLibRelayInstance) Received_CLI_REL_UPSTREAM_DATA(msg net.CLI_REL_U
 		p.relayState.CiphertextsHistoryClients[int32(msg.ClientID)] = make(map[int32][]byte)
 	}
 	p.relayState.CiphertextsHistoryClients[int32(msg.ClientID)][msg.RoundID] = msg.Data
-	// TODO: CLEAN HISTORY
 	p.relayState.roundManager.AddClientCipher(msg.RoundID, msg.ClientID, msg.Data)
 	if p.relayState.roundManager.HasAllCiphersForCurrentRound() {
 		p.upstreamPhase1_processCiphers(true)
@@ -253,7 +252,6 @@ func (p *PriFiLibRelayInstance) Received_TRU_REL_DC_CIPHER(msg net.TRU_REL_DC_CI
 		p.relayState.CiphertextsHistoryTrustees[int32(msg.TrusteeID)] = make(map[int32][]byte)
 	}
 	p.relayState.CiphertextsHistoryTrustees[int32(msg.TrusteeID)][msg.RoundID] = msg.Data
-	// TODO: CLEAN HISTORY
 	p.relayState.roundManager.AddTrusteeCipher(msg.RoundID, msg.TrusteeID, msg.Data)
 	if p.relayState.roundManager.HasAllCiphersForCurrentRound() {
 		p.upstreamPhase1_processCiphers(true)
@@ -444,8 +442,6 @@ func (p *PriFiLibRelayInstance) upstreamPhase2b_extractPayload() error {
 			p.relayState.LastMessageOfClients[roundID] = upstreamPlaintext
 		}
 
-		// TODO: Clean the lastmessageofclients map
-
 		//TEST
 		if p.relayState.roundManager.CurrentRound() == 100 {
 			//upstreamPlaintext[3] = 8
@@ -578,6 +574,20 @@ func (p *PriFiLibRelayInstance) upstreamPhase3_finalizeRound(roundID int32) erro
 	}
 
 	p.relayState.roundManager.CloseRound()
+
+	// clean history
+	for _, m := range p.relayState.CiphertextsHistoryTrustees {
+		delete(m, roundID)
+	}
+	for _, m := range p.relayState.CiphertextsHistoryClients {
+		delete(m, roundID)
+	}
+	earliest := p.relayState.roundManager.lastRoundClosed - int32(p.relayState.nClients)
+	for k := range p.relayState.LastMessageOfClients {
+		if k < earliest {
+			delete(p.relayState.LastMessageOfClients, k)
+		}
+	}
 
 	// we just closed that round. If there is any other round opened (window > 1), directly prepare to decode it
 	if roundOpened, nextRoundID := p.relayState.roundManager.currentRound(); roundOpened {
